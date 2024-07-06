@@ -1,11 +1,27 @@
-<script src="https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js"></script>
-<script>
- document.addEventListener('DOMContentLoaded', () => {
-    mermaid.initialize({
-    startOnLoad:true,
-    theme: "default",
-  });
-  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-  });
-</script>
- 
+<head>
+    <!-- Other head elements -->
+    <link rel="preload" href="/assets/lib/mermaid/mermaid.min.js" as="script">
+    <script src="/assets/lib/mermaid/mermaid.min.js" defer></script>
+    <script>
+      // hide mermaid diagram until it's rendered
+
+      const mermaidElements = document.querySelectorAll('.language-mermaid');
+      mermaidElements.forEach(el => {
+        el.style.visibility = 'hidden';  // Hide mermaid diagram until it's rendered
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // show mermaid diagram after rendering
+        mermaidElements.forEach(el => {
+          el.style.visibility = 'visible';
+        });
+
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: "default",
+        });
+        window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+      });
+    </script>
+  </head>
+  
