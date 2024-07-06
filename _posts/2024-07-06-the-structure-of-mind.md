@@ -86,7 +86,57 @@ Freud's theory suggests that the different parts of the mind interact dynamicall
 - **Conscious Thoughts and Perceptions** can trigger memories in the preconscious.
 - **Memories in the Preconscious** can influence the unconscious, leading to the emergence of repressed fears, motives, and desires.
 
+## Personality Structure
+```mermaid
+graph TD;
+    subgraph Id["Id"]
+        style Id fill:#F5B7B1,stroke:#C0392B
+        BasicNeeds["Basic Needs"]
+        Instincts["Instincts"]
+        PleasurePrinciple["Pleasure Principle"]
+    end
 
+    subgraph Ego["Ego"]
+        style Ego fill:#AED6F1,stroke:#2980B9
+        RealityPrinciple["Reality Principle"]
+        Balance["Balances Id and Superego"]
+        Rationalizes["Rationalizes Instincts"]
+        SelfPerception["Self-Perception"]
+    end
 
+    subgraph Superego["Superego"]
+        style Superego fill:#D7BDE2,stroke:#8E44AD
+        MoralPrinciples["Moral Principles"]
+        Ethics["Ethics of Thoughts and Actions"]
+        SocialAcceptance["Social Acceptance"]
+        SenseOfGuilt["Sense of Guilt"]
+        ExternalInfluences["External Influences"]
+    end
 
+    Id -->|Impulses| Ego
+    Superego -->|Moral Standards| Ego
 
+    Ego -->|Balances| Id
+    Ego -->|Balances| Superego
+
+    Id --> BasicNeeds
+    Id --> Instincts
+    Id --> PleasurePrinciple
+
+    Ego --> RealityPrinciple
+    Ego --> Balance
+    Ego --> Rationalizes
+    Ego --> SelfPerception
+
+    Superego --> MoralPrinciples
+    Superego --> Ethics
+    Superego --> SocialAcceptance
+    Superego --> SenseOfGuilt
+    Superego --> ExternalInfluences
+```
+
+**Id**: The most primitive part of the personality, driven by the pleasure principle. It seeks immediate gratification of basic needs and desires, such as hunger, thirst, and sexual urges. It is impulsive, irrational, and unconscious.
+
+**Ego**: The mediator between the Id and the Superego, operating on the reality principle. It seeks to satisfy the Id's desires in socially acceptable ways. It is rational, logical, and conscious.
+
+**Superego**: The moral compass of the personality, driven by the morality principle. It represents internalized ideals and values learned from parents and society. It strives for perfection and adherence to social norms. It is both conscious and unconscious.
