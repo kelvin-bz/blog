@@ -1,10 +1,20 @@
-<script src="https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script src="asset/lib/mermaid/mermaid.min.js"></script>
 <script>
- document.addEventListener('DOMContentLoaded', () => {
-    mermaid.initialize({
-    startOnLoad:true,
-    theme: "default",
+  document.querySelectorAll('.language-mermaid').forEach((block) => {
+    // hide the block
+    block.style.display = 'none';
+    // add loading animation
+
   });
-  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "default",
+  })
+  document.addEventListener('DOMContentLoaded', () => {
+    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+    // unhide the blocks
+    document.querySelectorAll('.language-mermaid').forEach((block) => {
+      block.style.display = 'block';
+    });
   });
 </script>

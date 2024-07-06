@@ -227,4 +227,5 @@ jekyll-archives:
     category: /categories/:name/
 
 
-mermaid: true
+mermaid:
+  enable: true          
