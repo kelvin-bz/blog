@@ -1,17 +1,10 @@
 <script src="https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <script>
-  const mermaidElements = document.querySelectorAll('.language-mermaid');
-  mermaidElements.forEach(el => {
-    el.style.visibility = 'hidden';  // Hide mermaid diagram until it's rendered
-  });
-  document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     mermaid.initialize({
-      startOnLoad: true,
-      theme: "default",
-    });
-    mermaidElements.forEach(el => {
-      el.style.visibility = 'visible';
-    });
-    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+    startOnLoad:true,
+    theme: "default",
+  });
+  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
   });
 </script>
