@@ -1,10 +1,7 @@
 <script src="/assets/mermaid.min.js"></script>
 <script>
   document.querySelectorAll('.language-mermaid').forEach((block) => {
-    // hide the block
     block.style.display = 'none';
-    // add loading animation
-
   });
   mermaid.initialize({
     startOnLoad: true,
@@ -12,7 +9,6 @@
   })
   document.addEventListener('DOMContentLoaded', () => {
     window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-    // unhide the blocks
     document.querySelectorAll('.language-mermaid').forEach((block) => {
       block.style.display = 'block';
     });
