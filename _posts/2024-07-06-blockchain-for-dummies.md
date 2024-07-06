@@ -1,5 +1,5 @@
 ---
-title: BLOCKCHAIN FOR DUMMIES
+title: Blockchain for Dummies
 categories: [blockchain]
 date: 2024-07-06 08:00:00
 tags: [blockchain]
