@@ -3,10 +3,6 @@
   document.querySelectorAll('.language-mermaid').forEach((block) => {
     block.style.display = 'none';
   });
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: "default",
-  })
   document.addEventListener('DOMContentLoaded', () => {
     window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
     document.querySelectorAll('.language-mermaid').forEach((block) => {
