@@ -5,6 +5,8 @@ date: 2024-07-06 08:00:00
 tags: [blockchain]
 ---
 
+I am not a blockchain expert, but I have been learning about blockchain technology and its applications. I have created some diagrams to help me understand the concepts better. I hope these diagrams can help you too.
+
 
 
 ## Transaction - Block
@@ -171,6 +173,51 @@ graph LR
 
 **POS (proof of stake)**: stake ETH to become validators. Validators are randomly selected to propose new blocks, with others attesting to their validity. Correct validators earn rewards, while incorrect ones are penalized. This replaces mining, making Ethereum more scalable and eco-friendly.
 
+## Stablecoins
+
+```mermaid
+graph LR
+    classDef cadetblue fill:#5F9EA0,stroke:#333,stroke-width:2px;
+    classDef mediumaquamarine fill:#66CDAA,stroke:#333,stroke-width:2px;
+    classDef lightgreen fill:#90EE90,stroke:#333,stroke-width:2px;
+    classDef lightpink fill:#FFB6C1,stroke:#333,stroke-width:2px;
+
+    subgraph Stablecoins["**Types of Stablecoins**"]
+        FiatBacked["Fiat-Backed"]:::cadetblue
+        CommodityBacked["Commodity-Backed"]:::mediumaquamarine
+        CryptoBacked["Crypto-Backed"]:::lightgreen
+        Algorithmic["Algorithmic"]:::lightpink
+    end
+
+    FiatBacked --> Tether["Tether (USDT)"]:::cadetblue
+    FiatBacked --> USDCoin["USD Coin (USDC)"]:::cadetblue
+
+    CommodityBacked --> TetherGold["Tether Gold (XAUT)"]:::mediumaquamarine
+    CommodityBacked --> PAXGold["PAX Gold (PAXG)"]:::mediumaquamarine
+
+    CryptoBacked --> Dai["Dai (DAI)"]:::lightgreen
+
+    Algorithmic --> AMPL["Ampleforth (AMPL)"]:::lightpink
+    Algorithmic --> UST["TerraUSD (UST)"]:::lightpink
+
+```
+
+**Stablecoins** offer stability in the volatile crypto market, making them suitable for everyday transactions, remittances, and trading. They provide easy access to the crypto world without exposure to extreme price fluctuation. They are a bridge between traditional finance and the crypto world. 
+
+**Fiat-Backed Stablecoins**: These stablecoins are backed 1:1 by fiat currencies like the US Dollar or Euro. The value of each coin is directly tied to the value of the fiat currency.
+
+
+
+**Commodity-Backed Stablecoins**: These stablecoins are backed by physical assets such as precious metals. The value is tied to the commodity, providing stability based on the physical asset's value.
+
+
+**Crypto-Backed Stablecoins:** These stablecoins are backed by other cryptocurrencies. They are usually over-collateralized to account for the volatility of the underlying crypto assets.
+
+
+**Algorithmic Stablecoins**: These stablecoins use algorithms and smart contracts to manage the supply and stabilize the value without needing reserves. They rely on mechanisms to adjust the coin supply based on demand.
+
+
+
 ## Restaking
 
 ```mermaid
@@ -266,7 +313,7 @@ graph LR
 
 **Smart contract**: A smart contract is a self-executing contract with the terms directly written into code on a blockchain. It automatically enforces and executes the terms of an agreement when predefined conditions are met. This eliminates the need for intermediaries, reducing costs and enhancing security. Smart contracts are commonly used in various applications, including finance, real estate, and supply chain management.
 
-### NFT (Non-Fungible Token)
+## NFT (Non-Fungible Token)
 
 ```mermaid
 graph LR
@@ -321,7 +368,7 @@ graph LR
 ```
 
 **An NFT (Non-Fungible Token)** is a unique digital asset represented by a smart contract. The smart contract contains code that defines state variables like token metadata and ownership, and functions for minting, transferring, and burning NFTs. Creators can mint new NFTs, owners can transfer them, and events like transfers and approvals are logged on the blockchain. Participants such as creators, buyers, and sellers interact with the NFT smart contract to manage the lifecycle of NFTs, ensuring transparency and security in ownership.
-###  Lending and Borrowing
+##  Lending and Borrowing
 
 ```mermaid
 graph LR
@@ -376,6 +423,58 @@ graph LR
 ```
 
 **Lenders** deposit funds into a smart contract to earn interest. **Borrowers** take out loans by using collateral and paying interest. Smart contracts manage balances, debts, and ensure transparent transactions. Lenders can withdraw their funds, and borrowers can repay loans through specific function calls. This system enhances accessibility and efficiency in financial services without intermediaries.
+
+## Liquidity Pool
+
+```mermaid
+graph LR;
+
+subgraph LiquidityPool["Liquidity Pool"]
+    TokenA["Token A"]:::skyblue
+    TokenB["Token B"]:::limegreen
+    AMM["Automated\nMarket Maker"]:::gold
+end
+
+User1["User 1\n(Liquidity\nProvider)"]:::coral -->|Deposits\nToken A & B| LiquidityPool
+User2["User 2\n(Liquidity\nProvider)"]:::orchid -->|Deposits\nToken A & B| LiquidityPool
+LiquidityPool -->|Swaps\nToken A <--> B| User3["User 3\n(Swapper)"]:::hotpink
+LiquidityPool -->|Trading\nFees| User1 & User2
+AMM -->|Determines\nPrice & Executes\nTrades| LiquidityPool
+
+classDef aqua fill:#00FFFF,stroke:#333,stroke-width:2px;
+classDef skyblue fill:#87CEEB,stroke:#333,stroke-width:2px;
+classDef limegreen fill:#32CD32,stroke:#333,stroke-width:2px;
+classDef coral fill:#FF7F50,stroke:#333,stroke-width:2px;
+classDef orchid fill:#DA70D6,stroke:#333,stroke-width:2px;
+classDef hotpink fill:#FF69B4,stroke:#333,stroke-width:2px;
+classDef gold fill:#FFD700,stroke:#333,stroke-width:2px;
+
+```
+**Liquidity Pool**:
+
+- Core component of decentralized exchanges (DEX) like Uniswap.
+- A smart contract holding a pair of tokens (e.g., Token A and Token B).
+- The ratio of tokens in the pool determines their relative prices.
+
+**Automated Market Maker (AMM)**:
+
+- Algorithm that governs the liquidity pool.
+- Determines token prices based on the ratio of assets in the pool using a constant product formula.
+- Automatically executes trades when users interact with the pool.
+
+**Liquidity Providers (User 1 & User 2)**:
+
+- Deposit equal value of two tokens into the pool.
+- Receive LP tokens representing their share of the pool.
+- Earn trading fees proportional to their share.
+- Face risk of impermanent loss if token prices diverge significantly.
+
+**Swappers (User 3)**:
+
+- Trade one token for another directly within the pool.
+- Pay a small transaction fee, distributed to liquidity providers.
+
+
 ## ETH VM ( Virtual Machine)
 
 This is a virtual computer that runs on the Ethereum network. It's responsible for executing smart contracts.
