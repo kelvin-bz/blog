@@ -3,10 +3,10 @@ title: Docker and GitHub Workflow to Deploy to Kubernetes
 categories: [tech]
 date: 2024-07-06 08:00:00
 tags: [docker, kubernetes, gitHub workflow ]
+image: "/assets/images/docker-and-github-workflow-to-deploy-to-kubernetes.png"
 ---
 
 ## Project Directory Structure
-
 
 ```bash
 main-repo/
@@ -177,40 +177,4 @@ graph TD
     style buildAndPushJob fill:#e6f2ea,stroke:#2e8b57
     style preparation fill:#b19cd9,stroke:#4b0082
     style build fill:#ffffe0,stroke:#8b4513
-```
-
-
- 
-```mermaid
-graph 
-    subgraph GitHub["GitHub"]
-        CodeChange["Code Changes"] -- "Merge to Master" --> MasterBranch["Master Branch"]
-    end
-
-    MasterBranch -- "Trigger GitHub Actions" --> GitHubActions
-
-    subgraph GitHubActions["GitHub Actions Workflow"]
-        CheckoutCode["Checkout Code"] -- "Install Dependencies (Helm, AWS CLI)" --> InstallDependencies
-        InstallDependencies -- "Authenticate with AWS" --> AuthenticateWithAws
-        AuthenticateWithAws -- "Build & Push Image to ECR" --> BuildPushImageToEcr
-        BuildPushImageToEcr -- "Update Helm Chart Version" --> UpdateHelmChartVersion
-        UpdateHelmChartVersion -- "Helm Deploy/Upgrade" --> HelmDeployUpgrade
-    end
-
-    HelmDeployUpgrade -- "Apply to" --> KubernetesCluster["Kubernetes Cluster"]
-
-    style GitHub fill:#f0f8ff,stroke:#007bff,color:black
-    style CodeChange fill:#e9ecef
-    style MasterBranch fill:#e9ecef
-    style GitHubActions fill:#f0f8ff,stroke:#007bff,color:black
-    style CheckoutCode fill:#e9ecef
-    style InstallDependencies fill:#e9ecef
-    style AuthenticateWithAws fill:#e9ecef
-    style BuildPushImageToEcr fill:#e9ecef
-    style UpdateHelmChartVersion fill:#e9ecef
-    style HelmDeployUpgrade fill:#e9ecef
-    style KubernetesCluster fill:#f0f8ff,stroke:#007bff,color:black
-
-
-
 ```
