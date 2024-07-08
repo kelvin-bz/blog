@@ -2,6 +2,7 @@
 title: "Unlocking the Unconscious: Freud's Psychoanalytic Theory"
 categories: [psychology]
 date: 2024-07-06 16:00:00
+image: "/assets/images/unlocking-the-unconscious-freud-psychoanalytic-theory.png"
 tags: [psychology]
 ---
 

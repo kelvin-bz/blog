@@ -6,6 +6,9 @@ tags: [docker, kubernetes, gitHub workflow ]
 image: "/assets/images/docker-and-github-workflow-to-deploy-to-kubernetes.png"
 ---
 
+This is the workflow I use to build and push Docker images to AWS ECR and deploy to Kubernetes using Helm. The workflow is triggered by a push to the master branch. It checks the services that have changed and calls the appropriate workflow to build and push the Docker images.
+
+
 ## Project Directory Structure
 
 ```bash
