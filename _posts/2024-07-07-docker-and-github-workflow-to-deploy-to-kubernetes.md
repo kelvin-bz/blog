@@ -1,7 +1,7 @@
 ---
 title: Docker and GitHub Workflow to Deploy to Kubernetes
 categories: [tech]
-date: 2024-07-06 08:00:00
+date: 2024-07-07 00:00:00
 tags: [docker, kubernetes, gitHub workflow ]
 image: "/assets/images/docker-and-github-workflow-to-deploy-to-kubernetes.png"
 ---

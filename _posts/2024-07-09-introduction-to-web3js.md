@@ -1,9 +1,9 @@
 ---
 title: Introduction To Web3.js
 categories: [tech]
-date: 2024-07-06 08:00:00
-image: "/assets/images/blockchain-for-dummies.png"
+date: 2024-07-09 00:00:00
 tags: [blockchain]
+image: "/assets/images/introduction-web3js.png"
 ---
 
 
@@ -43,6 +43,58 @@ graph TD
 
 ```
 
+### Code Example
+
+**Initialize the project and install dependencies**
+
+
+```bash
+mkdir introduction-web3js
+cd introduction-web3js
+npm init -y
+npm install web3
+npm install --save-dev typescript @types/node
+```
+
+Create a ``tsconfig.json`` file:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+```
+
+**Create a Web3 instance**
+
+Create a ``src/index.ts`` file:
+
+```typescript
+import Web3 from 'web3';
+
+// Connect to a local Ethereum node (e.g., Ganache)
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+// Check the connection
+web3.eth.net.isListening()
+  .then(() => console.log('Connected to the Ethereum network'))
+  .catch((e: Error) => console.error('Failed to connect to the Ethereum network', e));
+
+```
+Add a script to your ``package.json``:
+
+```json
+"scripts": {
+  "start": "tsc && node dist/index.js"
+}
+```
 ## Connecting to the Ethereum Network
 
 To interact with the Ethereum blockchain, you need to establish a connection using web3.js. This involves creating a web3 instance and selecting a provider that suits your needs.
@@ -75,6 +127,47 @@ graph TD
 
 - **HTTPProvider**: Connects using HTTP, suitable for most basic interactions.
 - **WebsocketProvider**: Connects using WebSocket, which is useful for real-time updates and listening to events.
+
+### Ganache
+
+Ganache (formerly known as TestRPC) is a personal blockchain for Ethereum development that you can use to deploy contracts, develop your applications, and run tests. It simulates the Ethereum network on your local machine, providing you with a safe and controlled environment for testing and experimentation.
+
+```mermaid
+graph TD
+  subgraph Ganache["Ganache (Personal Ethereum Blockchain)"]
+    style Ganache fill:#f9f,stroke:#333,stroke-width:2px
+    GanachePersonalBlockchain["Personal Blockchain\n Isolated from Mainnet\n No Real Gas Costs"]
+    InstantaneousMining["Instantaneous Mining\n Faster Testing"]
+    AccountManagement["Account Management\n Pre-funded Accounts"]
+    DebuggingTools["Debugging Tools\n Block Explorer\n Transaction History"]
+    Forking["Forking\n Mainnet or Testnet Copy\n Real-World Scenarios"]
+    Snapshots["Snapshots\n Revert to Previous States\n Experiment Freely"]
+  end
+
+  subgraph EthereumDevelopment["Ethereum Development"]
+    style EthereumDevelopment fill:#9ff,stroke:#333,stroke-width:2px
+    DeployContracts["Deploy Contracts"]
+    DevelopApplications["Develop Applications"]
+    RunTests["Run Tests"]
+  end
+
+  subgraph GanacheFlavors["Ganache Flavors"]
+    style GanacheFlavors fill:#ff9,stroke:#333,stroke-width:2px
+    GanacheUi["Ganache UI\n Desktop Application\n User-Friendly"]
+    GanacheCli["Ganache CLI\n Command-Line Tool\n Advanced Features"]
+  end
+
+  EthereumDevelopment --> Ganache
+  Ganache --> GanachePersonalBlockchain
+  Ganache --> InstantaneousMining
+  Ganache --> AccountManagement
+  Ganache --> DebuggingTools
+  Ganache --> Forking
+  Ganache --> Snapshots
+  Ganache --> GanacheFlavors
+
+```
+
 
 ## Interacting with Smart Contracts
 
