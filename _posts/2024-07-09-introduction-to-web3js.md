@@ -43,58 +43,6 @@ graph TD
 
 ```
 
-### Code Example
-
-**Initialize the project and install dependencies**
-
-
-```bash
-mkdir introduction-web3js
-cd introduction-web3js
-npm init -y
-npm install web3
-npm install --save-dev typescript @types/node
-```
-
-Create a ``tsconfig.json`` file:
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "dist"
-  },
-  "include": ["src"]
-}
-```
-
-**Create a Web3 instance**
-
-Create a ``src/index.ts`` file:
-
-```typescript
-import Web3 from 'web3';
-
-// Connect to a local Ethereum node (e.g., Ganache)
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
-// Check the connection
-web3.eth.net.isListening()
-  .then(() => console.log('Connected to the Ethereum network'))
-  .catch((e: Error) => console.error('Failed to connect to the Ethereum network', e));
-
-```
-Add a script to your ``package.json``:
-
-```json
-"scripts": {
-  "start": "tsc && node dist/index.js"
-}
-```
 ## Connecting to the Ethereum Network
 
 To interact with the Ethereum blockchain, you need to establish a connection using web3.js. This involves creating a web3 instance and selecting a provider that suits your needs.
@@ -129,6 +77,8 @@ graph TD
 - **WebsocketProvider**: Connects using WebSocket, which is useful for real-time updates and listening to events.
 
 ### Ganache
+
+![kelvin]({{ site.baseurl }}/assets/images/ganache.png)
 
 Ganache (formerly known as TestRPC) is a personal blockchain for Ethereum development that you can use to deploy contracts, develop your applications, and run tests. It simulates the Ethereum network on your local machine, providing you with a safe and controlled environment for testing and experimentation.
 
@@ -166,6 +116,71 @@ graph TD
   Ganache --> Snapshots
   Ganache --> GanacheFlavors
 
+```
+
+### Installing Ganache on macOS
+
+Download Ganache:
+
+- Go to the Ganache website: Visit the official Ganache download page: https://trufflesuite.com/ganache/
+
+
+- Start Ganache by choosing Quickstart Ethereum: Click it to create a new workspace with a default blockchain configuration.
+
+- Ganache Settings:  go to the "Settings" menu and check the "Server" tab.
+Port Number: Ensure the "Port Number" is set to 7545.
+
+### Code Example
+
+**Initialize the project and install dependencies**
+
+
+```bash
+mkdir introduction-web3js
+cd introduction-web3js
+npm init -y
+npm install web3
+npm install --save-dev typescript @types/node
+```
+
+Create a ``tsconfig.json`` file:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+```
+
+**Create a Web3 instance**
+
+Create a ``src/index.ts`` file:
+
+```typescript
+import Web3 from 'web3';
+
+// Connect to a local Ethereum node (e.g., Ganache)
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
+
+// Check the connection
+web3.eth.net.isListening()
+  .then(() => console.log('Connected to the Ethereum network'))
+  .catch((e: Error) => console.error('Failed to connect to the Ethereum network', e));
+
+```
+Add a script to your ``package.json``:
+
+```json
+"scripts": {
+  "start": "tsc && node dist/index.js"
+}
 ```
 
 
@@ -246,3 +261,5 @@ graph TD
 
 - **Subscribing to events**: Setting up listeners for specific events emitted by smart contracts.
 - **Handling events**: Defining what actions to take when an event is triggered.
+
+
