@@ -314,6 +314,53 @@ graph LR
 
 **Smart contract**: A smart contract is a self-executing contract with the terms directly written into code on a blockchain. It automatically enforces and executes the terms of an agreement when predefined conditions are met. This eliminates the need for intermediaries, reducing costs and enhancing security. Smart contracts are commonly used in various applications, including finance, real estate, and supply chain management.
 
+## Dapp (Decentralized Application)
+
+```mermaid
+flowchart TB
+    SmartContract["Smart Contract: MyToken"]
+    Blockchain["Blockchain"]
+    TransactionLog["Transaction Log (Blockchain)"]
+    EventData["Event Data (Blockchain)"]
+    BalancesData["Balances Data (Blockchain)"]
+    dApp["Decentralized Application"]
+    Web3["Web3.js/Ethers.js"]
+
+    SmartContract -->|Deploys to| Blockchain
+    SmartContract -->|Emits Event| TransactionLog
+    SmartContract -->|Reads/Writes| BalancesData
+    Blockchain -->|Stores| TransactionLog
+    Blockchain -->|Stores| EventData
+    Blockchain -->|Stores| BalancesData
+    dApp -->|Interacts with| Web3
+    Web3 -->|Reads Event Data| EventData
+    Web3 -->|Reads/Writes| BalancesData
+    Web3 -->|Listens for Events| TransactionLog
+
+    subgraph BlockchainSection[" "]
+        Blockchain
+        TransactionLog
+        EventData
+        BalancesData
+    end
+
+    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef external fill:#9f9,stroke:#333,stroke-width:2px;
+
+    Blockchain:::blockchain
+    TransactionLog:::blockchain
+    EventData:::blockchain
+    BalancesData:::blockchain
+    dApp:::external
+    Web3:::external
+    SmartContract:::contract
+
+```
+
+Decentralized applications (dApps) are software applications that run on a blockchain or peer-to-peer network of computers instead of a single computer. They are open-source, operate autonomously, and have their data stored immutably on a blockchain. dApps are often used to create financial services, social networks, games, and other applications that don't require a central authority or intermediary.
+Examples of dApps : Uniswap, Compound, Aave, MakerDAO etc.
+
 ## NFT (Non-Fungible Token)
 
 ```mermaid
