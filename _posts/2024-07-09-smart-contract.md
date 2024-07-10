@@ -53,7 +53,7 @@ graph TB
 ```
 **Example of a simple Solidity contract**:
 
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -198,7 +198,7 @@ Solidity is a statically-typed programming language designed for developing smar
 A Solidity file usually starts with a license identifier. This is an optional comment that specifies the license under which the code is distributed.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 ```
 
@@ -207,7 +207,7 @@ A Solidity file usually starts with a license identifier. This is an optional co
 The pragma directive is used to enable certain compiler features or checks. It specifies the version of the Solidity compiler to be used.
 
 **Example:**
-```solidity
+```js
 pragma solidity ^0.8.0;
 ```
 
@@ -216,7 +216,7 @@ pragma solidity ^0.8.0;
 Import statements are used to include code from other files, promoting modularity and code reuse.
 
 **Example:**
-```solidity
+```js
 import "./SafeMath.sol";
 ```
 
@@ -277,7 +277,7 @@ graph TB
 The main body of a Solidity file is the contract definition. This is where you define the smart contract, including its state variables, functions, and events.
 
 **Example:**
-```solidity
+```js
 contract MyContract {
     // State variables
     uint256 public myVariable;
@@ -307,7 +307,7 @@ contract MyContract {
 - Multi-line comments are enclosed in `/* */`.
 
 **Example:**
-```solidity
+```js
 // This is a single-line comment
 /*
 This is a
@@ -319,7 +319,7 @@ multi-line comment
 - Solidity supports various data types, including integers, booleans, addresses, and more.
 
 **Example:**
-```solidity
+```js
 uint256 public myUint;
 bool public myBool;
 address public myAddress;
@@ -329,7 +329,7 @@ address public myAddress;
 - Solidity supports standard control structures like `if`, `else`, `for`, `while`, and `do-while`.
 
 **Example:**
-```solidity
+```js
 function controlExample(uint256 x) public pure returns (bool) {
     if (x > 10) {
         return true;
@@ -375,7 +375,7 @@ Solidity supports various data types that help manage data within smart contract
 - Signed (`int`) and unsigned (`uint`) integers of various sizes (e.g., `uint8`, `uint256`).
 
 **Example:**
-```solidity
+```js
 uint256 public myUint = 1;
 int256 public myInt = -1;
 ```
@@ -384,7 +384,7 @@ int256 public myInt = -1;
 - Represents true or false.
 
 **Example:**
-```solidity
+```js
 bool public myBool = true;
 ```
 
@@ -392,7 +392,7 @@ bool public myBool = true;
 - Holds 20-byte Ethereum addresses.
 
 **Example:**
-```solidity
+```js
 address public myAddress = 0x1234567890123456789012345678901234567890;
 ```
 
@@ -400,7 +400,7 @@ address public myAddress = 0x1234567890123456789012345678901234567890;
 - Fixed-size (`bytes1`, `bytes32`) and dynamic-size (`bytes`, `string`) byte arrays.
 
 **Example:**
-```solidity
+```js
 bytes32 public myBytes = "Hello, World!";
 string public myString = "Hello, Solidity!";
 ```
@@ -410,12 +410,12 @@ string public myString = "Hello, Solidity!";
 Arrays are collections of elements of the same type.
 
 **Static Arrays:**
-```solidity
+```js
 uint256[5] public staticArray;
 ```
 
 **Dynamic Arrays:**
-```solidity
+```js
 uint256[] public dynamicArray;
 ```
 
@@ -423,7 +423,7 @@ uint256[] public dynamicArray;
 - Pushing elements, getting the length, and accessing elements.
 
 **Example:**
-```solidity
+```js
 function arrayOperations() public {
     dynamicArray.push(1);
     uint256 length = dynamicArray.length;
@@ -436,7 +436,7 @@ function arrayOperations() public {
 Mappings are key-value data structures.
 
 **Example:**
-```solidity
+```js
 mapping(address => uint256) public balances;
 
 function updateBalance(address account, uint256 amount) public {
@@ -482,7 +482,7 @@ Solidity supports standard control structures for conditional execution and loop
 #### Conditional Statements
 
 **If-Else Statements:**
-```solidity
+```js
 function checkValue(uint256 value) public pure returns (string memory) {
     if (value > 10) {
         return "Greater than 10";
@@ -495,7 +495,7 @@ function checkValue(uint256 value) public pure returns (string memory) {
 #### Loops
 
 **For Loop:**
-```solidity
+```js
 function sumArray(uint256[] memory array) public pure returns (uint256) {
     uint256 sum = 0;
     for (uint256 i = 0; i < array.length; i++) {
@@ -506,7 +506,7 @@ function sumArray(uint256[] memory array) public pure returns (uint256) {
 ```
 
 **While Loop:**
-```solidity
+```js
 function sumWhileLoop(uint256[] memory array) public pure returns (uint256) {
     uint256 sum = 0;
     uint256 i = 0;
@@ -519,17 +519,474 @@ function sumWhileLoop(uint256[] memory array) public pure returns (uint256) {
 ```
 
 
-This concludes Chapter 2 on Solidity Language Fundamentals, covering Syntax and Structure, Data Types and Variables, and Control Structures. These fundamentals provide the foundation needed to write more complex smart contracts.
+## Writing Your First Smart Contract
 
-## Chapter 3: Writing Your First Smart Contract
-- Basic Contract Structure
-- State Variables and Functions
-- Compiling and Deploying a Contract
 
-## Chapter 4: Working with Functions
-- Function Modifiers
-- Visibility (public, private, internal, external)
-- View and Pure Functions
+
+```bash
+├── build
+│   └── contracts
+│       └── MyFirstContract.json
+├── contracts
+│   └── MyFirstContract.sol
+├── migrations
+│   └── 2_deploy_contracts.js
+├── test
+└── truffle-config.js
+```
+
+### Basic Contract Structure
+
+```mermaid
+graph LR
+    basicStructure["Basic Contract Structure"]
+    licenseIdentifier["License Identifier"]
+    pragmaDirective["Pragma Directive"]
+    contractDefinition["Contract Definition"]
+
+    basicStructure -->|Specifies license| licenseIdentifier
+    basicStructure -->|Specifies compiler version| pragmaDirective
+    basicStructure -->|Defines contract| contractDefinition
+
+    subgraph contractStructure["Basic Contract Structure"]
+        licenseIdentifier
+        pragmaDirective
+        contractDefinition
+    end
+
+    classDef license fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+
+    licenseIdentifier:::license
+    pragmaDirective:::pragma
+    contractDefinition:::contract
+   
+    subgraph basicStructure["Basic Contract Structure"]
+        licenseIdentifier["License Identifier"]
+        pragmaDirective["Pragma Directive"]
+        contractDefinition["Contract Definition"]
+        licenseIdentifier:::license
+        pragmaDirective:::pragma
+    end
+
+    subgraph contractFunctions["State Variables and Functions"]
+        stateVariables["State Variables"]:::state
+        constructorFunction["Constructor Function"]:::constructor
+        setNumberFunction["Function: setNumber"]:::function
+        getNumberFunction["Function: getNumber"]:::function
+        setStringFunction["Function: setString"]:::function
+        getStringFunction["Function: getString"]:::function
+
+        stateVariables
+        constructorFunction
+        setNumberFunction
+        getNumberFunction
+        setStringFunction
+        getStringFunction
+
+        contractDefinition:::contract
+
+        contractDefinition -->|Declares variables| stateVariables
+        contractDefinition -->|Initializes state| constructorFunction
+        contractDefinition -->|Sets number| setNumberFunction
+        contractDefinition -->|Gets number| getNumberFunction
+        contractDefinition -->|Sets string| setStringFunction
+        contractDefinition -->|Gets string| getStringFunction
+    end
+
+    classDef license fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
+    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
+
+    licenseIdentifier:::license
+    pragmaDirective:::pragma
+    contractDefinition:::contract
+    stateVariables:::state
+    constructorFunction:::constructor
+    setNumberFunction:::function
+    getNumberFunction:::function
+    setStringFunction:::function
+    getStringFunction:::function
+
+```
+
+### Steps to Create Smart Contract
+
+1. **Install Node.js and npm**
+
+   If you haven't already, download and install Node.js from [nodejs.org](https://nodejs.org/). This will also install npm (Node Package Manager).
+
+   Verify the installation:
+   ```bash
+   node -v
+   npm -v
+   ```
+
+2. **Install Truffle**
+
+   Install Truffle globally using npm:
+   ```bash
+   npm install -g truffle
+   ```
+
+   Verify the installation:
+   ```bash
+   truffle version
+   ```
+
+3. **Install Ganache CLI**
+
+   Install Ganache CLI globally using npm:
+   ```bash
+   npm install -g ganache-cli
+   ```
+
+   Start Ganache CLI to simulate an Ethereum blockchain locally:
+   ```bash
+   ganache-cli -p 7545
+   ```
+
+4. **Initialize a New Truffle Project**
+
+   Create a new directory for your project and navigate into it:
+   ```bash
+   mkdir my-solidity-project
+   cd my-solidity-project
+   ```
+
+   Initialize a new Truffle project:
+   ```bash
+   truffle init
+   ```
+
+5. **Create the Solidity Contract**
+
+   Navigate to the `contracts` directory and create a new file called `MyFirstContract.sol`:
+   ```bash
+   cd contracts
+   touch MyFirstContract.sol
+   ```
+
+   Open `MyFirstContract.sol` in a text editor and add the following code:
+   ```solidity
+   // SPDX-License-Identifier: MIT
+   pragma solidity ^0.8.0;
+
+   contract MyFirstContract {
+       uint256 public myNumber;
+       string public myString;
+
+       constructor(uint256 _initialNumber, string memory _initialString) {
+           myNumber = _initialNumber;
+           myString = _initialString;
+       }
+
+       function setNumber(uint256 _newNumber) public {
+           myNumber = _newNumber;
+       }
+
+       function getNumber() public view returns (uint256) {
+           return myNumber;
+       }
+
+       function setString(string memory _newString) public {
+           myString = _newString;
+       }
+
+       function getString() public view returns (string memory) {
+           return myString;
+       }
+
+       event ValueChanged(uint256 newValue);
+   }
+   ```
+
+6. **Create the Migration Script**
+
+   Navigate to the `migrations` directory and create a new file called `2_deploy_contracts.js`:
+   ```bash
+   cd ../migrations
+   touch 2_deploy_contracts.js
+   ```
+
+   Open `2_deploy_contracts.js` in a text editor and add the following code:
+   ```javascript
+   const MyFirstContract = artifacts.require("MyFirstContract");
+
+   module.exports = function (deployer) {
+       deployer.deploy(MyFirstContract, 42, "Hello, World!");
+   };
+   ```
+
+7. **Configure Truffle**
+
+   Open the `truffle-config.js` file in a text editor and configure it to use port 7545:
+   ```javascript
+   module.exports = {
+     networks: {
+       development: {
+         host: "127.0.0.1",
+         port: 7545,
+         network_id: "*" // Match any network id
+       },
+     },
+     compilers: {
+       solc: {
+         version: "0.8.0", // Fetch exact version from solc-bin
+       }
+     }
+   };
+   ```
+
+8. **Compile the Contract**
+
+   Navigate back to the root directory of your project and compile the contract:
+   ```bash
+   cd ..
+   truffle compile
+   ```
+
+9. **Deploy the Contract**
+
+   Ensure Ganache CLI is running, then deploy the contract:
+   ```bash
+   truffle migrate
+   ```
+
+10. **Interact with the Contract**
+
+    You can interact with your deployed contract using the Truffle console:
+    ```bash
+    truffle console
+    ```
+
+    In the console, you can retrieve and interact with the contract instance:
+    ```javascript
+    let instance = await MyFirstContract.deployed();
+    let number = await instance.getNumber();
+    console.log(number.toString());
+    await instance.setNumber(100);
+    number = await instance.getNumber();
+    console.log(number.toString());
+    ```
+
+By following these steps, you will have created, compiled, and deployed your first Solidity smart contract using Truffle and Ganache CLI.
+
+
+## Working with Functions
+
+Functions are essential in Solidity as they define the logic and behavior of your smart contracts. This chapter will cover function modifiers, visibility specifiers, and the concepts of view and pure functions.
+
+### Function Modifiers
+
+```mermaid
+graph TB
+    functionModifiers["Function Modifiers"]
+    ownerVar["State Variable: owner"]
+    constructorFunc["Constructor Function"]
+    onlyOwnerModifier["Modifier: onlyOwner"]
+    changeOwnerFunc["Function: changeOwner"]
+
+    functionModifiers -->|Defines| ownerVar
+    functionModifiers -->|Initializes| constructorFunc
+    functionModifiers -->|Checks ownership| onlyOwnerModifier
+    functionModifiers -->|Uses modifier| changeOwnerFunc
+
+    subgraph modifierStructure["Function Modifiers"]
+        ownerVar
+        constructorFunc
+        onlyOwnerModifier
+        changeOwnerFunc
+    end
+
+    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
+    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
+    classDef modifier fill:#ccffcc,stroke:#333,stroke-width:2px;
+
+    ownerVar:::state
+    constructorFunc:::function
+    onlyOwnerModifier:::modifier
+    changeOwnerFunc:::function
+```
+
+Function modifiers are used to change the behavior of functions in a declarative way. They can be used to add preconditions, postconditions, or to enforce access control.
+
+**Example:**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract FunctionModifiers {
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Caller is not the owner");
+        _;
+    }
+
+    function changeOwner(address newOwner) public onlyOwner {
+        owner = newOwner;
+    }
+}
+```
+
+**Explanation:**
+- **Modifier Definition:** The `onlyOwner` modifier checks if the caller is the owner.
+- **Modifier Usage:** The `changeOwner` function uses the `onlyOwner` modifier to ensure only the owner can call it.
+
+
+
+
+### Visibility (public, private, internal, external)
+
+```mermaid
+graph LR
+    visibilitySpecifiers["Visibility Specifiers"]
+    publicVar["Public State Variable: publicVar"]
+    privateVar["Private State Variable: privateVar"]
+    internalVar["Internal State Variable: internalVar"]
+    externalFunc["External Function: externalFunc"]
+    publicFunc["Public Function: publicFunc"]
+    privateFunc["Private Function: privateFunc"]
+    internalFunc["Internal Function: internalFunc"]
+
+    visibilitySpecifiers -->|Defines| publicVar
+    visibilitySpecifiers -->|Defines| privateVar
+    visibilitySpecifiers -->|Defines| internalVar
+    visibilitySpecifiers -->|External access| externalFunc
+    visibilitySpecifiers -->|Public access| publicFunc
+    visibilitySpecifiers -->|Private access| privateFunc
+    visibilitySpecifiers -->|Internal access| internalFunc
+
+    subgraph visibilityStructure["Visibility Specifiers"]
+        publicVar
+        privateVar
+        internalVar
+        externalFunc
+        publicFunc
+        privateFunc
+        internalFunc
+    end
+
+    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
+    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
+
+    publicVar:::state
+    privateVar:::state
+    internalVar:::state
+    externalFunc:::function
+    publicFunc:::function
+    privateFunc:::function
+    internalFunc:::function
+```
+
+Visibility specifiers define the accessibility of functions and state variables. Solidity supports four types of visibility: `public`, `private`, `internal`, and `external`.
+
+**Example:**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Visibility {
+    // Public state variable
+    uint256 public publicVar = 1;
+
+    // Private state variable
+    uint256 private privateVar = 2;
+
+    // Internal state variable
+    uint256 internal internalVar = 3;
+
+    // External function
+    function externalFunc() external view returns (uint256) {
+        return publicVar + privateVar + internalVar;
+    }
+
+    // Public function
+    function publicFunc() public view returns (uint256) {
+        return privateVar;
+    }
+
+    // Private function
+    function privateFunc() private view returns (uint256) {
+        return internalVar;
+    }
+
+    // Internal function
+    function internalFunc() internal view returns (uint256) {
+        return publicVar;
+    }
+}
+```
+
+**Explanation:**
+- **Public:** Accessible from anywhere, including external calls.
+- **Private:** Accessible only within the contract.
+- **Internal:** Accessible within the contract and derived contracts.
+- **External:** Accessible only from external calls, not from within the contract itself.
+
+
+
+### View and Pure Functions
+
+```mermaid
+graph TB
+    viewPureFunctions["View and Pure Functions"]
+    myNumberVar["State Variable: myNumber"]
+    getNumberFunc["View Function: getNumber"]
+    addFunc["Pure Function: add"]
+
+    viewPureFunctions -->|Defines| myNumberVar
+    viewPureFunctions -->|Reads state| getNumberFunc
+    viewPureFunctions -->|No state access| addFunc
+
+    subgraph viewPureStructure["View and Pure Functions"]
+        myNumberVar
+        getNumberFunc
+        addFunc
+    end
+
+    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
+    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
+
+    myNumberVar:::state
+    getNumberFunc:::function
+    addFunc:::function
+```
+
+View and pure functions are used to access data without modifying the state. View functions can read state variables, while pure functions cannot even read state variables.
+
+**Example:**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ViewAndPureFunctions {
+    uint256 public myNumber = 42;
+
+    // View function
+    function getNumber() public view returns (uint256) {
+        return myNumber;
+    }
+
+    // Pure function
+    function add(uint256 a, uint256 b) public pure returns (uint256) {
+        return a + b;
+    }
+}
+```
+
+**Explanation:**
+- **View Function:** `getNumber` reads the state variable `myNumber`.
+- **Pure Function:** `add` does not read or modify any state variables.
+
 
 ## Chapter 5: Events and Logging
 - Declaring Events
