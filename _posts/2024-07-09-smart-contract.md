@@ -1013,7 +1013,7 @@ Events in Solidity are a way to communicate that something has happened on the b
 Events are declared within the contract. They define the structure of the log entry that will be recorded when the event is emitted.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1060,7 +1060,7 @@ graph TB
 To log an event, you need to emit it within a function. This records the event on the blockchain and makes it accessible for external listeners.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1129,7 +1129,7 @@ graph LR
 Events can be used for debugging by providing a way to track the flow of execution and state changes within your contract. They are particularly useful because they do not cost gas once stored in the log.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1250,7 +1250,7 @@ Here's an example of how you might listen for events using web3.js:
 To send and receive Ether in Solidity, you need to use payable functions and the appropriate transfer methods.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1320,7 +1320,7 @@ graph TB
 Payable functions in Solidity are functions that can receive Ether along with the call. They are denoted by the `payable` keyword.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1390,7 +1390,7 @@ graph TB
 Fallback functions are special functions that are executed when a contract receives Ether and no other function matches the call data. They can be used to handle plain Ether transfers and interact with contracts that do not explicitly call a function.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1458,7 +1458,7 @@ graph TB
 Mappings are key-value data structures that provide efficient data storage and retrieval. In Solidity, mappings are declared using the `mapping` keyword.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1517,7 +1517,7 @@ graph TB
 Arrays are ordered collections of elements. Solidity supports both fixed-size and dynamic-size arrays.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1587,7 +1587,7 @@ graph TB
 Structs are custom data types that allow you to group related variables. Nested data structures combine mappings, arrays, and structs for complex data management.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1660,7 +1660,7 @@ graph TB
 Ownership is a common pattern used to restrict access to certain functions to the contract's owner. This is typically done using an `owner` state variable and functions to transfer ownership.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1743,7 +1743,7 @@ graph LR
 Modifiers are used to add reusable code to functions, often for access control purposes. They help ensure that only authorized users can execute specific functions.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1822,7 +1822,7 @@ Smart contracts are prone to various security vulnerabilities. Understanding and
 - **Solution:** Use the "checks-effects-interactions" pattern and `ReentrancyGuard`.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1849,7 +1849,7 @@ contract ReentrancyExample {
 - **Solution:** Use SafeMath library or built-in overflow checks.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1902,7 +1902,7 @@ This chapter covered the essentials of access control and security in Solidity:
 
 These concepts are crucial for building secure and robust smart contracts.
 
-## Chapter 9: Inheritance and Interfaces
+## Inheritance and Interfaces
 
 Inheritance and interfaces in Solidity allow you to write modular and reusable code. Inheritance lets you create new contracts based on existing ones, while interfaces define a contract’s external behavior without implementing it. This chapter covers inheriting from other contracts, overriding functions, and implementing interfaces.
 
@@ -1930,7 +1930,7 @@ graph TB
 Inheritance allows one contract to inherit properties and methods from another contract. This promotes code reuse and modularity.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1994,7 +1994,7 @@ graph TB
 Overriding allows derived contracts to provide specific implementations for functions defined in their parent contracts.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -2043,7 +2043,7 @@ graph TB
 Interfaces define a contract's external behavior without implementing it. Any contract that implements an interface must provide implementations for all its functions.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -2082,7 +2082,7 @@ This chapter covered the essentials of inheritance and interfaces in Solidity:
 
 These concepts enable you to write modular, reusable, and maintainable smart contracts.
 
-## Chapter 10: Advanced Topics and Best Practices
+## Advanced Topics and Best Practices
 
 ```mermaid
 graph TB
@@ -2123,7 +2123,7 @@ Gas optimization is crucial for reducing the cost of executing smart contracts. 
 1. **Minimize Storage Operations:**
    - Reading from and writing to storage is expensive. Minimize these operations by using memory and calldata when possible.
    - Example:
-     ```solidity
+     ```js
      // Using memory instead of storage for temporary variables
      function compute(uint256[] memory data) public view returns (uint256) {
          uint256 sum = 0;
@@ -2137,14 +2137,14 @@ Gas optimization is crucial for reducing the cost of executing smart contracts. 
 2. **Use Fixed-Size Data Types:**
    - Use smaller, fixed-size data types (e.g., `uint8`, `uint16`) to save gas.
    - Example:
-     ```solidity
+     ```js
      uint8 public smallNumber; // Cheaper than uint256
      ```
 
 3. **Optimize Function Visibility:**
    - Functions with external visibility are cheaper to call from other contracts.
    - Example:
-     ```solidity
+     ```js
      function externalFunction() external {
          // Cheaper than public function
      }
@@ -2153,7 +2153,7 @@ Gas optimization is crucial for reducing the cost of executing smart contracts. 
 4. **Avoid Unnecessary Computations:**
    - Perform complex calculations off-chain whenever possible and pass the results to the contract.
    - Example:
-     ```solidity
+     ```js
      function storeResult(uint256 result) external {
          // Store precomputed result
      }
@@ -2189,7 +2189,7 @@ Proper error handling is essential for ensuring the robustness of smart contract
 1. **Require Statement:**
    - Use `require` to check conditions and revert if the condition is not met. It refunds remaining gas and reverts changes.
    - Example:
-     ```solidity
+     ```js
      function withdraw(uint256 amount) public {
          require(amount <= balances[msg.sender], "Insufficient balance");
          balances[msg.sender] -= amount;
@@ -2200,7 +2200,7 @@ Proper error handling is essential for ensuring the robustness of smart contract
 2. **Revert Statement:**
    - Use `revert` for custom error handling with a message. It stops execution and reverts state changes.
    - Example:
-     ```solidity
+     ```js
      function transfer(address to, uint256 amount) public {
          if (amount > balances[msg.sender]) {
              revert("Insufficient balance");
@@ -2213,7 +2213,7 @@ Proper error handling is essential for ensuring the robustness of smart contract
 3. **Assert Statement:**
    - Use `assert` for internal errors and invariants. It should not be used for input validation.
    - Example:
-     ```solidity
+     ```js
      function setOwner(address newOwner) public {
          assert(newOwner != address(0));
          owner = newOwner;
@@ -2257,7 +2257,7 @@ Security is paramount in smart contract development. Adopting best practices hel
 1. **Use SafeMath:**
    - Prevent integer overflows and underflows by using the SafeMath library.
    - Example:
-     ```solidity
+     ```js
      using SafeMath for uint256;
      uint256 public totalSupply;
 
@@ -2269,7 +2269,7 @@ Security is paramount in smart contract development. Adopting best practices hel
 2. **Implement Access Control:**
    - Restrict access to sensitive functions using modifiers like `onlyOwner`.
    - Example:
-     ```solidity
+     ```js
      modifier onlyOwner() {
          require(msg.sender == owner, "Caller is not the owner");
          _;
@@ -2283,7 +2283,7 @@ Security is paramount in smart contract development. Adopting best practices hel
 3. **Avoid Reentrancy:**
    - Use the "checks-effects-interactions" pattern to prevent reentrancy attacks.
    - Example:
-     ```solidity
+     ```js
      function withdraw(uint256 amount) public {
          require(amount <= balances[msg.sender], "Insufficient balance");
          balances[msg.sender] -= amount;
@@ -2295,7 +2295,7 @@ Security is paramount in smart contract development. Adopting best practices hel
 4. **Use Known Patterns and Libraries:**
    - Leverage audited libraries and patterns from reputable sources like OpenZeppelin.
    - Example:
-     ```solidity
+     ```js
      import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
      contract MyToken is ERC20 {
