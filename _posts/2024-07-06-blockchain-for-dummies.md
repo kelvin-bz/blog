@@ -53,7 +53,8 @@ graph LR
     BlockHeader --> Nonce["Nonce"]
 ```
 
-- **Transaction**: A digital record of value transfer between two parties (sender and recipient) with a specific amount. It's signed with the sender's private key and verified by the network using their public key.
+- **Transaction**: A digital record of value transfer between two parties (sender and recipient) with a specific amount. It's signed with the sender's private key and verified by the network using their public key. [ethereum's doc](https://ethereum.org/en/developers/docs/transactions/)
+
 
 - **Block**: A collection of verified transactions grouped together, along with a header containing metadata (e.g., timestamp, previous block's hash).
 
@@ -173,6 +174,39 @@ graph LR
 ```
 
 **POS (proof of stake)**: stake ETH to become validators. Validators are randomly selected to propose new blocks, with others attesting to their validity. Correct validators earn rewards, while incorrect ones are penalized. This replaces mining, making Ethereum more scalable and eco-friendly.
+
+## Gas Fees
+Gas in the Ethereum network is a unit that measures the computational work required to execute transactions or smart contracts. Each operation on the Ethereum Virtual Machine (EVM) requires a certain amount of gas, which must be paid for in Ether (ETH). Gas ensures that transactions and contract executions are fairly priced according to their resource consumption. Users specify a gas limit and a gas price for their transactions; if the gas limit is exceeded, the transaction fails but the gas used is still deducted. This mechanism prevents network abuse and incentivizes efficient code execution. 
+
+```mermaid
+graph TD
+    subgraph UserA["Bob's Account"]
+        style UserA fill:#9f9,stroke:#333,stroke-width:2px
+        BalanceA["1.0042 ETH"]
+    end
+
+        style Blockchain fill:#ff9,stroke:#333,stroke-width:2px
+        Miner["Miner/Validator"]
+    
+    subgraph UserB["Alice's Account"]
+        style UserB fill:#9f9,stroke:#333,stroke-width:2px
+        BalanceB["0 ETH"]
+    end
+
+    UserA --"Sends 1 ETH + 0.0042 ETH Fee"--> Blockchain
+    Blockchain --"Transfers 1 ETH"--> UserB
+    Blockchain --"Pays 0.00021 ETH Tip"--> Miner
+    Blockchain --"Burns 0.00399 ETH"--> LostETH["0.00399 ETH"]
+
+```
+
+- Transaction Cost: Sending ETH has a base cost of 21,000 units of gas.
+- Gas Price: Bob sets a gas price of 200 gwei (190 gwei base fee + 10 gwei tip).
+- Total Fee: The total fee Bob pays is 21,000 gas * 200 gwei/gas = 4,200,000 gwei (or 0.0042 ETH).
+- Bob's account is debited 1.0042 ETH (1 ETH for Alice + 0.0042 ETH fee).
+- Alice's account is credited 1 ETH.
+0.00399 ETH is burned (removed from circulation).
+- The miner receives 0.00021 ETH as a tip.
 
 ## Stablecoins
 
