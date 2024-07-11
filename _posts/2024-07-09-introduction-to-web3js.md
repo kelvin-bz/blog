@@ -1,7 +1,7 @@
 ---
 title: Introduction To Web3.js
 categories: [tech]
-date: 2024-07-09 00:00:00
+date: 2025-07-09 00:00:00
 tags: [blockchain]
 image: "/assets/images/introduction-web3js.png"
 ---
