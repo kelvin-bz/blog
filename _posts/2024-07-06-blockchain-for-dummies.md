@@ -104,6 +104,67 @@ graph LR
 - **Node**: Nodes maintain copies of the blockchain, validate transactions, and relay information across the network.
 
 - **Wallet**:  Wallets store users' private keys (used for signing transactions) and public keys (used for receiving transactions), allowing them to interact with the blockchain.
+##  Immutability and Consensus
+
+```mermaid
+graph TD
+        block1["Block 1"]
+        block2["Block 2"]
+        block3["Block 3"]:::invalid
+        block4["Block 4"]:::invalid
+        block5["Block 5"]:::invalid
+
+        block1 -->|Hash Link| block2
+        block2 -->|Hash Link| block3
+        block3 -->|Hash Link| block4
+        block4 -->|Hash Link| block5
+    
+    block2 -- "Data Change" --> invalidBlock2["Invalid Block 2"]
+    invalidBlock2 -.-> |"Invalidates"| block3
+    invalidBlock2 -.-> |"Invalidates"| block4
+    invalidBlock2 -.-> |"Invalidates"| block5
+    classDef invalid fill:#f96
+
+```
+
+**Immutability**:This means that once a block of data is added to the blockchain, it is extremely difficult to alter or remove. This immutability is crucial for maintaining trust and security in the network. Each block in a blockchain contains a unique cryptographic hash that is calculated based on the block's contents and the hash of the previous block. If you change any data within a block, its hash changes, invalidating all subsequent blocks in the chain.
+
+```mermaid
+graph LR
+    subgraph Blockchain["Blockchain"]
+        style Blockchain fill:#ff9,stroke:#333,stroke-width:2px
+        Block1["Block 1"]
+        Block2["Block 2"]
+        Block3["Block 3"]
+
+        Block1 --> |"Hash Link"| Block2
+        Block2 --> |"Hash Link"| Block3
+    end
+
+    Block2 -- "Attempted Data Change" -->  Disagreement["Disagreement with\nNetwork Consensus"]
+
+```
+
+**Consensus**: Changes to the blockchain require the agreement (consensus) of the majority of the network's nodes. To modify a historical block, you'd need to convince the majority of nodes to rewrite the entire chain from that point onwards, which is computationally infeasible and extremely unlikely.
+
+
+
+## P2P (Peer-to-Peer) Network
+
+A peer-to-peer (P2P) network is a type of network architecture where all participants (devices or computers) have equal status and capabilities.  Unlike traditional client-server models, there's no central authority governing the network. Instead, each participant, known as a node, directly communicates and shares resources with other nodes.
+
+```mermaid
+graph TD
+    subgraph P2PBlockchainNetwork["Peer-to-Peer Blockchain Network"]
+        A[Node 1]
+        B[Node 2]
+        C[Node 3]
+        A <--"Share Ledger Data & Validate Transactions"--> B
+        A <--> C
+        B <--> C
+    end
+```
+
 
 ## Hashrate
 
