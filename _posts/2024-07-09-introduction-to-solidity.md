@@ -835,214 +835,179 @@ By following these steps, you will have created, compiled, and deployed your fir
 
 ## Working with Functions
 
-Functions are essential in Solidity as they define the logic and behavior of your smart contracts. This chapter will cover function modifiers, visibility specifiers, and the concepts of view and pure functions.
-
-### Function Modifiers
-
 ```mermaid
-graph TB
-    functionModifiers["Function Modifiers"]
-    ownerVar["State Variable: owner"]
-    constructorFunc["Constructor Function"]
-    onlyOwnerModifier["Modifier: onlyOwner"]
-    changeOwnerFunc["Function: changeOwner"]
+graph TD
+    functionExample["function getMessage() public view returns (string) {\n    return message;\n}"]
+    functionDefinition["Function Definition\n(Name, Parameters, Body)"]:::fdColor
+    visibilitySpecifiers["Visibility Specifiers\n(public, external, internal, private)"]:::vsColor
+    stateMutability["State Mutability\n(pure, view, payable)"]:::smColor
+    functionModifiers["Function Modifiers\n(Access control, Validation)"]:::fmColor
+    returnValues["Return Values\n(Return type)"]:::rvColor
 
-    functionModifiers -->|Defines| ownerVar
-    functionModifiers -->|Initializes| constructorFunc
-    functionModifiers -->|Checks ownership| onlyOwnerModifier
-    functionModifiers -->|Uses modifier| changeOwnerFunc
+    functionExample --> functionDefinition
+    functionExample --> visibilitySpecifiers
+    functionExample --> stateMutability
+    functionExample --> functionModifiers
+    functionExample --> returnValues
 
-    subgraph modifierStructure["Function Modifiers"]
-        ownerVar
-        constructorFunc
-        onlyOwnerModifier
-        changeOwnerFunc
+    subgraph functionStructure["Function Structure"]
+        functionDefinition
+        visibilitySpecifiers
+        stateMutability
+        functionModifiers
+        returnValues
     end
 
-    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
-    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
-    classDef modifier fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef fdColor fill:#ff9999,stroke:#333,stroke-width:2px;
+    classDef vsColor fill:#99ccff,stroke:#333,stroke-width:2px;
+    classDef smColor fill:#99ff99,stroke:#333,stroke-width:2px;
+    classDef fmColor fill:#ffcc99,stroke:#333,stroke-width:2px;
+    classDef rvColor fill:#cc99ff,stroke:#333,stroke-width:2px;
 
-    ownerVar:::state
-    constructorFunc:::function
-    onlyOwnerModifier:::modifier
-    changeOwnerFunc:::function
 ```
 
-Function modifiers are used to change the behavior of functions in a declarative way. They can be used to add preconditions, postconditions, or to enforce access control.
+Functions in Solidity are blocks of code designed to perform specific tasks. They are fundamental building blocks of smart contracts, allowing developers to execute predefined instructions on the Ethereum blockchain. Let's break down the basics of functions in Solidity.
+
+
+### Function Definition 
+
+A function in Solidity is defined using the `function` keyword, followed by the function name, parameters, visibility specifier, and the function body.
+
+**Syntax:**
+```solidity
+function functionName(parameters) visibility returns (returnType) {
+    // function body
+}
+```
+
+### Function Visibility
+
+Visibility specifiers determine who can call the function. There are four types of visibility specifiers:
+
+- `public`: The function can be called from within the contract, derived contracts, and externally.
+- `external`: The function can only be called from outside the contract.
+- `internal`: The function can only be called from within the contract and derived contracts.
+- `private`: The function can only be called from within the contract.
 
 **Example:**
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract FunctionModifiers {
+contract VisibilityExample {
+    // Public function
+    function publicFunction() public view returns (string memory) {
+        return "Public function";
+    }
+
+    // External function
+    function externalFunction() external view returns (string memory) {
+        return "External function";
+    }
+
+    // Internal function
+    function internalFunction() internal view returns (string memory) {
+        return "Internal function";
+    }
+
+    // Private function
+    function privateFunction() private view returns (string memory) {
+        return "Private function";
+    }
+}
+```
+
+### State Mutability
+
+Functions can also have state mutability specifiers to indicate whether they modify the blockchain state:
+
+- `pure`: The function does not read or modify the state.
+- `view`: The function reads the state but does not modify it.
+- `payable`: The function can accept Ether while being called.
+
+**Example:**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StateMutabilityExample {
+    uint256 public value;
+
+    // Pure function
+    function multiply(uint256 a, uint256 b) public pure returns (uint256) {
+        return a * b;
+    }
+
+    // View function
+    function getValue() public view returns (uint256) {
+        return value;
+    }
+
+    // Payable function
+    function setValue(uint256 newValue) public payable {
+        require(msg.value > 0, "Must send some Ether");
+        value = newValue;
+    }
+}
+```
+
+### Function Modifiers 
+
+Function modifiers are used to change the behavior of functions. They can be used for access control, validation, and more.
+
+**Example:**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ModifierExample {
     address public owner;
 
     constructor() {
         owner = msg.sender;
     }
 
+    // Modifier to check if the caller is the owner
     modifier onlyOwner() {
-        require(msg.sender == owner, "Caller is not the owner");
+        require(msg.sender == owner, "Not the contract owner");
         _;
     }
 
-    function changeOwner(address newOwner) public onlyOwner {
-        owner = newOwner;
+    // Function using the onlyOwner modifier
+    function setValue(uint256 newValue) public onlyOwner {
+        value = newValue;
     }
 }
 ```
 
-**Explanation:**
-- **Modifier Definition:** The `onlyOwner` modifier checks if the caller is the owner.
-- **Modifier Usage:** The `changeOwner` function uses the `onlyOwner` modifier to ensure only the owner can call it.
+### Return Values
 
-
-
-
-### Visibility (public, private, internal, external)
-
-```mermaid
-graph LR
-    visibilitySpecifiers["Visibility Specifiers"]
-    publicVar["Public State Variable: publicVar"]
-    privateVar["Private State Variable: privateVar"]
-    internalVar["Internal State Variable: internalVar"]
-    externalFunc["External Function: externalFunc"]
-    publicFunc["Public Function: publicFunc"]
-    privateFunc["Private Function: privateFunc"]
-    internalFunc["Internal Function: internalFunc"]
-
-    visibilitySpecifiers -->|Defines| publicVar
-    visibilitySpecifiers -->|Defines| privateVar
-    visibilitySpecifiers -->|Defines| internalVar
-    visibilitySpecifiers -->|External access| externalFunc
-    visibilitySpecifiers -->|Public access| publicFunc
-    visibilitySpecifiers -->|Private access| privateFunc
-    visibilitySpecifiers -->|Internal access| internalFunc
-
-    subgraph visibilityStructure["Visibility Specifiers"]
-        publicVar
-        privateVar
-        internalVar
-        externalFunc
-        publicFunc
-        privateFunc
-        internalFunc
-    end
-
-    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
-    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
-
-    publicVar:::state
-    privateVar:::state
-    internalVar:::state
-    externalFunc:::function
-    publicFunc:::function
-    privateFunc:::function
-    internalFunc:::function
-```
-
-Visibility specifiers define the accessibility of functions and state variables. Solidity supports four types of visibility: `public`, `private`, `internal`, and `external`.
+Functions can return values. The return type is specified after the visibility specifier and before the function body.
 
 **Example:**
-```js
+```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Visibility {
-    // Public state variable
-    uint256 public publicVar = 1;
-
-    // Private state variable
-    uint256 private privateVar = 2;
-
-    // Internal state variable
-    uint256 internal internalVar = 3;
-
-    // External function
-    function externalFunc() external view returns (uint256) {
-        return publicVar + privateVar + internalVar;
-    }
-
-    // Public function
-    function publicFunc() public view returns (uint256) {
-        return privateVar;
-    }
-
-    // Private function
-    function privateFunc() private view returns (uint256) {
-        return internalVar;
-    }
-
-    // Internal function
-    function internalFunc() internal view returns (uint256) {
-        return publicVar;
-    }
-}
-```
-
-**Explanation:**
-- **Public:** Accessible from anywhere, including external calls.
-- **Private:** Accessible only within the contract.
-- **Internal:** Accessible within the contract and derived contracts.
-- **External:** Accessible only from external calls, not from within the contract itself.
-
-
-
-### View and Pure Functions
-
-```mermaid
-graph TB
-    viewPureFunctions["View and Pure Functions"]
-    myNumberVar["State Variable: myNumber"]
-    getNumberFunc["View Function: getNumber"]
-    addFunc["Pure Function: add"]
-
-    viewPureFunctions -->|Defines| myNumberVar
-    viewPureFunctions -->|Reads state| getNumberFunc
-    viewPureFunctions -->|No state access| addFunc
-
-    subgraph viewPureStructure["View and Pure Functions"]
-        myNumberVar
-        getNumberFunc
-        addFunc
-    end
-
-    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
-    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
-
-    myNumberVar:::state
-    getNumberFunc:::function
-    addFunc:::function
-```
-
-View and pure functions are used to access data without modifying the state. View functions can read state variables, while pure functions cannot even read state variables.
-
-**Example:**
-```js
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract ViewAndPureFunctions {
-    uint256 public myNumber = 42;
-
-    // View function
-    function getNumber() public view returns (uint256) {
-        return myNumber;
-    }
-
-    // Pure function
+contract ReturnValueExample {
     function add(uint256 a, uint256 b) public pure returns (uint256) {
         return a + b;
     }
+
+    function getMessage() public pure returns (string memory) {
+        return "Hello, Solidity!";
+    }
 }
 ```
 
-**Explanation:**
-- **View Function:** `getNumber` reads the state variable `myNumber`.
-- **Pure Function:** `add` does not read or modify any state variables.
+### Summary
+
+- **Function Definition:** Defines the function's name, parameters, and body.
+- **Visibility Specifiers:** Determine who can call the function (`public`, `external`, `internal`, `private`).
+- **State Mutability:** Specifies whether the function modifies the state (`pure`, `view`, `payable`).
+- **Function Modifiers:** Allow altering function behavior for access control and validation.
+- **Return Values:** Functions can return values by specifying the return type.
+
 
 ## Application Binary Interface (ABI)
 ```mermaid
