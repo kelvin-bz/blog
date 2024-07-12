@@ -1,7 +1,7 @@
 ---
 title: Smart Contracts
 categories: [tech]
-date: 2025-07-09 00:00:00
+date: 2024-07-09 00:00:00
 tags: [blockchain]
 image: "/assets/images/smart-contracts/smart-contracts.png"
 ---
@@ -10,15 +10,16 @@ image: "/assets/images/smart-contracts/smart-contracts.png"
 ## Introduction to Solidity
 
 **Explanation:**
-Solidity is a high-level programming language designed for writing smart contracts on the Ethereum blockchain. It is influenced by C++, Python, and JavaScript. 
+Solidity is a high-level programming language designed for writing smart contracts on the Ethereum blockchain.
 
 
 ```mermaid
-graph TB
+graph LR
     classDef license fill:#f9f,stroke:#333,stroke-width:2px;
     classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
     classDef import fill:#9f9,stroke:#333,stroke-width:2px;
     classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef interface fill:#fcf,stroke:#333,stroke-width:2px;
     classDef state fill:#f99,stroke:#333,stroke-width:2px;
     classDef function fill:#9ff,stroke:#333,stroke-width:2px;
     classDef event fill:#fc9,stroke:#333,stroke-width:2px;
@@ -27,6 +28,7 @@ graph TB
     licenseIdentifier["License Identifier"]:::license
     pragmaDirective["Pragma Directive"]:::pragma
     importStatements["Import Statements"]:::import
+    interfaceDefinition["Interface Definition"]:::interface
     contractDefinition["Contract Definition"]:::contract
     stateVariables["State Variables"]:::state
     functions["Functions"]:::function
@@ -35,6 +37,7 @@ graph TB
     solidityFile -->|Specifies license type| licenseIdentifier
     solidityFile -->|Specifies compiler version| pragmaDirective
     solidityFile -->|Includes external files| importStatements
+    solidityFile -->|Defines interface| interfaceDefinition
     solidityFile -->|Defines contract| contractDefinition
     contractDefinition -->|Declares variables| stateVariables
     contractDefinition -->|Implements logic| functions
@@ -44,11 +47,13 @@ graph TB
         licenseIdentifier
         pragmaDirective
         importStatements
+        interfaceDefinition
         contractDefinition
         stateVariables
         functions
         events
     end
+
 
 ```
 **Example of a simple Solidity contract**:
@@ -189,7 +194,8 @@ Save and switch to the Ganache network.
 
 ## Solidity Language Fundamentals
 
-### Syntax and Structure
+### Structure of a Solidity File
+
 
 Solidity is a statically-typed programming language designed for developing smart contracts that run on the Ethereum Virtual Machine (EVM). Understanding the syntax and structure is crucial for writing effective and secure smart contracts.
 
@@ -222,57 +228,40 @@ import "./SafeMath.sol";
 
 #### Contract Definition
 
-
 ```mermaid
-graph TB
-    solidityFile["Solidity File Structure"]
-    licenseIdentifier["License Identifier"]
-    pragmaDirective["Pragma Directive"]
-    importStatements["Import Statements"]
-    contractDefinition["Contract Definition"]
-    stateVariables["State Variables"]
-    constructorFunction["Constructor"]
-    functions["Functions"]
-    events["Events"]
-
-    solidityFile -->|Specifies license type| licenseIdentifier
-    solidityFile -->|Specifies compiler version| pragmaDirective
-    solidityFile -->|Includes external files| importStatements
-    solidityFile -->|Defines contract| contractDefinition
-    contractDefinition -->|Declares variables| stateVariables
-    contractDefinition -->|Initializes state| constructorFunction
-    contractDefinition -->|Implements logic| functions
-    contractDefinition -->|Declares events| events
-
-    subgraph fileStructure["Solidity File Structure"]
-        licenseIdentifier
-        pragmaDirective
-        importStatements
-        contractDefinition
-        stateVariables
-        constructorFunction
-        functions
-        events
-    end
-
+graph LR
     classDef license fill:#f9f,stroke:#333,stroke-width:2px;
     classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
     classDef import fill:#9f9,stroke:#333,stroke-width:2px;
     classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef interface fill:#fcf,stroke:#333,stroke-width:2px;
     classDef state fill:#f99,stroke:#333,stroke-width:2px;
     classDef function fill:#9ff,stroke:#333,stroke-width:2px;
     classDef event fill:#fc9,stroke:#333,stroke-width:2px;
+    classDef modifier fill:#ccf,stroke:#333,stroke-width:2px;
 
-    licenseIdentifier:::license
-    pragmaDirective:::pragma
-    importStatements:::import
-    contractDefinition:::contract
-    stateVariables:::state
-    constructorFunction:::constructor
-    functions:::function
-    events:::event
+    contractDetails["Detailed Contract Definition"]
+    stateVariables["State Variables"]:::state
+    constructorFunction["Constructor Function"]:::function
+    regularFunctions["Regular Functions"]:::function
+    modifiers["Modifiers"]:::modifier
+    events["Events"]:::event
+
+    contractDetails -->|Declares| stateVariables
+    contractDetails -->|Defines| constructorFunction
+    contractDetails -->|Implements| regularFunctions
+    contractDetails -->|Includes| modifiers
+    contractDetails -->|Logs| events
+
+    subgraph detailedContractStructure["Detailed Contract Definition"]
+        stateVariables
+        constructorFunction
+        regularFunctions
+        modifiers
+        events
+    end
+
 ```
-
 
 The main body of a Solidity file is the contract definition. This is where you define the smart contract, including its state variables, functions, and events.
 
@@ -298,44 +287,6 @@ contract MyContract {
 
     // Events
     event ValueChanged(uint256 newValue);
-}
-```
-#### Basic Solidity Syntax
-
-**Comments:**
-- Single-line comments start with `//`.
-- Multi-line comments are enclosed in `/* */`.
-
-**Example:**
-```js
-// This is a single-line comment
-/*
-This is a
-multi-line comment
-*/
-```
-
-**Data Types:**
-- Solidity supports various data types, including integers, booleans, addresses, and more.
-
-**Example:**
-```js
-uint256 public myUint;
-bool public myBool;
-address public myAddress;
-```
-
-**Control Structures:**
-- Solidity supports standard control structures like `if`, `else`, `for`, `while`, and `do-while`.
-
-**Example:**
-```js
-function controlExample(uint256 x) public pure returns (bool) {
-    if (x > 10) {
-        return true;
-    } else {
-        return false;
-    }
 }
 ```
 
@@ -367,9 +318,95 @@ graph TB
     mappings:::mapping
 ```
 
-Solidity supports various data types that help manage data within smart contracts. Understanding these data types and how to use them is essential for developing robust smart contracts.
-
 #### Elementary Data Types
+
+```mermaid
+graph LR
+    classDef variable fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef visibility fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef type fill:#9f9,stroke:#333,stroke-width:2px;
+    classDef value fill:#99f,stroke:#333,stroke-width:2px;
+
+    dataType["Data Type: uint256"]:::type
+    visibilitySpecifier["Visibility: public"]:::visibility
+    variableName["Variable Name: myUint"]:::variable
+    initialValue["Initial Value: 1"]:::value
+
+
+    subgraph variableStructure["Structure of a Variable Definition"]
+        dataType
+        visibilitySpecifier
+        variableName
+        initialValue
+    end
+
+```
+
+```mermaid
+graph LR
+    classDef type fill:#9f9,stroke:#333,stroke-width:2px;
+    classDef example fill:#99f,stroke:#333,stroke-width:2px;
+
+    solidityTypes["Basic Elementary Types in Solidity"]
+    integerTypes["Integer Types"]:::type
+    signedInteger["Signed Integer (int)"]:::type
+    unsignedInteger["Unsigned Integer (uint)"]:::type
+    booleanType["Boolean Type"]:::type
+    addressType["Address Type"]:::type
+    bytesTypes["Bytes Types"]:::type
+    fixedBytes["Fixed-size Bytes (bytes1, bytes32)"]:::type
+    dynamicBytes["Dynamic-size Bytes (bytes)"]:::type
+    stringType["String Type"]:::type
+
+    signedIntegerExample["int256 public myInt = -1;"]:::example
+    unsignedIntegerExample["uint256 public myUint = 1;"]:::example
+    booleanExample["bool public myBool = true;"]:::example
+    addressExample["address public myAddress = 0x1234567890123456789012345678901234567890;"]:::example
+    fixedBytesExample["bytes32 public myBytes = 'Hello, World!';"]:::example
+    dynamicBytesExample["bytes public myDynamicBytes = 'Hello';"]:::example
+    stringExample["string public myString = 'Hello, Solidity!';"]:::example
+
+    solidityTypes --> integerTypes
+    integerTypes --> signedInteger
+    integerTypes --> unsignedInteger
+    solidityTypes --> booleanType
+    solidityTypes --> addressType
+    solidityTypes --> bytesTypes
+    bytesTypes --> fixedBytes
+    bytesTypes --> dynamicBytes
+    solidityTypes --> stringType
+
+    signedInteger --> signedIntegerExample
+    unsignedInteger --> unsignedIntegerExample
+    booleanType --> booleanExample
+    addressType --> addressExample
+    fixedBytes --> fixedBytesExample
+    dynamicBytes --> dynamicBytesExample
+    stringType --> stringExample
+
+    subgraph elementaryTypesStructure["Basic Elementary Types in Solidity"]
+        integerTypes
+        signedInteger
+        unsignedInteger
+        booleanType
+        addressType
+        bytesTypes
+        fixedBytes
+        dynamicBytes
+        stringType
+    end
+
+    subgraph examples["Examples"]
+        signedIntegerExample
+        unsignedIntegerExample
+        booleanExample
+        addressExample
+        fixedBytesExample
+        dynamicBytesExample
+        stringExample
+    end
+
+```
 
 **Integer Types:**
 - Signed (`int`) and unsigned (`uint`) integers of various sizes (e.g., `uint8`, `uint256`).
@@ -399,11 +436,31 @@ address public myAddress = 0x1234567890123456789012345678901234567890;
 **Bytes and Strings:**
 - Fixed-size (`bytes1`, `bytes32`) and dynamic-size (`bytes`, `string`) byte arrays.
 
-**Example:**
-```js
-bytes32 public myBytes = "Hello, World!";
-string public myString = "Hello, Solidity!";
-```
+
+
+- **Use `bytes` when:**
+  - You need to handle raw binary data or arbitrary byte arrays.
+  - You need to perform operations on individual bytes directly.
+  - You want to save gas by avoiding the overhead of UTF-8 encoding.
+
+- **Use `string` when:**
+  - You need to handle text data that requires UTF-8 encoding.
+  - You want to store and manipulate human-readable text.
+
+
+- **Bytes Usage:**
+  ```js
+  bytes public data = "raw data";
+  data[0] = 0x01; // Direct access to individual bytes
+  ```
+
+- **String Usage:**
+  ```js
+  string public message = "Hello, Solidity!";
+  // Cannot access individual characters directly
+  ```
+
+In summary, use `bytes` for low-level byte manipulation and `string` for human-readable text.
 
 #### Arrays
 
