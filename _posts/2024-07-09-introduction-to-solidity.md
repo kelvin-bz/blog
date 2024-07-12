@@ -1,8 +1,8 @@
 ---
-title: Smart Contracts
+title: Introduction to Solidity
 categories: [tech]
 date: 2024-07-09 00:00:00
-tags: [blockchain]
+tags: [blockchain, solidity, smart-contracts]
 image: "/assets/images/smart-contracts/smart-contracts.png"
 ---
 
