@@ -1,7 +1,7 @@
 ---
 title: Blockchain for Dummies
 categories: [tech]
-date: 2024-07-06 08:00:00
+date: 2024-07-13 00:00:00
 image: "/assets/images/blockchain-for-dummies.png"
 tags: [blockchain]
 ---
