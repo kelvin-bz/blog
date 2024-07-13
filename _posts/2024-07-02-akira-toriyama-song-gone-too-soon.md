@@ -1,7 +1,7 @@
 ---
 title: "AKIRA TORIYAMA SONG | Gone Too Soon | ANIMETRIX [DRAGON BALL Z]"
 categories: [music]
-date: 2024-07-06 16:00:00
+date: 2024-07-03 16:00:00
 tags: [music, anime]
 image: "/assets/images/akira-toriyama.png"
 ---

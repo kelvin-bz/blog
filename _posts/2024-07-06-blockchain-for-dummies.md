@@ -1,7 +1,7 @@
 ---
-title: Blockchain for Dummies
+title: "Blockchain Basics P1 - Understanding the Basics of Blockchain Technology" 
 categories: [tech]
-date: 2024-07-13 00:00:00
+date: 2024-07-06 00:00:00
 image: "/assets/images/blockchain-for-dummies.png"
 tags: [blockchain]
 ---

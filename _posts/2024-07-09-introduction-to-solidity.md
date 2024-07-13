@@ -1,7 +1,7 @@
 ---
-title: Introduction to Solidity
+title: "Blockchain Basics P2 - Getting Started with Solidity and Smart Contracts"
 categories: [tech]
-date: 2024-07-12 00:00:01
+date: 2024-07-08 00:00:01
 tags: [blockchain, solidity, smart-contracts]
 image: "/assets/images/smart-contracts/smart-contracts.png"
 ---
