@@ -107,22 +107,24 @@ graph LR
 
 ```mermaid
 graph TD
-        block1["Block 1"]
-        block2["Block 2"]
-        block3["Block 3"]:::invalid
-        block4["Block 4"]:::invalid
-        block5["Block 5"]:::invalid
+    block1["fa:fa-cube Block 1"]
+    block2["fa:fa-cube Block 2"]
+    block3["fa:fa-times-circle Block 3"]:::invalid
+    block4["fa:fa-times-circle Block 4"]:::invalid
+    block5["fa:fa-times-circle Block 5"]:::invalid
 
-        block1 -->|Hash Link| block2
-        block2 -->|Hash Link| block3
-        block3 -->|Hash Link| block4
-        block4 -->|Hash Link| block5
-    
-    block2 -- "Data Change" --> invalidBlock2["Invalid Block 2"]
-    invalidBlock2 -.-> |"Invalidates"| block3
-    invalidBlock2 -.-> |"Invalidates"| block4
-    invalidBlock2 -.-> |"Invalidates"| block5
+    block1 -->|fa:fa-link Hash Link| block2
+    block2 -->|fa:fa-link Hash Link| block3
+    block3 -->|fa:fa-link Hash Link| block4
+    block4 -->|fa:fa-link Hash Link| block5
+
+    block2 -- "fa:fa-edit Data Change" --> invalidBlock2["fa:fa-ban Invalid Block 2"]
+    invalidBlock2 -.-> |"fa:fa-times Invalidates"| block3
+    invalidBlock2 -.-> |"fa:fa-times Invalidates"| block4
+    invalidBlock2 -.-> |"fa:fa-times Invalidates"| block5
+
     classDef invalid fill:#f96
+
 
 ```
 
@@ -130,17 +132,20 @@ graph TD
 
 ```mermaid
 graph LR
-    subgraph Blockchain["Blockchain"]
+    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
+    
+    subgraph Blockchain["fa:fa-network-wired Blockchain"]
         style Blockchain fill:#ff9,stroke:#333,stroke-width:2px
-        Block1["Block 1"]
-        Block2["Block 2"]
-        Block3["Block 3"]
+        Block1["fa:fa-cube Block 1"]
+        Block2["fa:fa-cube Block 2"]
+        Block3["fa:fa-cube Block 3"]
 
-        Block1 --> |"Hash Link"| Block2
-        Block2 --> |"Hash Link"| Block3
+        Block1 --> |"fa:fa-link Hash Link"| Block2
+        Block2 --> |"fa:fa-link Hash Link"| Block3
     end
 
-    Block2 -- "Attempted Data Change" -->  Disagreement["Disagreement with\nNetwork Consensus"]
+    Block2 -- "fa:fa-edit Attempted Data Change" --> Disagreement["fa:fa-exclamation-triangle Disagreement with\nNetwork Consensus"]
+
 
 ```
 
@@ -154,11 +159,14 @@ A peer-to-peer (P2P) network is a type of network architecture where all partici
 
 ```mermaid
 graph TD
-    subgraph P2PBlockchainNetwork["Peer-to-Peer Blockchain Network"]
-        A[Node 1]
-        B[Node 2]
-        C[Node 3]
-        A <--"Share Ledger Data & Validate Transactions"--> B
+    classDef network fill:#f0f0f0,stroke:#333,stroke-width:2px;
+
+    subgraph P2PBlockchainNetwork["fa:fa-sitemap Peer-to-Peer Blockchain Network"]
+        style P2PBlockchainNetwork fill:#f0f0f0,stroke:#333,stroke-width:2px
+        A["fa:fa-server Node 1"]
+        B["fa:fa-server Node 2"]
+        C["fa:fa-server Node 3"]
+        A <--"fa:fa-share-alt Share Ledger Data & Validate Transactions"--> B
         A <--> C
         B <--> C
     end
@@ -320,37 +328,40 @@ graph LR
 
 ```mermaid
 graph LR
-subgraph EthereumBlockchain["Ethereum Blockchain (Beacon Chain)"]
-    style EthereumBlockchain fill:#F2F2F2,stroke:#666666
-    Validator["Validator"]
-    style Validator fill:#FFF2CC,stroke:#D6B656
-end
+    classDef network fill:#f0f0f0,stroke:#333,stroke-width:2px;
 
-subgraph StakingPlatform["Staking Platform (e.g., Lido)"]
-    style StakingPlatform fill:#C2E0C6,stroke:#5FB483
-    StakingPool["Staking Pool"]
-    style StakingPool fill:#E6F2FF,stroke:#B8D8F2
-    stETH["stETH (Liquid Staking Token)"]
-    style stETH fill:#D5E8D4,stroke:#82B366
-end
+    subgraph EthereumBlockchain["fa:fa-link Ethereum Blockchain (Beacon Chain)"]
+        style EthereumBlockchain fill:#F2F2F2,stroke:#666666
+        Validator["fa:fa-user-shield Validator"]
+        style Validator fill:#FFF2CC,stroke:#D6B656
+    end
 
-subgraph RestakingPlatform["Restaking Platform (e.g., EigenLayer)"]
-    style RestakingPlatform fill:#E1D5E7,stroke:#9673A6
-    RestakingContract
-    style RestakingContract fill:#FFDDCC,stroke:#E69966
-    OtherProtocol["Other Protocol/Service"]
-    style OtherProtocol fill:#F08080,stroke:#DC143C
-end
+    subgraph StakingPlatform["fa:fa-coins Staking Platform (e.g., Lido)"]
+        style StakingPlatform fill:#C2E0C6,stroke:#5FB483
+        StakingPool["fa:fa-piggy-bank Staking Pool"]
+        style StakingPool fill:#E6F2FF,stroke:#B8D8F2
+        stETH["fa:fa-coins stETH (Liquid Staking Token)"]
+        style stETH fill:#D5E8D4,stroke:#82B366
+    end
 
-Validator -- "Stake 32 ETH" --> StakingPool
-StakingPool -- "Issues" --> stETH
-Validator -- "Receives" --> stETH
+    subgraph RestakingPlatform["fa:fa-handshake Restaking Platform (e.g., EigenLayer)"]
+        style RestakingPlatform fill:#E1D5E7,stroke:#9673A6
+        RestakingContract["fa:fa-file-contract Restaking Contract"]
+        style RestakingContract fill:#FFDDCC,stroke:#E69966
+        OtherProtocol["fa:fa-cogs Other Protocol/Service"]
+        style OtherProtocol fill:#F08080,stroke:#DC143C
+    end
 
-stETH -- "Restake" --> RestakingContract
-RestakingContract -- "Secures" --> OtherProtocol
-RestakingContract -- "Provides" --> AdditionalRewards["Additional Rewards"]
+    Validator -- "fa:fa-arrow-right Stake 32 ETH" --> StakingPool
+    StakingPool -- "fa:fa-arrow-right Issues" --> stETH
+    Validator -- "fa:fa-arrow-left Receives" --> stETH
 
-Validator -- "Earns" --> StakingRewards["Staking Rewards (ETH)"]
+    stETH -- "fa:fa-arrow-right Restake" --> RestakingContract
+    RestakingContract -- "fa:fa-shield-alt Secures" --> OtherProtocol
+    RestakingContract -- "fa:fa-gift Provides" --> AdditionalRewards["fa:fa-coins Additional Rewards"]
+
+    Validator -- "fa:fa-coins Earns" --> StakingRewards["fa:fa-coins Staking Rewards (ETH)"]
+
 
 ```
 
@@ -454,53 +465,54 @@ Examples of dApps : Uniswap, Compound, Aave, MakerDAO etc.
 
 ```mermaid
 graph LR
-    subgraph NFTSmartContract["NFT Smart Contract"]
+    subgraph NFTSmartContract["fa:fa-file-contract NFT Smart Contract"]
         style NFTSmartContract fill:#FFF2CC,stroke:#D6B656
-        ContractCode["Contract Code<br/>(Solidity, etc.)"]
-        StateVariables["State Variables<br/>(Token Metadata, Owner)"]
-        Functions["Functions<br/>(Mint, Transfer, Burn)"]
-        Events["Events<br/>(Transfer, Approval)"]
+        ContractCode["fa:fa-code Contract Code<br/>(Solidity, etc.)"]
+        StateVariables["fa:fa-database State Variables<br/>(Token Metadata, Owner)"]
+        Functions["fa:fa-cogs Functions<br/>(Mint, Transfer, Burn)"]
+        Events["fa:fa-bullhorn Events<br/>(Transfer, Approval)"]
     end
 
-    subgraph EthereumBlockchain["Ethereum Blockchain"]
+    subgraph EthereumBlockchain["fa:fa-link Ethereum Blockchain"]
         style EthereumBlockchain fill:#F2F2F2,stroke:#666666
-        BlockchainNetwork["Ethereum Network"]
+        BlockchainNetwork["fa:fa-network-wired Ethereum Network"]
     end
 
-    subgraph Participants["Participants"]
+    subgraph Participants["fa:fa-users Participants"]
         style Participants fill:#F0F0F0,stroke:#888888
-        Creator["Creator"]
+        Creator["fa:fa-user-plus Creator"]
         style Creator fill:#C2E0C6,stroke:#5FB483
-        Buyer["Buyer"]
+        Buyer["fa:fa-user Buyer"]
         style Buyer fill:#F5DEB3,stroke:#D2B48C
-        Seller["Seller"]
+        Seller["fa:fa-user-times Seller"]
         style Seller fill:#ADD8E6,stroke:#4682B4
     end
     
-    subgraph Trigger["Triggers"]
+    subgraph Trigger["fa:fa-bolt Triggers"]
         style Trigger fill:#D4EDDA,stroke:#4CAF50
-        MintCall["Mint Call<br/>(Creator)"]
+        MintCall["fa:fa-arrow-circle-up Mint Call<br/>(Creator)"]
         style MintCall fill:#E6F2FF,stroke:#B8D8F2
-        TransferCall["Transfer Call<br/>(Owner)"]
+        TransferCall["fa:fa-exchange-alt Transfer Call<br/>(Owner)"]
         style TransferCall fill:#E6F2FF,stroke:#B8D8F2
-        BurnCall["Burn Call<br/>(Owner)"]
+        BurnCall["fa:fa-trash Burn Call<br/>(Owner)"]
         style BurnCall fill:#E6F2FF,stroke:#B8D8F2
     end
 
-    Creator -- "Interacts With" --> NFTSmartContract
-    Buyer -- "Interacts With" --> NFTSmartContract
-    Seller -- "Interacts With" --> NFTSmartContract
+    Creator -- "fa:fa-hand-point-right Interacts With" --> NFTSmartContract
+    Buyer -- "fa:fa-hand-point-right Interacts With" --> NFTSmartContract
+    Seller -- "fa:fa-hand-point-right Interacts With" --> NFTSmartContract
 
-    NFTSmartContract -- "Deployed On" --> BlockchainNetwork
-    ContractCode -- "Defines" --> StateVariables
-    ContractCode -- "Defines" --> Functions
-    ContractCode -- "Defines" --> Events
-    Functions -- "Updates" --> StateVariables
-    Events -- "Emitted When State Changes" --> BlockchainNetwork
+    NFTSmartContract -- "fa:fa-link Deployed On" --> BlockchainNetwork
+    ContractCode -- "fa:fa-pencil-alt Defines" --> StateVariables
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Functions
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Events
+    Functions -- "fa:fa-sync-alt Updates" --> StateVariables
+    Events -- "fa:fa-bell Emitted When State Changes" --> BlockchainNetwork
 
     MintCall --> Functions
     TransferCall --> Functions
     BurnCall --> Functions
+
 
 ```
 
@@ -509,48 +521,48 @@ graph LR
 
 ```mermaid
 graph LR
-    subgraph DeFiSmartContract["DeFi Lending/Borrowing Smart Contract"]
+    subgraph DeFiSmartContract["fa:fa-file-contract DeFi Lending/Borrowing Smart Contract"]
         style DeFiSmartContract fill:#FFF2CC,stroke:#D6B656
-        ContractCode["Contract Code<br/>(Solidity, etc.)"]
-        StateVariables["State Variables<br/>(Lender Balances, Borrower Debts)"]
-        Functions["Functions<br/>(Deposit, Withdraw, Borrow, Repay)"]
-        Events["Events<br/>(Deposit, Withdrawal, Borrow, Repay)"]
+        ContractCode["fa:fa-code Contract Code<br/>(Solidity, etc.)"]
+        StateVariables["fa:fa-database State Variables<br/>(Lender Balances, Borrower Debts)"]
+        Functions["fa:fa-cogs Functions<br/>(Deposit, Withdraw, Borrow, Repay)"]
+        Events["fa:fa-bullhorn Events<br/>(Deposit, Withdrawal, Borrow, Repay)"]
     end
 
-    subgraph EthereumBlockchain["Ethereum Blockchain"]
+    subgraph EthereumBlockchain["fa:fa-link Ethereum Blockchain"]
         style EthereumBlockchain fill:#F2F2F2,stroke:#666666
-        BlockchainNetwork["Ethereum Network"]
+        BlockchainNetwork["fa:fa-network-wired Ethereum Network"]
     end
 
-    subgraph Participants["Participants"]
+    subgraph Participants["fa:fa-users Participants"]
         style Participants fill:#F0F0F0,stroke:#888888
-        Lender["Lender"]
+        Lender["fa:fa-user-tie Lender"]
         style Lender fill:#C2E0C6,stroke:#5FB483
-        Borrower["Borrower"]
+        Borrower["fa:fa-user Borrower"]
         style Borrower fill:#F5DEB3,stroke:#D2B48C
     end
     
-    subgraph Trigger["Triggers"]
+    subgraph Trigger["fa:fa-bolt Triggers"]
         style Trigger fill:#D4EDDA,stroke:#4CAF50
-        DepositCall["Deposit Call<br/>(Lender)"]
+        DepositCall["fa:fa-arrow-circle-down Deposit Call<br/>(Lender)"]
         style DepositCall fill:#E6F2FF,stroke:#B8D8F2
-        WithdrawCall["Withdraw Call<br/>(Lender)"]
+        WithdrawCall["fa:fa-arrow-circle-up Withdraw Call<br/>(Lender)"]
         style WithdrawCall fill:#E6F2FF,stroke:#B8D8F2
-        BorrowCall["Borrow Call<br/>(Borrower)"]
+        BorrowCall["fa:fa-hand-holding-usd Borrow Call<br/>(Borrower)"]
         style BorrowCall fill:#E6F2FF,stroke:#B8D8F2
-        RepayCall["Repay Call<br/>(Borrower)"]
+        RepayCall["fa:fa-handshake Repay Call<br/>(Borrower)"]
         style RepayCall fill:#E6F2FF,stroke:#B8D8F2
     end
 
-    Lender -- "Interacts With" --> DeFiSmartContract
-    Borrower -- "Interacts With" --> DeFiSmartContract
+    Lender -- "fa:fa-hand-point-right Interacts With" --> DeFiSmartContract
+    Borrower -- "fa:fa-hand-point-right Interacts With" --> DeFiSmartContract
 
-    DeFiSmartContract -- "Deployed On" --> BlockchainNetwork
-    ContractCode -- "Defines" --> StateVariables
-    ContractCode -- "Defines" --> Functions
-    ContractCode -- "Defines" --> Events
-    Functions -- "Updates" --> StateVariables
-    Events -- "Emitted When State Changes" --> BlockchainNetwork
+    DeFiSmartContract -- "fa:fa-link Deployed On" --> BlockchainNetwork
+    ContractCode -- "fa:fa-pencil-alt Defines" --> StateVariables
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Functions
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Events
+    Functions -- "fa:fa-sync-alt Updates" --> StateVariables
+    Events -- "fa:fa-bell Emitted When State Changes" --> BlockchainNetwork
 
     DepositCall --> Functions
     WithdrawCall --> Functions
@@ -566,17 +578,17 @@ graph LR
 ```mermaid
 graph LR;
 
-subgraph LiquidityPool["Liquidity Pool"]
-    TokenA["Token A"]:::skyblue
-    TokenB["Token B"]:::limegreen
-    AMM["Automated\nMarket Maker"]:::gold
+subgraph LiquidityPool["fa:fa-water Liquidity Pool"]
+    TokenA["fa:fa-coins Token A"]:::skyblue
+    TokenB["fa:fa-coins Token B"]:::limegreen
+    AMM["fa:fa-cogs Automated\nMarket Maker"]:::gold
 end
 
-User1["User 1\n(Liquidity\nProvider)"]:::coral -->|Deposits\nToken A & B| LiquidityPool
-User2["User 2\n(Liquidity\nProvider)"]:::orchid -->|Deposits\nToken A & B| LiquidityPool
-LiquidityPool -->|Swaps\nToken A <--> B| User3["User 3\n(Swapper)"]:::hotpink
-LiquidityPool -->|Trading\nFees| User1 & User2
-AMM -->|Determines\nPrice & Executes\nTrades| LiquidityPool
+User1["fa:fa-user User 1\n(Liquidity\nProvider)"]:::coral -->|fa:fa-arrow-down Deposits\nToken A & B| LiquidityPool
+User2["fa:fa-user User 2\n(Liquidity\nProvider)"]:::orchid -->|fa:fa-arrow-down Deposits\nToken A & B| LiquidityPool
+LiquidityPool -->|fa:fa-exchange-alt Swaps\nToken A <--> B| User3["fa:fa-user User 3\n(Swapper)"]:::hotpink
+LiquidityPool -->|fa:fa-coins Trading\nFees| User1 & User2
+AMM -->|fa:fa-balance-scale Determines\nPrice & Executes\nTrades| LiquidityPool
 
 classDef aqua fill:#00FFFF,stroke:#333,stroke-width:2px;
 classDef skyblue fill:#87CEEB,stroke:#333,stroke-width:2px;
@@ -585,6 +597,7 @@ classDef coral fill:#FF7F50,stroke:#333,stroke-width:2px;
 classDef orchid fill:#DA70D6,stroke:#333,stroke-width:2px;
 classDef hotpink fill:#FF69B4,stroke:#333,stroke-width:2px;
 classDef gold fill:#FFD700,stroke:#333,stroke-width:2px;
+
 
 ```
 **Liquidity Pool**:
