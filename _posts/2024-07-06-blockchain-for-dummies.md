@@ -52,7 +52,7 @@ graph LR
 
 ```
 
-- **Transaction**: A digital record of value transfer between two parties (sender and recipient) with a specific amount. It's signed with the sender's private key and verified by the network using their public key. [ethereum's doc](https://ethereum.org/en/developers/docs/transactions/)
+- **Transaction**: A digital record of value transfer between two parties (sender and recipient) with a specific amount. It's signed with the sender's private key and verified by the network using their public key. In the case of deploying a smart contract, the transaction does not have a recipient address. [ethereum's doc](https://ethereum.org/en/developers/docs/transactions/)
 
 
 - **Block**: A collection of verified transactions grouped together, along with a header containing metadata (e.g., timestamp, previous block's hash).
@@ -278,6 +278,71 @@ graph TD
 0.00399 ETH is burned (removed from circulation).
 - The miner receives 0.00021 ETH as a tip.
 
+### Unit Conversion
+
+
+
+| Unit    | Symbol | Value in Wei (Smallest Unit) | Usage                         |
+| ------- | ------ | --------------------------- | ----------------------------- |
+| Wei     | wei    | 1                           | Atomic unit of Ether           |
+| Kwei    | Kwei   | 10^3                        | Rarely used                   |
+| Mwei    | Mwei   | 10^6                        | Rarely used                   |
+| Gwei    | Gwei   | 10^9                        | Gas prices, small transactions |
+| Microether (Szabo) | szabo  | 10^12                        | Rarely used                   |
+| Milliether (Finney) | finney  | 10^15                        | Small amounts of Ether        |
+| Ether   | ETH    | 10^18                        | Standard unit for most purposes |
+
+**Key Points:**
+
+- **Wei:** The smallest denomination of Ether. All other units are multiples of Wei.
+- **Gwei:** The most commonly used unit after Ether, especially for gas prices and small transactions.
+- **Ether:** The standard unit for most transactions and interactions with Ethereum applications.
+
+**Example Conversions:**
+
+- 1 ETH = 1,000,000,000 Gwei
+- 1 Gwei = 1,000,000,000 wei
+
+### Gas Price and Gas Limit
+
+```mermaid
+graph LR
+  subgraph transaction["fa:fa-file-invoice-dollar Transaction"]
+      style transaction fill:#9f9,stroke:#333,stroke-width:2px
+      data["fa:fa-database Transaction Data"]
+      gasLimit["fa:fa-gas-pump Gas Limit (Maximum Allowed)"]
+      gasPrice["fa:fa-dollar-sign Gas Price (Bid per Unit)"]
+  end
+
+  subgraph network["fa:fa-link Network"]
+      style network fill:#ff9,stroke:#333,stroke-width:2px
+      marketDemand["fa:fa-chart-line Market Demand"]
+      networkCongestion["fa:fa-traffic-light Network Congestion"]
+      minerPreference["fa:fa-gavel Miner Preference"]
+  end
+
+  subgraph execution["fa:fa-cogs Execution"]
+      style execution fill:#f9f,stroke:#333,stroke-width:2px
+      gasUsed["fa:fa-fire Gas Used (Actual Consumption)"]
+      transactionFee["fa:fa-coins Transaction Fee (Total Cost)"]
+  end
+
+  transaction --> execution
+  gasLimit -.-> gasUsed
+  gasPrice & gasUsed --> transactionFee
+  marketDemand --> gasPrice
+  networkCongestion --> gasPrice
+  minerPreference --> gasPrice
+
+```
+- **Gas Price as a Bid**: The maximum amount of gas (computational units) the sender is willing to spend on executing the transaction. It determines the transaction's priority and is often influenced by market demand, network congestion, and miner preference.
+
+- **Gas Limit**: The maximum amount of gas (computational units) the sender is willing to spend on executing the transaction.
+
+- **Gas Used**: The actual amount of gas consumed during the transaction execution.
+
+- **Transaction Fee**: The total cost of executing the transaction, calculated as: ``Gas Used`` * ``Gas Price``
+
 ## Stablecoins
 
 ```mermaid
@@ -420,6 +485,36 @@ graph LR
 ```
 
 **Smart contract**: A smart contract is a self-executing contract with the terms directly written into code on a blockchain. It automatically enforces and executes the terms of an agreement when predefined conditions are met. This eliminates the need for intermediaries, reducing costs and enhancing security. Smart contracts are commonly used in various applications, including finance, real estate, and supply chain management.
+
+### Smart Contract Deploy Transaction
+
+```mermaid
+graph TD
+    subgraph transaction["fa:fa-file-invoice-dollar Transaction"]
+        style transaction fill:#9f9,stroke:#333,stroke-width:2px
+        gasPrice["fa:fa-dollar-sign Gas Price"]
+        gasLimit["fa:fa-gas-pump Gas Limit"]
+        compiledBytecode["fa:fa-file-code Compiled Bytecode"]
+        signature["fa:fa-signature Signature (from Private Key)"]
+        noRecipient["fa:fa-ban no recipient"]
+    end
+
+    subgraph blockchain["fa:fa-link Blockchain Network"]
+        style blockchain fill:#ff9,stroke:#333,stroke-width:2px
+        minersValidators["fa:fa-gavel Miners/Validators"]
+    end
+
+    transaction -->|"Verified & Executed By"<i class='fas fa-arrow-right'></i>| minersValidators
+
+```
+
+
+
+- **No Recipient Address**: Unlike regular transactions that send funds to an address, deployment transactions don't have a recipient. The transaction itself creates the new contract address.
+- **Gas Costs**: Deploying a smart contract consumes gas, and the cost depends on the complexity of your contract. Be mindful of the gas limit you set.
+- **Immutability**: Once deployed, a smart contract's code is generally immutable (cannot be changed), so thorough testing is crucial before deployment.
+- **Modifying a smart contract** on a blockchain like Ethereum requires deploying a new transaction with the updated code. This is due to the fundamental immutability of blockchains: once data is written to the blockchain, it cannot be changed.
+
 
 ## Dapp (Decentralized Application)
 
