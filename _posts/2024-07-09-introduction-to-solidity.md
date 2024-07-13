@@ -24,15 +24,15 @@ graph LR
     classDef function fill:#9ff,stroke:#333,stroke-width:2px;
     classDef event fill:#fc9,stroke:#333,stroke-width:2px;
 
-    solidityFile["Structure of a Solidity File"]
-    licenseIdentifier["License Identifier"]:::license
-    pragmaDirective["Pragma Directive"]:::pragma
-    importStatements["Import Statements"]:::import
-    interfaceDefinition["Interface Definition"]:::interface
-    contractDefinition["Contract Definition"]:::contract
-    stateVariables["State Variables"]:::state
-    functions["Functions"]:::function
-    events["Events"]:::event
+    solidityFile["fa:fa-file-contract Structure of a Solidity File"]
+    licenseIdentifier["fa:fa-balance-scale License Identifier"]:::license
+    pragmaDirective["fa:fa-code Pragma Directive"]:::pragma
+    importStatements["fa:fa-file-import Import Statements"]:::import
+    interfaceDefinition["fa:fa-cogs Interface Definition"]:::interface
+    contractDefinition["fa:fa-file-contract Contract Definition"]:::contract
+    stateVariables["fa:fa-database State Variables"]:::state
+    functions["fa:fa-cogs Functions"]:::function
+    events["fa:fa-bullhorn Events"]:::event
 
     solidityFile -->|Specifies license type| licenseIdentifier
     solidityFile -->|Specifies compiler version| pragmaDirective
@@ -43,7 +43,7 @@ graph LR
     contractDefinition -->|Implements logic| functions
     contractDefinition -->|Declares events| events
 
-    subgraph fileStructure["Solidity File Structure"]
+    subgraph fileStructure["fa:fa-folder Solidity File Structure"]
         licenseIdentifier
         pragmaDirective
         importStatements
@@ -295,9 +295,9 @@ contract MyContract {
 ```mermaid
 graph TB
     dataTypes["Data Types and Variables"]
-    elementaryTypes["Elementary Data Types"]
-    arrays["Arrays"]
-    mappings["Mappings"]
+    elementaryTypes["fa:fa-list-ol Elementary Data Types"]
+    arrays["fa:fa-table Arrays"]
+    mappings["fa:fa-book Mappings"]
 
     dataTypes -->|Includes| elementaryTypes
     dataTypes -->|Includes| arrays
@@ -327,19 +327,17 @@ graph LR
     classDef type fill:#9f9,stroke:#333,stroke-width:2px;
     classDef value fill:#99f,stroke:#333,stroke-width:2px;
 
-    dataType["Data Type: uint256"]:::type
-    visibilitySpecifier["Visibility: public"]:::visibility
-    variableName["Variable Name: myUint"]:::variable
-    initialValue["Initial Value: 1"]:::value
+    dataType["fa:fa-list-alt Data Type: uint256"]:::type
+    visibilitySpecifier["fa:fa-eye Visibility: public"]:::visibility
+    variableName["fa:fa-tag Variable Name: myUint"]:::variable
+    initialValue["fa:fa-equals Initial Value: 1"]:::value
 
-
-    subgraph variableStructure["Structure of a Variable Definition"]
+    subgraph variableStructure["fa:fa-cube Structure of a Variable Definition"]
         dataType
         visibilitySpecifier
         variableName
         initialValue
     end
-
 ```
 
 ```mermaid
@@ -347,24 +345,24 @@ graph LR
     classDef type fill:#9f9,stroke:#333,stroke-width:2px;
     classDef example fill:#99f,stroke:#333,stroke-width:2px;
 
-    solidityTypes["Basic Elementary Types in Solidity"]
-    integerTypes["Integer Types"]:::type
-    signedInteger["Signed Integer (int)"]:::type
-    unsignedInteger["Unsigned Integer (uint)"]:::type
-    booleanType["Boolean Type"]:::type
-    addressType["Address Type"]:::type
-    bytesTypes["Bytes Types"]:::type
-    fixedBytes["Fixed-size Bytes (bytes1, bytes32)"]:::type
-    dynamicBytes["Dynamic-size Bytes (bytes)"]:::type
-    stringType["String Type"]:::type
+    solidityTypes["fa:fa-list Basic Elementary Types in Solidity"]
+    integerTypes["fa:fa-hashtag Integer Types"]:::type
+    signedInteger["fa:fa-minus-square Signed Integer (int)"]:::type
+    unsignedInteger["fa:fa-plus-square Unsigned Integer (uint)"]:::type
+    booleanType["fa:fa-toggle-on Boolean Type"]:::type
+    addressType["fa:fa-map-marker-alt Address Type"]:::type
+    bytesTypes["fa:fa-file-code Bytes Types"]:::type
+    fixedBytes["fa:fa-lock Fixed-size Bytes (bytes1, bytes32)"]:::type
+    dynamicBytes["fa:fa-unlock Dynamic-size Bytes (bytes)"]:::type
+    stringType["fa:fa-font String Type"]:::type
 
-    signedIntegerExample["int256 public myInt = -1;"]:::example
-    unsignedIntegerExample["uint256 public myUint = 1;"]:::example
-    booleanExample["bool public myBool = true;"]:::example
-    addressExample["address public myAddress = 0x1234567890123456789012345678901234567890;"]:::example
-    fixedBytesExample["bytes32 public myBytes = 'Hello, World!';"]:::example
-    dynamicBytesExample["bytes public myDynamicBytes = 'Hello';"]:::example
-    stringExample["string public myString = 'Hello, Solidity!';"]:::example
+    signedIntegerExample["fa:fa-code int256 public myInt = -1;"]:::example
+    unsignedIntegerExample["fa:fa-code uint256 public myUint = 1;"]:::example
+    booleanExample["fa:fa-code bool public myBool = true;"]:::example
+    addressExample["fa:fa-code address public myAddress = 0x1234567890123456789012345678901234567890;"]:::example
+    fixedBytesExample["fa:fa-code bytes32 public myBytes = 'Hello, World!';"]:::example
+    dynamicBytesExample["fa:fa-code bytes public myDynamicBytes = 'Hello';"]:::example
+    stringExample["fa:fa-code string public myString = 'Hello, Solidity!';"]:::example
 
     solidityTypes --> integerTypes
     integerTypes --> signedInteger
@@ -384,7 +382,7 @@ graph LR
     dynamicBytes --> dynamicBytesExample
     stringType --> stringExample
 
-    subgraph elementaryTypesStructure["Basic Elementary Types in Solidity"]
+    subgraph elementaryTypesStructure["fa:fa-list Basic Elementary Types in Solidity"]
         integerTypes
         signedInteger
         unsignedInteger
@@ -396,7 +394,7 @@ graph LR
         stringType
     end
 
-    subgraph examples["Examples"]
+    subgraph examples["fa:fa-code Examples"]
         signedIntegerExample
         unsignedIntegerExample
         booleanExample
@@ -405,6 +403,7 @@ graph LR
         dynamicBytesExample
         stringExample
     end
+
 
 ```
 
@@ -511,27 +510,23 @@ function getBalance(address account) public view returns (uint256) {
 ### Control Structures (if, else, loops)
 ```mermaid
 graph TB
-    controlStructures["Control Structures"]
-    ifElseStatements["If-Else Statements"]
-    forLoop["For Loop"]
-    whileLoop["While Loop"]
+    classDef conditional fill:#ff9999,stroke:#333,stroke-width:2px;
+    classDef loop fill:#9999ff,stroke:#333,stroke-width:2px;
+
+    controlStructures["fa:fa-cogs Control Structures"]
+    ifElseStatements["fa:fa-random If-Else Statements"]:::conditional
+    forLoop["fa:fa-sync-alt For Loop"]:::loop
+    whileLoop["fa:fa-redo While Loop"]:::loop
 
     controlStructures -->|Includes| ifElseStatements
     controlStructures -->|Includes| forLoop
     controlStructures -->|Includes| whileLoop
 
-    subgraph controlStructuresDescription["Control Structures"]
+    subgraph controlStructuresDescription["fa:fa-cogs Control Structures"]
         ifElseStatements
         forLoop
         whileLoop
     end
-
-    classDef conditional fill:#ff9999,stroke:#333,stroke-width:2px;
-    classDef loop fill:#9999ff,stroke:#333,stroke-width:2px;
-
-    ifElseStatements:::conditional
-    forLoop:::loop
-    whileLoop:::loop
 ```
 
 Solidity supports standard control structures for conditional execution and loops.
@@ -596,53 +591,22 @@ function sumWhileLoop(uint256[] memory array) public pure returns (uint256) {
 
 ```mermaid
 graph LR
-    basicStructure["Basic Contract Structure"]
-    licenseIdentifier["License Identifier"]
-    pragmaDirective["Pragma Directive"]
-    contractDefinition["Contract Definition"]
+    basicStructure["fa:fa-file-code Basic Contract Structure"]
+    licenseIdentifier["fa:fa-balance-scale License Identifier"]:::license
+    pragmaDirective["fa:fa-code Pragma Directive"]:::pragma
+    contractDefinition["fa:fa-file-contract Contract Definition"]:::contract
 
     basicStructure -->|Specifies license| licenseIdentifier
     basicStructure -->|Specifies compiler version| pragmaDirective
     basicStructure -->|Defines contract| contractDefinition
 
-    subgraph contractStructure["Basic Contract Structure"]
-        licenseIdentifier
-        pragmaDirective
-        contractDefinition
-    end
-
-    classDef license fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
-
-    licenseIdentifier:::license
-    pragmaDirective:::pragma
-    contractDefinition:::contract
-   
-    subgraph basicStructure["Basic Contract Structure"]
-        licenseIdentifier["License Identifier"]
-        pragmaDirective["Pragma Directive"]
-        contractDefinition["Contract Definition"]
-        licenseIdentifier:::license
-        pragmaDirective:::pragma
-    end
-
-    subgraph contractFunctions["State Variables and Functions"]
-        stateVariables["State Variables"]:::state
-        constructorFunction["Constructor Function"]:::constructor
-        setNumberFunction["Function: setNumber"]:::function
-        getNumberFunction["Function: getNumber"]:::function
-        setStringFunction["Function: setString"]:::function
-        getStringFunction["Function: getString"]:::function
-
-        stateVariables
-        constructorFunction
-        setNumberFunction
-        getNumberFunction
-        setStringFunction
-        getStringFunction
-
-        contractDefinition:::contract
+    subgraph contractFunctions["fa:fa-cogs State Variables & Functions"]
+        stateVariables["fa:fa-hamburger State Variables"]:::state
+        constructorFunction["fa:fa-hammer Constructor Function"]:::constructor
+        setNumberFunction["fa:fa-edit Function: setNumber"]:::function  
+        getNumberFunction["fa:fa-eye Function: getNumber"]:::function 
+        setStringFunction["fa:fa-edit Function: setString"]:::function 
+        getStringFunction["fa:fa-eye Function: getString"]:::function 
 
         contractDefinition -->|Declares variables| stateVariables
         contractDefinition -->|Initializes state| constructorFunction
@@ -657,16 +621,6 @@ graph LR
     classDef contract fill:#99f,stroke:#333,stroke-width:2px;
     classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
     classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
-
-    licenseIdentifier:::license
-    pragmaDirective:::pragma
-    contractDefinition:::contract
-    stateVariables:::state
-    constructorFunction:::constructor
-    setNumberFunction:::function
-    getNumberFunction:::function
-    setStringFunction:::function
-    getStringFunction:::function
 
 ```
 
@@ -837,12 +791,18 @@ By following these steps, you will have created, compiled, and deployed your fir
 
 ```mermaid
 graph TD
-    functionExample["function getMessage() public view returns (string) {\n    return message;\n}"]
-    functionDefinition["Function Definition\n(Name, Parameters, Body)"]:::fdColor
-    visibilitySpecifiers["Visibility Specifiers\n(public, external, internal, private)"]:::vsColor
-    stateMutability["State Mutability\n(pure, view, payable)"]:::smColor
-    functionModifiers["Function Modifiers\n(Access control, Validation)"]:::fmColor
-    returnValues["Return Values\n(Return type)"]:::rvColor
+    classDef fdColor fill:#ff9999,stroke:#333,stroke-width:2px;
+    classDef vsColor fill:#99ccff,stroke:#333,stroke-width:2px;
+    classDef smColor fill:#99ff99,stroke:#333,stroke-width:2px;
+    classDef fmColor fill:#ffcc99,stroke:#333,stroke-width:2px;
+    classDef rvColor fill:#cc99ff,stroke:#333,stroke-width:2px;
+
+    functionExample["fa:fa-code function getMessage() public view returns (string) {\n    return message;\n}"]
+    functionDefinition["fa:fa-list Function Definition\n(Name, Parameters, Body)"]:::fdColor
+    visibilitySpecifiers["fa:fa-eye Visibility Specifiers\n(public, external, internal, private)"]:::vsColor
+    stateMutability["fa:fa-exchange-alt State Mutability\n(pure, view, payable)"]:::smColor
+    functionModifiers["fa:fa-key Function Modifiers\n(Access control, Validation)"]:::fmColor
+    returnValues["fa:fa-undo Return Values\n(Return type)"]:::rvColor
 
     functionExample --> functionDefinition
     functionExample --> visibilitySpecifiers
@@ -850,19 +810,13 @@ graph TD
     functionExample --> functionModifiers
     functionExample --> returnValues
 
-    subgraph functionStructure["Function Structure"]
+    subgraph functionStructure["fa:fa-cogs Function Structure"]
         functionDefinition
         visibilitySpecifiers
         stateMutability
         functionModifiers
         returnValues
     end
-
-    classDef fdColor fill:#ff9999,stroke:#333,stroke-width:2px;
-    classDef vsColor fill:#99ccff,stroke:#333,stroke-width:2px;
-    classDef smColor fill:#99ff99,stroke:#333,stroke-width:2px;
-    classDef fmColor fill:#ffcc99,stroke:#333,stroke-width:2px;
-    classDef rvColor fill:#cc99ff,stroke:#333,stroke-width:2px;
 
 ```
 
@@ -874,7 +828,7 @@ Functions in Solidity are blocks of code designed to perform specific tasks. The
 A function in Solidity is defined using the `function` keyword, followed by the function name, parameters, visibility specifier, and the function body.
 
 **Syntax:**
-```solidity
+```js
 function functionName(parameters) visibility returns (returnType) {
     // function body
 }
@@ -882,6 +836,44 @@ function functionName(parameters) visibility returns (returnType) {
 
 ### Function Visibility
 
+```mermaid
+graph 
+    classDef pubColor fill:#bbdefb,stroke:#333,stroke-width:2px;
+    classDef extColor fill:#b2dfdb,stroke:#333,stroke-width:2px;
+    classDef intColor fill:#ffcdd2,stroke:#333,stroke-width:2px;
+    classDef privColor fill:#d1c4e9,stroke:#333,stroke-width:2px;
+    classDef derivedColor fill:#c8e6c9,stroke:#333,stroke-width:2px;
+    classDef contractColor fill:#f0f4c3,stroke:#333,stroke-width:2px;
+    classDef visibilityColor fill:#e0f7fa,stroke:#333,stroke-width:2px;
+
+    externalCalls["fa:fa-external-link-alt External Calls"]:::extColor
+
+    subgraph derivedContracts["fa:fa-sitemap Derived Contracts"]
+        subgraph mainContract["fa:fa-file-contract Contract"]
+            privateFunction["fa:fa-lock private: only within the contract"]:::privColor
+            internalFunction["fa:fa-key internal: within the contract and derived contracts"]:::intColor
+        end
+        publicFunction["fa:fa-globe public: within the contract, derived contracts, and externally"]:::pubColor
+        internalFunctionCopy["fa:fa-key internal:  within the contract and derived contracts"]:::intColor
+    end
+
+    externalFunction["fa:fa-external-link-alt external: only be called from outside the contract"]:::extColor
+
+    externalCalls --> |Calls| publicFunction
+    externalCalls --> |Calls| externalFunction
+
+    subgraph visibilityAreas["fa:fa-eye Function Visibility Areas"]
+        externalCalls
+        derivedContracts
+        externalFunction
+    end
+
+    style visibilityAreas fill:#e0f7fa,stroke:#333,stroke-width:2px
+    style derivedContracts fill:#c8e6c9,stroke:#333,stroke-width:2px
+    style mainContract fill:#f0f4c3,stroke:#333,stroke-width:2px
+
+
+```
 Visibility specifiers determine who can call the function. There are four types of visibility specifiers:
 
 - `public`: The function can be called from within the contract, derived contracts, and externally.
@@ -926,7 +918,7 @@ Functions can also have state mutability specifiers to indicate whether they mod
 - `payable`: The function can accept Ether while being called.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -956,7 +948,7 @@ contract StateMutabilityExample {
 Function modifiers are used to change the behavior of functions. They can be used for access control, validation, and more.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -985,7 +977,7 @@ contract ModifierExample {
 Functions can return values. The return type is specified after the visibility specifier and before the function body.
 
 **Example:**
-```solidity
+```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -1008,6 +1000,31 @@ contract ReturnValueExample {
 - **Function Modifiers:** Allow altering function behavior for access control and validation.
 - **Return Values:** Functions can return values by specifying the return type.
 
+```mermaid
+graph
+    classDef contract fill:#FFDDC1,stroke:#333,stroke-width:2px;
+    classDef function fill:#FFABAB,stroke:#333,stroke-width:2px;
+    classDef visibility fill:#FFC3A0,stroke:#333,stroke-width:2px;
+    classDef stateMutability fill:#FF677D,stroke:#333,stroke-width:2px;
+    classDef private fill:#D4A5A5,stroke:#333,stroke-width:2px;
+    classDef public fill:#A0572,stroke:#FFF,stroke-width:2px;
+    classDef internal fill:#7D5A,stroke:#FFF,stroke-width:2px;
+    classDef external fill:#4B8E8D,stroke:#FFF,stroke-width:2px;
+    classDef pure fill:#A9E5BB,stroke:#333,stroke-width:2px;
+    classDef view fill:#F3E37C,stroke:#333,stroke-width:2px;
+    classDef payable fill:#FFBCBC,stroke:#333,stroke-width:2px;
+    classDef externalCall fill:#ACD8AA,stroke:#333,stroke-width:2px;
+    classDef derivedContracts fill:#FFD3B6,stroke:#333,stroke-width:2px;
+
+    contract["fa:fa-file-contract contract"]:::contract --> function:::function
+    function --> visibility["fa:fa-eye visibility"]:::visibility & state-mutability["fa:fa-exchange-alt state-mutability"]:::stateMutability
+    visibility --> private["fa:fa-ban private"]:::private & public["fa:fa-globe public"]:::public & internal["fa:fa-lock internal"]:::internal & external["fa:fa-external-link-alt external"]:::external
+    state-mutability --> pure["fa:fa-water pure"]:::pure & view["fa:fa-glasses view"]:::view & payable["fa:fa-credit-card payable"]:::payable
+    external-call["fa:fa-phone external-call"]:::externalCall -.-> public & external
+    derived-contracts["fa:fa-sitemap derived-contracts"]:::derivedContracts -.-> private & internal
+
+
+```
 
 ## Application Binary Interface (ABI)
 ```mermaid
@@ -1023,33 +1040,29 @@ graph LR
 
 ```mermaid
 graph LR
-    ABI["Application Binary Interface"]
-    ABI --> Functions["Functions"]
-    ABI --> Events["Events"]
-    ABI --> StateMutability["State Mutability"]
+    ABI["fa:fa-code Application Binary Interface"]
+    ABI --> Functions["fa:fa-cogs Functions"]
+    ABI --> Events["fa:fa-bullhorn Events"]
+    ABI --> StateMutability["fa:fa-exchange-alt State Mutability"]
 
-    subgraph Functions["Functions"]
-        setFunction["Function: set"]
-        getFunction["Function: get"]
+    subgraph Functions["fa:fa-cogs Functions"]
+        setFunction["fa:fa-edit Function: set"]
+        getFunction["fa:fa-eye Function: get"]
     end
 
-    subgraph Events["Events"]
-        event1["Event: Transfer"]
-        event2["Event: Approval"]
+    subgraph Events["fa:fa-bullhorn Events"]
+        event1["fa:fa-exchange-alt Event: Transfer"]
+        event2["fa:fa-thumbs-up Event: Approval"]
     end
 
-    subgraph StateMutability["State Mutability"]
-        view["view"]
-        pure["pure"]
-        payable["payable"]
-        nonpayable["nonpayable"]
+    subgraph StateMutability["fa:fa-exchange-alt State Mutability"]
+        view["fa:fa-glasses view"]
+        pure["fa:fa-water pure"]
+        payable["fa:fa-credit-card payable"]
+        nonpayable["fa:fa-ban nonpayable"]
     end
 
-    setFunction -->|Input| inputSet["uint256 x"]
-    setFunction -->|Output| outputSet["None"]
-
-    getFunction -->|Input| inputGet["None"]
-    getFunction -->|Output| outputGet["uint256"]
+  
 
     style ABI fill:#f9f,stroke:#333,stroke-width:2px
     style Functions fill:#9ff,stroke:#333,stroke-width:2px
@@ -1063,6 +1076,7 @@ graph LR
     style pure fill:#cfc,stroke:#333,stroke-width:2px
     style payable fill:#9cf,stroke:#333,stroke-width:2px
     style nonpayable fill:#f99,stroke:#333,stroke-width:2px
+
 ```
 
 
@@ -1380,12 +1394,17 @@ After an event is emitted by a smart contract on the Ethereum blockchain, it is 
 
 ### How Events Are Handled
 
-```
+```mermaid
 flowchart TB
-    SmartContract["Smart Contract"]
-    Blockchain["Blockchain"]
-    dApp["Decentralized Application"]
-    Web3["Web3.js/Ethers.js"]
+    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef application fill:#9f9,stroke:#333,stroke-width:2px;
+    classDef library fill:#fc9,stroke:#333,stroke-width:2px;
+
+    SmartContract["fa:fa-file-contract Smart Contract"]:::contract
+    Blockchain["fa:fa-cubes Blockchain"]:::blockchain
+    dApp["fa:fa-desktop Decentralized Application"]:::application
+    Web3["fa:fa-code Web3.js/Ethers.js"]:::library
 
     SmartContract -->|Emit Event| Blockchain
     Blockchain -->|Store Event in Transaction Log| Blockchain
@@ -1394,22 +1413,13 @@ flowchart TB
     dApp -->|Process Event Data| Web3
     Web3 -->|Handle Event| dApp
 
-    subgraph EmitAndCatchEvents["Emit and Catch Events"]
+    subgraph EmitAndCatchEvents["fa:fa-bell Emit and Catch Events"]
         SmartContract
         Blockchain
         dApp
         Web3
     end
 
-    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
-    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef application fill:#9f9,stroke:#333,stroke-width:2px;
-    classDef library fill:#fc9,stroke:#333,stroke-width:2px;
-
-    SmartContract:::contract
-    Blockchain:::blockchain
-    dApp:::application
-    Web3:::library
 ```
 
 
