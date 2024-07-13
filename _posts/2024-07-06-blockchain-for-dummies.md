@@ -14,43 +14,42 @@ I am not a blockchain expert, but I have been learning about blockchain technolo
 
 ```mermaid
 graph LR
-    subgraph TransactionData["Transaction Data"]
-        style TransactionData fill:#FFF2CC,stroke:#D6B656
-        TransactionDetails["Transaction Details<br/>(Sender, Recipient, Amount)"]
-    end
 
-    subgraph Keys["Keys"]
+    subgraph Keys["fa:fa-key Keys"]
         style Keys fill:#C2E0C6,stroke:#5FB483
-        PrivateKey["Private Key (Sender)"]
-        PublicKey["Public Key (Sender/Recipient)"]
+        PrivateKey["fa:fa-lock Private Key (Sender)"]
+        PublicKey["fa:fa-unlock Public Key (Sender/Recipient)"]
     end
-    PrivateKey --"Signs"--> TransactionSignature
-    PublicKey --"Verifies"--> TransactionSignature
-    TransactionDetails --"Included in"--> Transaction
+    PrivateKey --"fa:fa-pen Signs"--> TransactionSignature
+    PublicKey --"fa:fa-check Verifies"--> TransactionSignature
 
-    subgraph Transaction["Transaction"]
+    subgraph Transaction["fa:fa-file-alt Transaction"]
       style Transaction fill:#E1D5E7,stroke:#9673A6
-      TransactionSignature["Digital Signature"]
+      TransactionSignature["fa:fa-signature Digital Signature"]
+      subgraph TransactionData["fa:fa-database Transaction Data"]
+        style TransactionData fill:#FFF2CC,stroke:#D6B656
+        TransactionDetails["fa:fa-info-circle Transaction Details<br/>(Sender, Recipient, Amount)"]
+    end
     end
 
-    subgraph Verification["Verification"]
+    subgraph Verification["fa:fa-shield-alt Verification"]
       style Verification fill:#D4EDDA,stroke:#4CAF50
-      BlockchainNetwork["Blockchain Network"]
+      BlockchainNetwork["fa:fa-network-wired Blockchain Network"]
     end
 
-    Transaction --"Verified by"--> BlockchainNetwork
+    Transaction --"fa:fa-check Verified by"--> BlockchainNetwork
 
-
-    subgraph Block["Block (Example)"]
+    subgraph Block["fa:fa-cube Block (Example)"]
         style Block fill:#F0F0F0,stroke:#888888
-        BlockHeader["Block Header"]
-        BlockData["Block Data (Multiple Transactions)"]
+        BlockHeader["fa:fa-header Block Header"]
+        BlockData["fa:fa-database Block Data (Multiple Transactions)"]
     end
 
     Transaction -.-> BlockData
-    BlockHeader --> BlockHash["Block Hash"]
-    BlockHeader --> PreviousBlockHash["Previous Block's Hash"]
-    BlockHeader --> Nonce["Nonce"]
+    BlockHeader --> BlockHash["fa:fa-fingerprint Block Hash"]
+    BlockHeader --> PreviousBlockHash["fa:fa-link Previous Block's Hash"]
+    BlockHeader --> Nonce["fa:fa-random Nonce"]
+
 ```
 
 - **Transaction**: A digital record of value transfer between two parties (sender and recipient) with a specific amount. It's signed with the sender's private key and verified by the network using their public key. [ethereum's doc](https://ethereum.org/en/developers/docs/transactions/)
@@ -63,39 +62,39 @@ graph LR
 
 ```mermaid
 graph LR
-    subgraph Network["Blockchain Network"]
+    subgraph Network["fa:fa-network-wired Blockchain Network"]
         style Network fill:#F2F2F2,stroke:#666666
-        Transactions["Transactions"]
+        Transactions["fa:fa-exchange-alt Transactions"]
         style Transactions fill:#E1D5E7,stroke:#9673A6
-        Blocks["Blocks"]
+        Blocks["fa:fa-cube Blocks"]
         style Blocks fill:#F0F0F0,stroke:#888888
     end
 
-    subgraph Participants["Participants"]
+    subgraph Participants["fa:fa-users Participants"]
         style Participants fill:#F0F0F0,stroke:#888888
-        Wallet["Wallet (User)"]
+        Wallet["fa:fa-wallet Wallet (User)"]
         style Wallet fill:#FFF2CC,stroke:#D6B656
-        Node["Node"]
+        Node["fa:fa-server Node"]
         style Node fill:#C2E0C6,stroke:#5FB483
-        Miner["Miner"]
+        Miner["fa:fa-user-shield Miner"]
         style Miner fill:#F5DEB3,stroke:#D2B48C
     end
     
     subgraph Wallet
-      PublicKey["Public Key (Sender/Recipient)"]
-      PrivateKey["Private Key (Sender)"]
+      PublicKey["fa:fa-key Public Key (Sender/Recipient)"]
+      PrivateKey["fa:fa-lock Private Key (Sender)"]
     end
 
-
-    Wallet -- "Creates/Receives" --> Transactions
-    Node -- "Validates/Stores" --> Transactions
-    Node -- "Validates/Stores" --> Blocks
-    Miner -- "Creates/Validates" --> Blocks
+    Wallet -- "fa:fa-paper-plane Creates/Receives" --> Transactions
+    Node -- "fa:fa-check Validates/Stores" --> Transactions
+    Node -- "fa:fa-check Validates/Stores" --> Blocks
+    Miner -- "fa:fa-hammer Creates/Validates" --> Blocks
     Transactions -.-> Blocks
 
-    PrivateKey -- "Signs" --> Transactions
-    PublicKey -- "Verifies" --> Transactions
-    Miner -- "Receives Rewards From" --> Blocks
+    PrivateKey -- "fa:fa-pen Signs" --> Transactions
+    PublicKey -- "fa:fa-check Verifies" --> Transactions
+    Miner -- "fa:fa-coins Receives Rewards From" --> Blocks
+
 
 ```
 
@@ -170,25 +169,26 @@ graph TD
 
 ```mermaid
 graph LR
-    HashRate["BTC Hash Rate<br/>614.42 EH/s"]
+    HashRate["fa:fa-tachometer-alt BTC Hash Rate<br/>614.42 EH/s"]
     style HashRate fill:#F2F2F2,stroke:#666666
-    HashRate -- "Represents" --> TotalNetworkPower["Total Network Computing Power"]
+    HashRate -- "fa:fa-info Represents" --> TotalNetworkPower["fa:fa-cogs Total Network Computing Power"]
     style TotalNetworkPower fill:#FFDDCC,stroke:#E69966
 
-    TotalNetworkPower -- "Influenced by" --> NumberOfMiners["Number of Miners"]
+    TotalNetworkPower -- "fa:fa-users Influenced by" --> NumberOfMiners["fa:fa-user-friends Number of Miners"]
     style NumberOfMiners fill:#FFF2CC,stroke:#D6B656
 
-    TotalNetworkPower -- "Influenced by" --> MiningHardware["Mining Hardware Efficiency"]
+    TotalNetworkPower -- "fa:fa-microchip Influenced by" --> MiningHardware["fa:fa-tools Mining Hardware Efficiency"]
     style MiningHardware fill:#C2E0C6,stroke:#5FB483
 
-    HashRate -- "Determines" --> Difficulty["Mining Difficulty"]
+    HashRate -- "fa:fa-tasks Determines" --> Difficulty["fa:fa-dumbbell Mining Difficulty"]
     style Difficulty fill:#E1D5E7,stroke:#9673A6
 
-    HashRate -- "Affects" --> BlockTime["Average Block Time<br/>~10 minutes"]
+    HashRate -- "fa:fa-clock Affects" --> BlockTime["fa:fa-hourglass-half Average Block Time<br/>~10 minutes"]
     style BlockTime fill:#D5E8D4,stroke:#82B366
     
-    HashRate -- "Indicates" --> Security["Network Security"]
+    HashRate -- "fa:fa-lock Indicates" --> Security["fa:fa-shield-alt Network Security"]
     style Security fill:#9673A6,stroke:#E1D5E7
+
 ```
 
 **Bitcoin Hashrate** measures the total computing power miners use to secure the network, currently at 614.42 EH/s. A higher hashrate enhances security by making it harder for bad actors to control the network. It also influences mining difficulty, ensuring consistent block creation times.
@@ -197,39 +197,40 @@ graph LR
 
 ```mermaid
 graph LR
-    subgraph Network["Blockchain Network (Ethereum 2.0)"]
+    subgraph Network["fa:fa-network-wired Blockchain Network (Ethereum 2.0)"]
         style Network fill:#F2F2F2,stroke:#666666
-        Transactions["Transactions"]
+        Transactions["fa:fa-exchange-alt Transactions"]
         style Transactions fill:#E1D5E7,stroke:#9673A6
-        Blocks["Blocks"]
+        Blocks["fa:fa-cube Blocks"]
         style Blocks fill:#F0F0F0,stroke:#888888
     end
 
-    subgraph Participants["Participants"]
+    subgraph Participants["fa:fa-users Participants"]
         style Participants fill:#F0F0F0,stroke:#888888
-        Wallet["Wallet (User)"]
+        Wallet["fa:fa-wallet Wallet (User)"]
         style Wallet fill:#FFF2CC,stroke:#D6B656
-        Node["Node"]
+        Node["fa:fa-server Node"]
         style Node fill:#C2E0C6,stroke:#5FB483
-        Validator["Validator"]
+        Validator["fa:fa-user-shield Validator"]
         style Validator fill:#F5DEB3,stroke:#D2B48C
     end
     
     subgraph Wallet
-      PublicKey["Public Key (Sender/Recipient)"]
-      PrivateKey["Private Key (Sender)"]
+      PublicKey["fa:fa-key Public Key (Sender/Recipient)"]
+      PrivateKey["fa:fa-lock Private Key (Sender)"]
     end
 
-    Wallet -- "Creates/Receives" --> Transactions
-    Node -- "Validates/Stores" --> Transactions
-    Node -- "Validates/Stores" --> Blocks
-    Validator -- "Proposes/Validates" --> Blocks
+    Wallet -- "fa:fa-paper-plane Creates/Receives" --> Transactions
+    Node -- "fa:fa-check Validates/Stores" --> Transactions
+    Node -- "fa:fa-check Validates/Stores" --> Blocks
+    Validator -- "fa:fa-gavel Proposes/Validates" --> Blocks
     Transactions -.-> Blocks
 
-    PrivateKey -- "Signs" --> Transactions
-    PublicKey -- "Verifies" --> Transactions
-    Validator -- "Receives Rewards From" --> Blocks
-    Validator --> StakedETH["Staked ETH (32 ETH)"]
+    PrivateKey -- "fa:fa-pen Signs" --> Transactions
+    PublicKey -- "fa:fa-check Verifies" --> Transactions
+    Validator -- "fa:fa-coins Receives Rewards From" --> Blocks
+    Validator --> StakedETH["fa:fa-piggy-bank Staked ETH (32 ETH)"]
+
     
 
 ```
@@ -241,23 +242,23 @@ Gas in the Ethereum network is a unit that measures the computational work requi
 
 ```mermaid
 graph TD
-    subgraph UserA["Bob's Account"]
+    subgraph UserA["fa:fa-user Bob's Account"]
         style UserA fill:#9f9,stroke:#333,stroke-width:2px
-        BalanceA["1.0042 ETH"]
+        BalanceA["fa:fa-money-bill-wave 1.0042 ETH"]
     end
 
-        style Blockchain fill:#ff9,stroke:#333,stroke-width:2px
-        Miner["Miner/Validator"]
+    style Blockchain fill:#ff9,stroke:#333,stroke-width:2px
+    Miner["fa:fa-gavel Miner/Validator"]
     
-    subgraph UserB["Alice's Account"]
+    subgraph UserB["fa:fa-user Alice's Account"]
         style UserB fill:#9f9,stroke:#333,stroke-width:2px
-        BalanceB["0 ETH"]
+        BalanceB["fa:fa-money-bill-wave 0 ETH"]
     end
 
-    UserA --"Sends 1 ETH + 0.0042 ETH Fee"--> Blockchain
-    Blockchain --"Transfers 1 ETH"--> UserB
-    Blockchain --"Pays 0.00021 ETH Tip"--> Miner
-    Blockchain --"Burns 0.00399 ETH"--> LostETH["0.00399 ETH"]
+    UserA --"fa:fa-arrow-right Sends 1 ETH + 0.0042 ETH Fee"--> Blockchain
+    Blockchain --"fa:fa-arrow-right Transfers 1 ETH"--> UserB
+    Blockchain --"fa:fa-coins Pays 0.00021 ETH Tip"--> Miner
+    Blockchain --"fa:fa-fire Burns 0.00399 ETH"--> LostETH["fa:fa-money-bill-wave 0.00399 ETH"]
 
 ```
 
@@ -278,23 +279,24 @@ graph LR
     classDef lightgreen fill:#90EE90,stroke:#333,stroke-width:2px;
     classDef lightpink fill:#FFB6C1,stroke:#333,stroke-width:2px;
 
-    subgraph Stablecoins["**Types of Stablecoins**"]
-        FiatBacked["Fiat-Backed"]:::cadetblue
-        CommodityBacked["Commodity-Backed"]:::mediumaquamarine
-        CryptoBacked["Crypto-Backed"]:::lightgreen
-        Algorithmic["Algorithmic"]:::lightpink
+    subgraph Stablecoins["fa:fa-coins **Types of Stablecoins**"]
+        FiatBacked["fa:fa-dollar-sign Fiat-Backed"]:::cadetblue
+        CommodityBacked["fa:fa-gem Commodity-Backed"]:::mediumaquamarine
+        CryptoBacked["fa:fa-b Crypto-Backed"]:::lightgreen
+        Algorithmic["fa:fa-cogs Algorithmic"]:::lightpink
     end
 
-    FiatBacked --> Tether["Tether (USDT)"]:::cadetblue
-    FiatBacked --> USDCoin["USD Coin (USDC)"]:::cadetblue
+    FiatBacked --> Tether["fa:fa-dollar-sign Tether (USDT)"]:::cadetblue
+    FiatBacked --> USDCoin["fa:fa-dollar-sign USD Coin (USDC)"]:::cadetblue
 
-    CommodityBacked --> TetherGold["Tether Gold (XAUT)"]:::mediumaquamarine
-    CommodityBacked --> PAXGold["PAX Gold (PAXG)"]:::mediumaquamarine
+    CommodityBacked --> TetherGold["fa:fa-gem Tether Gold (XAUT)"]:::mediumaquamarine
+    CommodityBacked --> PAXGold["fa:fa-gem PAX Gold (PAXG)"]:::mediumaquamarine
 
-    CryptoBacked --> Dai["Dai (DAI)"]:::lightgreen
+    CryptoBacked --> Dai["fa:fa-b Dai (DAI)"]:::lightgreen
 
-    Algorithmic --> AMPL["Ampleforth (AMPL)"]:::lightpink
-    Algorithmic --> UST["TerraUSD (UST)"]:::lightpink
+    Algorithmic --> AMPL["fa:fa-cogs Ampleforth (AMPL)"]:::lightpink
+    Algorithmic --> UST["fa:fa-cogs TerraUSD (UST)"]:::lightpink
+
 
 ```
 
@@ -359,47 +361,46 @@ Validator -- "Earns" --> StakingRewards["Staking Rewards (ETH)"]
 
 ```mermaid
 graph LR
-    subgraph SmartContract["Smart Contract"]
+    subgraph SmartContract["fa:fa-file-contract Smart Contract"]
         style SmartContract fill:#FFF2CC,stroke:#D6B656
-        ContractCode["Contract Code<br/>(Solidity, etc.)"]
-        StateVariables["State Variables"]
-        Functions["Functions"]
-        Events["Events"]
+        ContractCode["fa:fa-code Contract Code<br/>(Solidity, etc.)"]
+        StateVariables["fa:fa-database State Variables"]
+        Functions["fa:fa-cogs Functions"]
+        Events["fa:fa-bullhorn Events"]
     end
 
-    subgraph Blockchain["Blockchain"]
+    subgraph Blockchain["fa:fa-network-wired Blockchain"]
         style Blockchain fill:#F2F2F2,stroke:#666666
-        BlockchainNetwork
+        BlockchainNetwork["fa:fa-link Blockchain Network"]
     end
 
-    subgraph Participants["Participants"]
+    subgraph Participants["fa:fa-users Participants"]
         style Participants fill:#F0F0F0,stroke:#888888
-        User1["User 1"]
+        User1["fa:fa-user User 1"]
         style User1 fill:#C2E0C6,stroke:#5FB483
-        User2["User 2"]
+        User2["fa:fa-user User 2"]
         style User2 fill:#F5DEB3,stroke:#D2B48C
     end
     
-    subgraph Trigger["Triggers"]
+    subgraph Trigger["fa:fa-bolt Triggers"]
         style Trigger fill:#D4EDDA,stroke:#4CAF50
-        ExternalCall["External Call<br/>(User/Contract)"]
+        ExternalCall["fa:fa-external-link-alt External Call<br/>(User/Contract)"]
         style ExternalCall fill:#E6F2FF,stroke:#B8D8F2
-        TimeBased["Time-Based<br/>(e.g., Scheduled Payment)"]
+        TimeBased["fa:fa-clock Time-Based<br/>(e.g., Scheduled Payment)"]
         style TimeBased fill:#E6F2FF,stroke:#B8D8F2
-        EventBased["Event-Based<br/>(e.g., Price Change)"]
+        EventBased["fa:fa-calendar Event-Based<br/>(e.g., Price Change)"]
         style EventBased fill:#E6F2FF,stroke:#B8D8F2
     end
 
+    User1 -- "fa:fa-hand-point-right Interacts With" --> SmartContract
+    User2 -- "fa:fa-hand-point-right Interacts With" --> SmartContract
 
-    User1 -- "Interacts With" --> SmartContract
-    User2 -- "Interacts With" --> SmartContract
-
-    SmartContract -- "Deployed On" --> BlockchainNetwork
-    ContractCode -- "Defines" --> StateVariables
-    ContractCode -- "Defines" --> Functions
-    ContractCode -- "Defines" --> Events
-    Functions -- "Updates" --> StateVariables
-    Events -- "Emitted When State Changes" --> BlockchainNetwork
+    SmartContract -- "fa:fa-link Deployed On" --> BlockchainNetwork
+    ContractCode -- "fa:fa-pencil-alt Defines" --> StateVariables
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Functions
+    ContractCode -- "fa:fa-pencil-alt Defines" --> Events
+    Functions -- "fa:fa-sync-alt Updates" --> StateVariables
+    Events -- "fa:fa-bell Emitted When State Changes" --> BlockchainNetwork
 
     ExternalCall --> Functions
     TimeBased --> Functions
@@ -413,24 +414,28 @@ graph LR
 
 ```mermaid
 flowchart TB
-    SmartContract["Smart Contract: MyToken"]
-    Blockchain["Blockchain"]
-    TransactionLog["Transaction Log (Blockchain)"]
-    EventData["Event Data (Blockchain)"]
-    BalancesData["Balances Data (Blockchain)"]
-    dApp["Decentralized Application"]
-    Web3["Web3.js/Ethers.js"]
+    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
+    classDef external fill:#9f9,stroke:#333,stroke-width:2px;
 
-    SmartContract -->|Deploys to| Blockchain
-    SmartContract -->|Emits Event| TransactionLog
-    SmartContract -->|Reads/Writes| BalancesData
-    Blockchain -->|Stores| TransactionLog
-    Blockchain -->|Stores| EventData
-    Blockchain -->|Stores| BalancesData
-    dApp -->|Interacts with| Web3
-    Web3 -->|Reads Event Data| EventData
-    Web3 -->|Reads/Writes| BalancesData
-    Web3 -->|Listens for Events| TransactionLog
+    SmartContract["fa:fa-file-contract Smart Contract: MyToken"]:::contract
+    Blockchain["fa:fa-network-wired Blockchain"]:::blockchain
+    TransactionLog["fa:fa-list Transaction Log (Blockchain)"]:::blockchain
+    EventData["fa:fa-database Event Data (Blockchain)"]:::blockchain
+    BalancesData["fa:fa-balance-scale Balances Data (Blockchain)"]:::blockchain
+    dApp["fa:fa-desktop Decentralized Application"]:::external
+    Web3["fa:fa-code Web3.js/Ethers.js"]:::external
+
+    SmartContract -->|fa:fa-upload Deploys to| Blockchain
+    SmartContract -->|fa:fa-bullhorn Emits Event| TransactionLog
+    SmartContract -->|fa:fa-exchange-alt Reads/Writes| BalancesData
+    Blockchain -->|fa:fa-save Stores| TransactionLog
+    Blockchain -->|fa:fa-save Stores| EventData
+    Blockchain -->|fa:fa-save Stores| BalancesData
+    dApp -->|fa:fa-hand-point-right Interacts with| Web3
+    Web3 -->|fa:fa-database Reads Event Data| EventData
+    Web3 -->|fa:fa-exchange-alt Reads/Writes| BalancesData
+    Web3 -->|fa:fa-bell Listens for Events| TransactionLog
 
     subgraph BlockchainSection[" "]
         Blockchain
@@ -439,17 +444,6 @@ flowchart TB
         BalancesData
     end
 
-    classDef blockchain fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef contract fill:#99f,stroke:#333,stroke-width:2px;
-    classDef external fill:#9f9,stroke:#333,stroke-width:2px;
-
-    Blockchain:::blockchain
-    TransactionLog:::blockchain
-    EventData:::blockchain
-    BalancesData:::blockchain
-    dApp:::external
-    Web3:::external
-    SmartContract:::contract
 
 ```
 
