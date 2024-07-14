@@ -185,23 +185,35 @@ adoptionInstance.getAdopters.call();
 
 ```mermaid
 graph TD
-    getPetId["fa:fa-dog Get Pet ID from Event"]:::action
-    getAccount["fa:fa-user Get User Account"]:::account
-    fetchContract["fa:fa-file-contract Get Adoption Contract Instance"]:::account
-    sendTransaction["fa:fa-paper-plane Send Transaction to Contract"]:::transaction
-    markAdopted["fa:fa-check-circle Mark Adopted Pets"]:::ui
 
-    getPetId --> getAccount
-    getAccount --> fetchContract
-    fetchContract --> sendTransaction
-    sendTransaction --> markAdopted
+subgraph DApp["fa:fa-dharmachakra Your DApp"]
+  truffleContract["App.contracts.Adoption = TruffleContract(AdoptionArtifact)"]:::truffle
+  deployedPromise["fa:fa-spinner deployed() Promise"]:::promise
+  adoptionInstance["fa:fa-cube Contract Instance"]:::instance
+  adoptFunction["fa:fa-hand-point-right adopt(petId, {from: account})"]:::adopt
+end
 
-    classDef action fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef account fill:#9f9,stroke:#333,stroke-width:2px;
-    classDef transaction fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef ui fill:#9ff,stroke:#333,stroke-width:2px;
+subgraph Blockchain["fa:fa-cube Ethereum Blockchain"]
+  deployedContract["fa:fa-cloud-upload Deployed Adoption Contract"]:::contract
+end
+
+truffleContract --> |"fa:fa-arrow-right Resolves to"| deployedPromise
+deployedPromise --> |"fa:fa-arrow-right Provides"| adoptionInstance
+adoptionInstance --> |"fa:fa-arrow-right Calls"| adoptFunction
+adoptFunction --> |"fa:fa-arrow-right Modifies State"| deployedContract
+
+classDef dapp fill:#ffe0e0,stroke:#800,stroke-width:2px;
+classDef promise fill:#e0e0ff,stroke:#0000ff,stroke-width:2px;
+classDef instance fill:#ffebcc,stroke:#cc6600,stroke-width:2px;
+classDef adopt fill:#e0ffff,stroke:#008080,stroke-width:2px;
+classDef read fill:#f0e68c,stroke:#b8860b,stroke-width:2px;
+classDef contract fill:#e0f0e0,stroke:#008000,stroke-width:2px;
+classDef truffle fill:#ffd700,stroke:#DAA520,stroke-width:2px;
+
 
 ```
+
+When a user clicks the "Adopt" button, the `handleAdopt` function is called. This function retrieves the pet ID from the button's data attribute and calls the `adopt()` function on the contract instance.
 
 ```js
 App = {
@@ -237,6 +249,77 @@ App = {
     ///.
 }
 ```
+
+This will cost gas, and the user will need to confirm the transaction in MetaMask. Once the transaction is confirmed, the pet will be marked as adopted in the DApp interface.
+
+## Display Adopted Pets
+```mermaid
+graph TD
+
+subgraph DApp["fa:fa-dharmachakra DApp"]
+  appContractsAdoption["fa:fa-code App.contracts.Adoption"]:::dapp
+  deployedPromise["fa:fa-spinner deployed() Promise"]:::promise
+  adoptionInstance["fa:fa-cube Contract Instance"]:::instance
+  callGetAdoptersFunction["fa:fa-database adoptionInstance.getAdopters.call()"]:::read
+end
+
+subgraph Blockchain["fa:fa-cube Ethereum Blockchain"]
+  deployedAdoptionContract["fa:fa-cloud-upload Deployed Adoption Contract"]:::contract
+end
+
+appContractsAdoption --> |"fa:fa-arrow-right Resolves to"| deployedPromise
+deployedPromise --> |"fa:fa-arrow-right Provides"| adoptionInstance
+adoptionInstance --> |"fa:fa-arrow-right Calls"| callGetAdoptersFunction
+callGetAdoptersFunction --> |"fa:fa-arrow-right Reads Data From"| deployedAdoptionContract
+
+classDef dapp fill:#ffe0e0,stroke:#800,stroke-width:2px;
+classDef promise fill:#e0e0ff,stroke:#0000ff,stroke-width:2px;
+classDef instance fill:#ffebcc,stroke:#cc6600,stroke-width:2px;
+classDef read fill:#f0e68c,stroke:#b8860b,stroke-width:2px;
+classDef contract fill:#e0f0e0,stroke:#008000,stroke-width:2px;
+
+```
+
+```js
+// src/js/app.js
+App = {
+    web3Provider: null,
+    contracts: {},
+
+    // ...
+    
+    markAdopted: function () {
+        var adoptionInstance;
+
+        App.contracts.Adoption.deployed().then(function (instance) {
+            adoptionInstance = instance;
+
+            return adoptionInstance.getAdopters.call();
+        }).then(function (adopters) {
+            for (i = 0; i < adopters.length; i++) {
+                if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
+                    $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+                }
+            }
+        }).catch(function (err) {
+            console.log(err.message);
+        });
+
+    },
+
+    //...
+
+};
+```    
+
+The main goal of the `markAdopted` function is to visually update your DApp's interface to indicate which pets have already been adopted. It does this by:
+
+- Retrieving the list of adopters from the smart contract.
+- Checking each entry in the list to see if it's a valid Ethereum address (not all zeros).
+- Disabling and marking the "Adopt" button for pets that have already been adopted.
+
+
+
 
 ## Prepare MetaMask Wallet
 
