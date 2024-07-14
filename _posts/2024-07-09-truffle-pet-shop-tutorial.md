@@ -4,6 +4,7 @@ categories: [tech]
 date: 2024-07-09 00:00:00
 tags: [blockchain]
 image: "/assets/images/pet-shop-smart-contract.jpg"
+next_post_url: "/posts/truffle-pet-shop-interface"
 ---
 
 Truffle is the development framework for Ethereum, simplifying smart contract creation, testing, and deployment. 
@@ -437,7 +438,7 @@ Compiling your contracts...
 
 ## Source Code
 
-Full source code for the Truffle Pet Shop tutorial can be found on GitHub https://github.com/kelvin-bz/smart-contract-pet-shop
+Full source code for the Truffle Pet Shop tutorial can be found on GitHub here: [Truffle Pet Shop](https://github.com/kelvin-bz/smart-contract-pet-shop)
 
 
 ## References
@@ -445,4 +446,6 @@ Full source code for the Truffle Pet Shop tutorial can be found on GitHub https:
 - Read more about Truffle [https://archive.trufflesuite.com/guides/pet-shop/](https://archive.trufflesuite.com/guides/pet-shop/).
 
 
-
+{% if page.next_post_url %}  
+<a href="{{ page.next_post_url }}">Next Post: Blockchain Basics P4 - DApp Front-End Development with Web3.js</a> 
+{% endif %}
