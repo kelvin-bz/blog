@@ -8,6 +8,13 @@ image: "/assets/images/truffle-pet-shop-interface/truffle-pet-shop-interface.png
 
 In this post, we will explore the Truffle Pet Shop interface and the underlying code that powers it. The Truffle Pet Shop is a sample decentralized application (DApp) that showcases how to interact with smart contracts on the Ethereum blockchain. We will look at the key components of the interface and the JavaScript code that connects the frontend to the blockchain.
 
+## About the Pet Shop Tutorial
+
+The Truffle Pet Shop tutorial is a great place to start learning about Ethereum development. It's a simple dApp that allows users to adopt pets. 
+
+Previously, we covered the smart contract development part of the tutorial. In this post, we will focus on the frontend interface and the JavaScript code that interacts with the smart contract.
+
+
 ## window.ethereum object
 
 ```mermaid
@@ -253,9 +260,14 @@ To interact with the DApp in your browser, follow these steps:
 
 ![confirm_transaction]({{ site.baseurl }}/assets/images/truffle-pet-shop-interface/confirm-transaction.png)
 
+## Source Code
+
+Full source code for the Truffle Pet Shop tutorial can be found on GitHub here: [Truffle Pet Shop](https://github.com/kelvin-bz/smart-contract-pet-shop)
+
+
 ## References
 
-- [Truffle Suite](https://archive.trufflesuite.com/guides/pet-shop/)
+- The [Truffle Suite](https://archive.trufflesuite.com/guides/pet-shop/)
 
 - [Web3.js Documentation](https://web3js.readthedocs.io/en/v1.3.4/)
 
