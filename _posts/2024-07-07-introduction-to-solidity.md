@@ -2566,3 +2566,4 @@ This chapter covered advanced topics and best practices in Solidity development:
 
 These advanced topics and best practices are essential for writing efficient, robust, and secure smart contracts on the Ethereum blockchain.
 
+<a href="/posts/truffle-pet-shop-tutorial">Next Post: Blockchain Basics P3 - Truffle Pet-Shop Smart Contract</a> 
