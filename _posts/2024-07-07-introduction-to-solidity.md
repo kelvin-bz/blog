@@ -1,7 +1,7 @@
 ---
 title: "Blockchain Basics P2 - Getting Started with Solidity and Smart Contracts"
 categories: [tech]
-date: 2024-07-08 00:00:01
+date: 2024-07-07 00:00:01
 tags: [blockchain, solidity, smart-contracts]
 image: "/assets/images/smart-contracts/smart-contracts.png"
 ---
@@ -913,11 +913,32 @@ contract VisibilityExample {
 
 ### State Mutability
 
+```mermaid
+graph 
+    subgraph mutabilitySpecifiers["<i class='fas fa-exchange-alt'></i> State Mutability Specifiers"]
+        style mutabilitySpecifiers fill:#9f9,stroke:#333,stroke-width:2px
+        pure["<i class='fas fa-eye-slash'></i> pure<br/>(Does not read or modify state)"]
+        view["<i class='fas fa-eye'></i> view<br/>(Reads state, does not modify)"]
+        payable["<i class='fas fa-coins'></i> payable<br/>(Can accept Ether)"]
+        nonpayable["<i class='fas fa-ban'></i> nonpayable (default)<br/>(Does not accept Ether)"]
+    end
+
+    subgraph solidityFunction["<i class='fas fa-code'></i> Solidity Function"]
+        style solidityFunction fill:#f9f,stroke:#333,stroke-width:2px
+        functionDeclaration["function myFunction() ..."]
+    end
+
+    solidityFunction --> |Can have| mutabilitySpecifiers
+
+```
+
 Functions can also have state mutability specifiers to indicate whether they modify the blockchain state:
 
 - `pure`: The function does not read or modify the state.
 - `view`: The function reads the state but does not modify it.
 - `payable`: The function can accept Ether while being called.
+- `nonpayable`: Functions that do not explicitly specify any mutability keyword default to nonpayable, meaning they do not accept Ether and can read and write to the state.
+
 
 **Example:**
 ```js
@@ -942,6 +963,7 @@ contract StateMutabilityExample {
         require(msg.value > 0, "Must send some Ether");
         value = newValue;
     }
+    
 }
 ```
 

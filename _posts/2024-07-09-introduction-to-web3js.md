@@ -1,7 +1,7 @@
 ---
-title: Blockchain Basics P3 -  Integrating with Blockchain Using Web3.js
+title: Blockchain Basics P3 - Create Pet Shop S
 categories: [tech]
-date: 2024-07-09 00:00:00
+date: 2025-07-09 00:00:00
 tags: [blockchain]
 image: "/assets/images/introduction-web3js.png"
 ---
