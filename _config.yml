@@ -31,6 +31,8 @@ github:
 twitter:
   username: kelvin_bzz # change to your twitter username
 
+
+
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
@@ -42,7 +44,7 @@ social:
     - https://twitter.com/kelvin_bzz # change to your twitter homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    - https://www.linkedin.com/in/huycuongbuicong/
+    - https://www.linkedin.com/in/huycuongbuicong
 
 # Site Verification Settings
 webmaster_verifications:
@@ -59,7 +61,7 @@ webmaster_verifications:
 # Web Analytics Settings
 analytics:
   google:
-    id: # fill in your Google Analytics ID
+    id: G-0K5PJWGM7D
   goatcounter:
     id: # fill in your GoatCounter ID
   umami:
@@ -96,7 +98,7 @@ theme_mode: light
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: https://pbs.twimg.com/profile_images/1809523461997666304/GGDiBT94_400x400.jpg
+avatar: https://avatars.githubusercontent.com/u/15279486?v=4
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
