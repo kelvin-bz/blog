@@ -1,5 +1,5 @@
 ---
-title: Blockchain Basics P3 - Truffle Pet-Shop Tutorial
+title: Blockchain Basics P3 - Truffle Pet-Shop Smart Contract 
 categories: [tech]
 date: 2024-07-09 00:00:00
 tags: [blockchain]
@@ -16,7 +16,7 @@ The Truffle Pet Shop tutorial is a great place to start learning about Ethereum 
 
 ## Setting Up Truffle
 
-- Install Truffle globally using npm:
+Install Truffle globally using npm:
 ```bash
 npm install -g truffle
 ```
@@ -154,8 +154,8 @@ After running the compile command, you should see a new build/ directory in your
 
 The compilation process generates JSON files representing your compiled contracts. These files, called "artifacts," are stored in the build/contracts directory of your Truffle project.
 Each artifact file contains two crucial components:
-Bytecode: This is the binary representation of your contract's code, the set of instructions that the EVM will run on the blockchain.
-ABI (Application Binary Interface): This is a JSON object that describes the contract's interface, including its functions, their input parameters, return types, and events. The ABI is essential for interacting with your deployed contract from external applications and tools.
+- `Bytecode`: This is the binary representation of your contract's code, the set of instructions that the EVM will run on the blockchain.
+- `ABI (Application Binary Interface)`: This is a JSON object that describes the contract's interface, including its functions, their input parameters, return types, and events. The ABI is essential for interacting with your deployed contract from external applications and tools.
 
 
 ```bash
@@ -181,7 +181,7 @@ Compiling your contracts...
 
 ## Ganache: A Local Blockchain
 
-Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.  It acts as a simulated Ethereum network on your local machine, allowing you to test your smart contracts and decentralized applications (dApps) without incurring real costs or risking funds on a live network. 
+**Ganache** is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.  It acts as a simulated Ethereum network on your local machine, allowing you to test your smart contracts and decentralized applications (dApps) without incurring real costs or risking funds on a live network. 
 
 ![ganache]({{ site.baseurl }}/assets/images/ganache.png)
 
@@ -325,14 +325,13 @@ Summary
 - **Initial Migration (1_initial_migration.js)**:
 
 This script deploys the `Migrations` contract to your local blockchain (Development network with ID 5777). The Migrations contract is a special contract that helps Truffle track which migrations have already been run.
-It cost 0.000652195125 ETH (fake Ether since it's a development network) to deploy, including gas fees.
+It cost 0.000652195125 ETH (fake Ether since it's a development network) to deploy, including gas fees. (check this post [Gas Price and Gas Limit](https://kelvin-bz.github.io/posts/blockchain-for-dummies/#gas-fees))
 
 - **Deploying Contracts (2_deploy_contracts.js)**:
 
 This script deploys your custom `Adoption` contract.
 It also cost 0.000647504871762749 ETH on the development network.
 
-- **Gas Used**: check this post [Gas Price and Gas Limit](https://kelvin-bz.github.io/posts/blockchain-for-dummies/#gas-fees)
 
 - **Contract Address**: The contract address is a unique identifier assigned to a smart contract when it is deployed on the Ethereum blockchain. It allows users and other contracts to interact with the deployed contract.
   - `Migrations Contract` was deployed at 0x81634f10231fB77FB5d5f4ECBb6095C348491f40.
@@ -445,6 +444,5 @@ Full source code for the Truffle Pet Shop tutorial can be found on GitHub https:
 
 - Read more about Truffle [https://archive.trufflesuite.com/guides/pet-shop/](https://archive.trufflesuite.com/guides/pet-shop/).
 
-- Read the blog post [https://kelvin-bz.github.io/posts/truffle-pet-shop-tutorial/](https://kelvin-bz.github.io/posts/truffle-pet-shop-tutorial/).
 
 
