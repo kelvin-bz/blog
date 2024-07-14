@@ -8,6 +8,12 @@ image: "/assets/images/pet-shop-smart-contract.jpg"
 
 Truffle is the development framework for Ethereum, simplifying smart contract creation, testing, and deployment. 
 
+Read more about Truffle [here](https://archive.trufflesuite.com/guides/pet-shop/).
+
+## About the Pet Shop Tutorial
+
+The Truffle Pet Shop tutorial is a great place to start learning about Ethereum development. It's a simple dApp that allows users to adopt pets. 
+
 ## Setting Up Truffle
 
 - Install Truffle globally using npm:
@@ -176,6 +182,8 @@ Compiling your contracts...
 ## Ganache: A Local Blockchain
 
 Ganache is a personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.  It acts as a simulated Ethereum network on your local machine, allowing you to test your smart contracts and decentralized applications (dApps) without incurring real costs or risking funds on a live network. 
+
+![ganache]({{ site.baseurl }}/assets/images/ganache.png)
 
 For more information, visit the [Ganache website](https://archive.trufflesuite.com/ganache/).
 
@@ -427,5 +435,16 @@ Compiling your contracts...
 
   2 passing (92ms)
 ```
+
+## Source Code
+
+Full source code for the Truffle Pet Shop tutorial can be found on GitHub https://github.com/kelvin-bz/smart-contract-pet-shop
+
+
+## References
+
+- Read more about Truffle [https://archive.trufflesuite.com/guides/pet-shop/](https://archive.trufflesuite.com/guides/pet-shop/).
+
+- Read the blog post [https://kelvin-bz.github.io/posts/truffle-pet-shop-tutorial/](https://kelvin-bz.github.io/posts/truffle-pet-shop-tutorial/).
 
 
