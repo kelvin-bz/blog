@@ -757,6 +757,43 @@ graph LR
 ```
 
 
+## Hard Fork vs Soft Fork
+
+```mermaid
+graph TD
+    subgraph ethereumBlockchain["fa:fa-link Ethereum Blockchain"]
+        genesisBlock["fa:fa-cube Genesis Block"] --> |Initial State| block1["Block 1"] 
+        block1 --> |Protocol Rules| block2["Block 2"]
+        block2 --> |Existing Rules| block3["Block 3"]
+    end
+    
+    subgraph softFork["fa:fa-code-fork Soft Fork (Backward Compatible)"]
+        block3 --> |New Rules, Old Nodes Valid| block4Soft["Block 4"]
+        block4Soft --> |Continued Compatibility| block5Soft["Block 5"]
+        style softFork fill:#90EE90,stroke:#006400
+    end
+
+    subgraph hardFork["fa:fa-code-branch Hard Fork (Non-Compatible)"]
+        block3 --> |New Chain, New Rules| block4Hard["Block 4'"]
+        block4Hard --> |Separate Chain Continues| block5Hard["Block 5'"]
+        style hardFork fill:#FFCCCB,stroke:#8B0000
+    end
+    
+    block3 -.-> block4Soft
+    block3 -.-> block4Hard
+```
+
+- **Soft Fork**:
+  - Introduces backward-compatible changes to the protocol rules.
+  - Older nodes can still validate new blocks, even if they don't understand the new rules.
+  - Both old and new nodes continue on the same chain.
+
+- **Hard Fork**:
+  - Introduces non-backward-compatible changes.
+  - Older nodes cannot validate new blocks created under the new rules.
+  - This results in a permanent split into two separate chains: The original chain with old nodes following the old rules. A new chain with upgraded nodes following the new rules.
+
+
 ## TVL (Total Value Locked)
 
 ```mermaid
