@@ -2,7 +2,7 @@
 title: The beauty of "else if" in different programming languages
 
 categories: [tech]
-date: 2024-07-03 00:00:00
+date: 2034-07-03 00:00:00
 tags: [javascript]
 image: "/assets/images/the-beauty-of-else-if-in-different-programming-languages.jpg
 "

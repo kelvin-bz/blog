@@ -150,6 +150,12 @@ graph LR
 
 **Consensus**: Changes to the blockchain require the agreement (consensus) of the majority of the network's nodes. To modify a historical block, you'd need to convince the majority of nodes to rewrite the entire chain from that point onwards, which is computationally infeasible and extremely unlikely.
 
+Different blockchains use various consensus mechanisms to agree on the validity of transactions and the state of the blockchain. 
+
+**Proof of Work (PoW)**: Used by Bitcoin, it requires solving complex puzzles to add blocks, making it difficult for malicious actors to alter history due to the immense computational power needed.
+
+**Proof of Stake (PoS)**: Employed by Ethereum 2.0, it selects validators based on staked cryptocurrency, disincentivizing malicious actions as they risk losing their stake.
+
 
 
 ## P2P (Peer-to-Peer) Network
@@ -888,7 +894,7 @@ graph
 
     subgraph Factors["Factors Influencing TPS"]
         style Factors fill:#D4EDDA,stroke:#4CAF50
-        BlockSize["Block Size"]
+        BlockSize["Block Size"]sus
         style BlockSize fill:#FFF9E6,stroke:#F9EBC8
         BlockTime["Block Time"]
         style BlockTime fill:#FFF9E6,stroke:#F9EBC8
