@@ -1,11 +1,12 @@
 ---
-title: "Blockchain Basics P5 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"
+title: "Blockchain Basics P3 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"
 categories: [tech]
-date: 2034-07-10 00:00:00
-tags: [blockchain]
+date: 2024-07-08 00:00:00
+tags: [solidity, smart-contracts]
 image: "/assets/images/smart-contracts/lottery_smart_contract.jpg"
 ---
 
+In this guide, we will explore the creation of a simple lottery smart contract using Solidity and Remix. We will cover the key concepts of smart contracts, such as state variables, functions, modifiers, and testing. By the end of this guide, we will have a basic understanding of how to create, deploy, and test a smart contract on the Ethereum blockchain.
 
 ## Overview of the Lottery Contract
 
@@ -45,6 +46,9 @@ classDef winner fill:#ffe0a0,stroke:#800,stroke-width:2px;
 ```
 
 ## Set Owner Of The Contract
+
+The Lottery contract has a state variable called manager, which stores the address of the contract owner. The manager is the person who deploys the contract and has special privileges, such as picking the winner.
+
 
 ```mermaid
 graph LR
@@ -396,7 +400,11 @@ contract Lottery {
 
 ```
 
-## Remix Test
+## Remix
+
+Remix is a powerful online IDE for developing smart contracts on the Ethereum blockchain. It provides a Solidity compiler, a debugger, and various plugins to enhance the development experience. One of the plugins available in Remix is the Solidity Unit Testing plugin, which allows you to write and run tests for your smart contracts directly in the IDE.
+
+To use Remix user interface, you can visit [Remix IDE](https://remix.ethereum.org/)
 
 ### Why Test Solidity Contracts?
 
@@ -426,90 +434,117 @@ Testing your Solidity smart contracts is a crucial practice for several reasons:
 
 ### Generating Test Files in Remix
 
+![remix]({{ site.baseurl }}/assets/images/remix-lottery.png)
+
+
 Click on the **Generate** button on the Solidity Unit Testing plugin. This will generate a new test contract on the right side.
 
 Inside the test contract, you will find a function named "before all". This function is called before any of the tests are run.
 
 Inside the "before all" function, you will need to deploy the contract that you want to test. 
 
+```js
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.4.22 <0.9.0;
+import "remix_tests.sol"; 
+import "remix_accounts.sol";
+import "../contracts/4_Lottery.sol";
+
+contract LotteryTestSuite is Lottery {
+    address acc0 = TestsAccounts.getAccount(0); // manager by default
+    address acc1 = TestsAccounts.getAccount(1);
+    address acc2 = TestsAccounts.getAccount(2);
+    address acc3 = TestsAccounts.getAccount(3);
+
+    function beforeAll() public {
+        // Create an instance of the Lottery contract
+        manager = acc0;
+    }
+
+    /// #sender: account-1
+    /// #value: 20000000000000000
+    function testEnterAcc1() public payable {
+        Assert.equal(msg.value, 20000000000000000, 'value should be 0.02 Eth');
+        enter();
+        Assert.equal(players.length, 1, 'players array should have 1 entry');
+        Assert.equal(players[0], acc1, 'first player should be account-1');
+    }
+
+    /// #sender: account-2
+    /// #value: 30000000000000000
+    function testEnterAcc2() public payable {
+        Assert.equal(msg.value, 30000000000000000, 'value should be 0.03 Eth');
+        enter();
+        Assert.equal(players.length, 2, 'players array should have 2 entries');
+        Assert.equal(players[1], acc2, 'second player should be account-2');
+    }
+
+    /// #sender: account-3
+    /// #value: 40000000000000000
+    function testEnterAcc3() public payable {
+        Assert.equal(msg.value, 40000000000000000, 'value should be 0.04 Eth');
+        enter();
+        Assert.equal(players.length, 3, 'players array should have 3 entries');
+        Assert.equal(players[2], acc3, 'third player should be account-3');
+    }
+
+    /// #sender: account-0
+    function testPickWinner() public {
+        uint contractBalance = address(this).balance;
+        uint[3] memory initialBalances = [
+            acc1.balance,
+            acc2.balance,
+            acc3.balance
+        ];
+
+        pickWinner();
+
+        uint[3] memory finalBalances = [
+            acc1.balance,
+            acc2.balance,
+            acc3.balance
+        ];
+
+        bool foundWinner = false;
+        for (uint i = 0; i < 3; i++) {
+            if (finalBalances[i] > initialBalances[i]) {
+                Assert.equal(finalBalances[i], initialBalances[i] + contractBalance, "Winner should receive the contract balance");
+                foundWinner = true;
+            }
+        }
+
+        Assert.equal(foundWinner, true, "There should be one winner with an increased balance");
+        Assert.equal(players.length, 0, "Players array should be reset");
+    }
+
+}
+```
+
+
+
 ### Run the test
 
 Click on the Solidity Unit Testing plugin again.
-Unselect all the tests and select the test for the counter contract.
+Unselect all the tests and select the test for the contract.
 Click on the "Run" button.
 
+![remix_test]({{ site.baseurl }}/assets/images/remix-lottery-test.png)
 
-**Chapter 1: Getting Started with Solidity Testing**
 
-* Why Test Solidity Contracts?
-    - Ensuring Correctness
-    - Finding Bugs Early
-    - Building Confidence
-* Setting Up Remix for Testing
-    - Installing the Solidity Compiler
-    - Creating Test Files (`.sol`)
-    - Importing `remix_tests.sol`
+### Deploy And Interact With The Contract
 
-**Chapter 2: Basic Testing Techniques**
+![remix_deploy]({{ site.baseurl }}/assets/images/remix-deploy.png)
 
-* Writing Test Functions
-    - Using the `function` Keyword
-    - The `public` or `external` Visibility
-    - The `payable` Modifier (if sending Ether)
-* Using Assertions
-    - `Assert.equal(actual, expected, "Error message")`
-    - `Assert.ok(condition, "Error message")`
-    - `expectRevert("Error message")`
-* Basic Test Structure
-    - `beforeAll()` (Optional, for setup)
-    - `beforeEach()` (Optional, for per-test setup)
-    - Individual Test Functions (e.g., `testMyFunction()`)
+- **Deploy the contract**: Click on the "Deploy" button in Remix to deploy the Lottery contract to the Ethereum blockchain. This will create a new instance of the contract with its own address.
 
-**Chapter 3: Advanced Testing Techniques**
+- **Interact with the contract**: You can interact with the deployed contract by calling its functions. For example, you can call the enter() function to participate in the lottery by sending a minimum amount of Ether. You can also call the pickWinner() function to select a winner and transfer the prize pool to them.
 
-* Testing Complex Logic
-    - Multiple Function Calls
-    - Interactions Between Contracts
-    - State Changes
-* Event Testing
-    - Emitting Events in Your Contract
-    - Checking for Emitted Events in Tests
-* Gas Usage Analysis
-    - Estimating Gas Costs
-    - Optimizing for Lower Gas
+- **Accouunts**: You can use different accounts in Remix to simulate multiple users interacting with the contract. This allows you to test the contract's functionality from various perspectives and ensure that it behaves as expected for different scenarios.
 
-**Chapter 4: Additional Tools and Tips**
 
-* Debugging Tools
-    - Remix Debugger
-    - `console.log` (from Hardhat)
-* Test Coverage
-    - Understanding Code Coverage
-    - Tools for Measuring Coverage
-* Mocking and Faking
-    - Simulating External Dependencies
-* Common Pitfalls and How to Avoid Them
+## References
+- Stephen Grider Udemey Course: [Ethereum and Solidity: The Complete Developer's Guide](https://www.udemy.com/course/ethereum-and-solidity-the-complete-developers-guide)
 
-**Example Test:**
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-import "remix_tests.sol";
-import "./MyContract.sol";
-
-contract MyContractTest is RemixTest {
-    MyContract contract;
-
-    function beforeEach() public {
-        contract = new MyContract();
-    }
-
-    function testSetValue() public {
-        contract.setValue(42);
-        Assert.equal(contract.getValue(), 42, "Value should be set correctly");
-    }
-
-    // More test cases...
-}
-```
+<a href="/posts/truffle-pet-shop-tutorial">Next Post: Blockchain Basics P4 - Truffle Pet-Shop Smart Contract</a> 

@@ -1,8 +1,8 @@
 ---
-title: Blockchain Basics P4 - Truffle Pet-Shop Interface
+title: Blockchain Basics P5 - Truffle Pet-Shop Interface
 categories: [tech]
 date: 2024-07-10 00:00:00
-tags: [blockchain]
+tags: [solidity, smart-contracts]
 image: "/assets/images/truffle-pet-shop-interface/truffle-pet-shop-interface.png"
 ---
 

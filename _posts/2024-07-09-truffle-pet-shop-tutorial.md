@@ -1,8 +1,8 @@
 ---
-title: Blockchain Basics P3 - Truffle Pet-Shop Smart Contract 
+title: Blockchain Basics P4 - Truffle Pet-Shop Smart Contract 
 categories: [tech]
 date: 2024-07-09 00:00:00
-tags: [blockchain]
+tags: [solidity, smart-contracts]
 image: "/assets/images/pet-shop-smart-contract.jpg"
 ---
 
@@ -445,4 +445,4 @@ Full source code for the Truffle Pet Shop tutorial can be found on GitHub here: 
 - Read more about Truffle [https://archive.trufflesuite.com/guides/pet-shop/](https://archive.trufflesuite.com/guides/pet-shop/).
 
 
-<a href="/posts/truffle-pet-shop-interface">Next Post: Blockchain Basics P4 - Truffle Pet-Shop Interface</a> 
+<a href="/posts/truffle-pet-shop-interface">Next Post: Blockchain Basics P5 - Truffle Pet-Shop Interface</a> 
