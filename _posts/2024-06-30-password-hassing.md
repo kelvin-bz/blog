@@ -25,7 +25,9 @@ style dataThief fill:#ffcccc,stroke:#800
 ```mermaid
 graph LR
 subgraph passwordProtection["fa:fa-shield-alt Password Protection"]
-    user["fa:fa-user User"] -->|"Enters password"| hashFunction["fa:fa-key Hash Function (e.g., SHA-256)"]
+    user["fa:fa-user User"] -->|enter|plainText["fa:fa-file-alt Password: 'password123'"]
+    
+    plainText --> hashFunction["fa:fa-key Hash Function (e.g., SHA-256)"]
     hashFunction -->|"Irreversible process"| storedHash["fa:fa-lock Stored Hash (e.g., '9f86d0...1343c')"]
     databaseBreach["fa:fa-exclamation-triangle Database Breach"] -->|"Cannot reverse hash to get password"| storedHash
 end
@@ -47,7 +49,7 @@ style databaseBreach fill:#ffe0e0,stroke:#800
 graph LR
 subgraph hashingConcepts["fa:fa-road Hashing Concepts"]
     input["fa:fa-unlock-alt Password: 'password123'"] -->|Hashing Algorithm| hashOutput["fa:fa-lock Hash: 9f86d0...1343c"]
-    hashOutput -->|"Cannot be reversed"| input
+    hashOutput -.->|"fa:fa-ban Cannot be reversed"| input
 end
 
 style input fill:#cce5ee,stroke:#008
@@ -139,19 +141,21 @@ Sample table structure for storing salted passwords:
 ```mermaid
 graph LR
 subgraph peppering["fa:fa-pepper-hot Peppering"]
-    pepper["fa:fa-pepper-hot Secret Pepper"]
+    plaintextPassword["fa:fa-keyboard Plaintext Password"] --> |fa:fa-plus|pepper["fa:fa-pepper-hot Secret Pepper"]
     saltedHash["🧂 Salted Hash"]
 
-    pepper --> hashFunction["fa:fa-key Hash Function"]
+    pepper --> hashFunction
     saltedHash --> hashFunction
 
-    hashFunction --> pepperedHash["Peppered Hash"]
+    hashFunction --> pepperedHash["fa:fa-lock Peppered Hash"]
 end
 
+style plaintextPassword fill:#ffebcc,stroke:#800
 style pepper fill:#ffcccc,stroke:#800
 style saltedHash fill:#ccffcc,stroke:#080
 style hashFunction fill:#ccffcc,stroke:#080
 style pepperedHash fill:#fff0cc,stroke:#880
+
 ```
 
 
@@ -161,26 +165,62 @@ style pepperedHash fill:#fff0cc,stroke:#880
 
 ```js
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const saltRounds = 10;
-const PEPPER = process.env.PASSWORD_PEPPER; // Stored as an environment variable
+const PEPPER = process.env.PASSWORD_PEPPER || 'default_pepper'; // For testing, set default value
+const HMAC_KEY = process.env.HMAC_KEY || 'default_hmac_key'; // For testing, set default value
+
+// Generate HMAC for a given input
+function generateHmac(input) {
+    return crypto.createHmac('sha256', HMAC_KEY).update(input).digest('hex');
+}
 
 // User registration
 function registerUser(password) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    const hashedPassword = bcrypt.hashSync(password + PEPPER, salt);
+    const hmacPassword = generateHmac(password + PEPPER);
+    const hashedPassword = bcrypt.hashSync(hmacPassword, salt);
     // Store salt and hashedPassword in the database
-    // Example: { username: 'joe', salt: salt, password_hash: hashedPassword }
+    // Example: return { username: 'joe', salt: salt, password_hash: hashedPassword }
+    return { salt, hashedPassword };
 }
 
 // User login
 function loginUser(storedSalt, storedHash, inputPassword) {
-    const hashedInputPassword = bcrypt.hashSync(inputPassword + PEPPER, storedSalt);
+    const hmacInputPassword = generateHmac(inputPassword + PEPPER);
+    const hashedInputPassword = bcrypt.hashSync(hmacInputPassword, storedSalt);
     if (hashedInputPassword === storedHash) {
         console.log('Login successful!');
+        return true;
     } else {
         console.log('Invalid password.');
+        return false;
     }
 }
+
+// Test code
+function runTests() {
+    console.log('Running tests...');
+
+    // Test 1: Register and login with correct password
+    console.log(`Test 1: Register and login with correct password`)
+    const password1 = 'mypassword';
+    const { salt, hashedPassword } = registerUser(password1);
+    console.log('Registered user with salt:', salt);
+    const loginSuccess1 = loginUser(salt, hashedPassword, password1);
+    console.assert(loginSuccess1, 'Test 1 failed: login should succeed with correct password');
+
+    // Test 2: Attempt to login with incorrect password
+     console.log(`\n Test 2: Attempt to login with incorrect password`)
+    const incorrectPassword = 'wrongpassword';
+    const loginSuccess2 = loginUser(salt, hashedPassword, incorrectPassword);
+    console.assert(!loginSuccess2, 'Test 2 failed: login should fail with incorrect password');
+
+}
+
+// Run tests
+runTests();
+
 ```
 
 
@@ -273,22 +313,19 @@ subgraph outdatedAlgorithms["fa:fa-exclamation-triangle Outdated Algorithms to A
     sha2NoSalt["fa:fa-hashtag SHA-2 (without salt)"]
 end
 
-md5 --> |"Vulnerable to collision attacks and fast brute-force attacks"| insecureMD5["Insecure"]
-sha1 --> |"Vulnerable to collision attacks"| insecureSHA1["Insecure"]
-des --> |"56-bit key length is too short, easily brute-forced"| insecureDES["Insecure"]
-lanman --> |"Splits password, converts to uppercase, uses DES, easily brute-forced"| insecureLANMAN["Insecure"]
-sha2NoSalt --> |"Without salt, vulnerable to rainbow table attacks"| insecureSHA2NoSalt["Insecure"]
+md5 --> |"Vulnerable to collision attacks and fast brute-force attacks"| insecure["fa:fa-user-secret Insecure"]
+sha1 --> |"Vulnerable to collision attacks"| insecure
+des --> |"56-bit key length is too short, easily brute-forced"| insecure
+lanman --> |"Splits password, converts to uppercase, uses DES, easily brute-forced"| insecure
+sha2NoSalt --> |"Without salt, vulnerable to rainbow table attacks"| insecure
 
 style md5 fill:#ffcccc,stroke:#800
 style sha1 fill:#ffcccc,stroke:#800
 style des fill:#ffcccc,stroke:#800
 style lanman fill:#ffcccc,stroke:#800
 style sha2NoSalt fill:#ffcccc,stroke:#800
-style insecureMD5 fill:#eee,stroke:#802
-style insecureSHA1 fill:#eee,stroke:#800
-style insecureDES fill:#eee,stroke:#800
-style insecureLANMAN fill:#eee,stroke:#800
-style insecureSHA2NoSalt fill:#eee,stroke:#800
+style insecure fill:#eee,stroke:#802
+
 ```
 
 ## Considerations for Secure Password Hashing 🔒
