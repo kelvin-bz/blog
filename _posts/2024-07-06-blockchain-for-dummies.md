@@ -102,6 +102,33 @@ graph LR
 - **Node**: Nodes maintain copies of the blockchain, validate transactions, and relay information across the network.
 
 - **Wallet**:  Wallets store users' private keys (used for signing transactions) and public keys (used for receiving transactions), allowing them to interact with the blockchain.
+
+## Mining Pool
+
+```mermaid
+graph LR
+    subgraph Miners["fa:fa-users Miners"]
+        style Miners fill:#95E1D3,stroke:#00868B
+        Miner1["fa:fa-user Miner 1"]
+        Miner2["fa:fa-user Miner 2"]
+        Miner3["fa:fa-user Miner 3"]
+        Miner1 --> Pool
+        Miner2 --> Pool
+        Miner3 --> Pool
+    end
+
+    subgraph Pool["fa:fa-server Mining Pool"]
+        style Pool fill:#DCDCDC,stroke:#696969
+        PoolServer["fa:fa-database Pool Server"]
+    end
+
+    Pool --> |"Share Submitted"| Blockchain["fa:fa-link Blockchain"]
+    Blockchain --> |"Block Reward"| Pool
+    Pool --> |"Proportional Rewards"| Miners
+```
+
+A mining pool is a collaborative effort where multiple cryptocurrency miners combine their computational resources to increase the chances of successfully mining a block and earning rewards. The reward is distributed proportionally to the miners based on the number of shares they contributed. 
+
 ##  Immutability and Consensus
 
 ```mermaid
@@ -889,51 +916,51 @@ graph
 
 ```mermaid
 graph 
-    TPS["Transactions Per Second (TPS)"]
-    style TPS fill:#F2F2F2,stroke:#666666
+    transactionsPerSecond["fa:fa-tachometer-alt Transactions Per Second (TPS)"]
+    style transactionsPerSecond fill:#F2F2F2,stroke:#666666
 
-    subgraph Factors["Factors Influencing TPS"]
-        style Factors fill:#D4EDDA,stroke:#4CAF50
-        BlockSize["Block Size"]sus
-        style BlockSize fill:#FFF9E6,stroke:#F9EBC8
-        BlockTime["Block Time"]
-        style BlockTime fill:#FFF9E6,stroke:#F9EBC8
-        Consensus["Consensus Mechanism"]
-        style Consensus fill:#FFF9E6,stroke:#F9EBC8
-        TxComplexity["Transaction Complexity"]
-        style TxComplexity fill:#FFF9E6,stroke:#F9EBC8
+    subgraph factorsInfluencingTps["Factors Influencing TPS"]
+        style factorsInfluencingTps fill:#D4EDDA,stroke:#4CAF50
+        blockSize["fa:fa-expand-arrows-alt Block Size"]
+        style blockSize fill:#FFF9E6,stroke:#F9EBC8
+        blockTime["fa:fa-clock Block Time"]
+        style blockTime fill:#FFF9E6,stroke:#F9EBC8
+        consensusMechanism["fa:fa-cogs Consensus Mechanism"]
+        style consensusMechanism fill:#FFF9E6,stroke:#F9EBC8
+        transactionComplexity["fa:fa-search-dollar Transaction Complexity"]
+        style transactionComplexity fill:#FFF9E6,stroke:#F9EBC8
     end
 
-    subgraph Benefits["Benefits of High TPS"]
-        style Benefits fill:#C2E0C6,stroke:#5FB483
-        Scalability["Scalability"]
-        LowFees["Low Fees"]
-        FastTransactions["Fast Transactions"]
-        BetterUX["Better User Experience"]
+    subgraph benefitsHighTps["Benefits of High TPS"]
+        style benefitsHighTps fill:#C2E0C6,stroke:#5FB483
+        scalability["fa:fa-chart-line Scalability"]
+        lowFees["fa:fa-dollar-sign Low Fees"]
+        fastTransactions["fa:fa-bolt Fast Transactions"]
+        betterUserExperience["fa:fa-thumbs-up Better User Experience"]
     end
 
-    subgraph Drawbacks["Drawbacks of High TPS"]
-        style Drawbacks fill:#F2DEDE,stroke:#D9534F
-        Centralization["Centralization Risk"]
-        Security["Potential Security Risks"]
-        HighCosts["Higher Costs"]
-        DDOSRisk["DDoS Attack Risk"]
+    subgraph drawbacksHighTps["Drawbacks of High TPS"]
+        style drawbacksHighTps fill:#F2DEDE,stroke:#D9534F
+        centralizationRisk["fa:fa-map-pin Centralization Risk"]
+        potentialSecurityRisks["fa:fa-shield-alt Potential Security Risks"]
+        higherCosts["fa:fa-money-bill-wave Higher Costs"]
+        ddosAttackRisk["fa:fa-shield-virus DDoS Attack Risk"]
     end
 
-    subgraph Examples["Examples of TPS in Blockchains"]
-        style Examples fill:#E1D5E7,stroke:#9673A6
-        Bitcoin["Bitcoin (BTC) ~4-7 TPS"]
-        Ethereum["Ethereum (ETH) ~15-45 TPS"]
-        Solana["Solana (SOL) ~50,000 TPS (theoretical)"]
+    subgraph examplesTpsBlockchains["Examples of TPS in Blockchains"]
+        style examplesTpsBlockchains fill:#E1D5E7,stroke:#9673A6
+        bitcoin["fa:fa-b Bitcoin (BTC) ~4-7 TPS"]
+        ethereum["fa:fa-e Ethereum (ETH) ~15-45 TPS"]
+        solana["fa:fa-s Solana (SOL) ~50,000 TPS (theoretical)"]
     end
 
-    TPS --> Benefits
-    TPS --> Drawbacks
-    BlockSize --> TPS
-    BlockTime --> TPS
-    Consensus --> TPS
-    TxComplexity --> TPS
-    TPS --> Examples
+    transactionsPerSecond --> |"Benefits"|benefitsHighTps
+    transactionsPerSecond --> |"Drawbacks"|drawbacksHighTps
+    blockSize --> |"Influences"|transactionsPerSecond
+    blockTime --> |"Influences"|transactionsPerSecond
+    consensusMechanism --> |"Influences"|transactionsPerSecond
+    transactionComplexity --> |"Influences"|transactionsPerSecond
+    transactionsPerSecond --> |"Examples"|examplesTpsBlockchains
 
 ```
 **TPS**: measures a blockchain's transaction processing speed, influenced by block size, time, consensus, and complexity.
@@ -943,99 +970,76 @@ High TPS offers scalability and fast transactions, but can risk security and dec
 
 ```mermaid
 graph LR
-    subgraph ChildChain["Child Chain"]
+    subgraph ChildChain["fa:fa-link Child Chain"]
         style ChildChain fill:#95E1D3,stroke:#00868B
-        ChildBlock1["Block 1"]
-        ChildBlock2["Block 2"]
-        ChildBlock3["Block 3"]
+        ChildBlock1["fa:fa-cube Block 1"]
+        ChildBlock2["fa:fa-cube Block 2"]
+        ChildBlock3["fa:fa-cube Block 3"]
         ChildBlock1 --> ChildBlock2 --> ChildBlock3
     end
 
-    subgraph ParentChain["Parent Chain"]
+    subgraph ParentChain["fa:fa-sitemap Parent Chain"]
         style ParentChain fill:#DCDCDC,stroke:#696969
-        ParentBlock1["Block 1"]
-        ParentBlock2["Block 2"]
-        ParentBlock3["Block 3"]
+        ParentBlock1["fa:fa-cube Block 1"]
+        ParentBlock2["fa:fa-cube Block 2"]
+        ParentBlock3["fa:fa-cube Block 3"]
         ParentBlock1 --> ParentBlock2 --> ParentBlock3
     end
 
-    ChildBlock3 --> Checkpoint["Checkpoint"]
-    Checkpoint --> ParentBlock2
+    ChildBlock3 --> |"Transaction Data"| Checkpoint["fa:fa-flag-checkered Checkpoint"]
+    Checkpoint --> |"State Root"| ParentBlock2
+
 ```
-### Rollup
+- **Child Chain (L2)**:  The child chain (also called a Layer 2 or L2) is where most of the transaction processing happens. It's designed to be faster and cheaper than the main blockchain.
 
-```mermaid
-graph LR
-    subgraph RollupChain["Rollup Chain"]
-        style RollupChain fill:#FFDDC1,stroke:#FFB6C1
-        RollupBlock1["Block 1"]
-        RollupBlock2["Block 2"]
-        RollupBlock3["Block 3"]
-        RollupBlock1 --> RollupBlock2 --> RollupBlock3
-    end
-
-    subgraph MainChain["Main Chain"]
-        style MainChain fill:#DCDCDC,stroke:#696969
-        MainBlock1["Block 1"]
-        MainBlock2["Block 2"]
-        MainBlock3["Block 3"]
-        MainBlock1 --> MainBlock2 --> MainBlock3
-    end
-
-    RollupBlock3 --> RollupBatch["Batch of Transactions"]
-    RollupBatch --> MainBlock2
-    
-    RollupTypes["Types of Rollups"] --> OptimisticRollups["Optimistic Rollups"]
-    RollupTypes --> ZKRollups["ZK Rollups"]
-    OptimisticRollups --> RollupChain
-    ZKRollups --> RollupChain
-```
+- **Parent Chain (L1)**: This is the main blockchain (Layer 1 or L1), which is typically slower but more secure. 
 
 
 ## Sharding
 
 ```mermaid
 graph LR
-    subgraph BeaconChain["Beacon Chain"]
-        style BeaconChain fill:#F2F2F2,stroke:#666666
-        BeaconNode1["Beacon Node 1"]
-        BeaconNode2["Beacon Node 2"]
-        BeaconNode3["Beacon Node 3"]
-        BeaconNode1 --> BeaconNode2
-        BeaconNode2 --> BeaconNode3
+    subgraph beaconChain["fa:fa-sitemap Beacon Chain"]
+        style beaconChain fill:#F2F2F2,stroke:#666666
+        beaconNode1["fa:fa-server Beacon Node 1"]
+        beaconNode2["fa:fa-server Beacon Node 2"]
+        beaconNode3["fa:fa-server Beacon Node 3"]
+        beaconNode1 --> |"Connects to"|beaconNode2
+        beaconNode2 --> |"Connects to"|beaconNode3
     end
 
-    subgraph ShardChains["Shard Chains"]
-        style ShardChains fill:#C2E0C6,stroke:#5FB483
-        ShardChain1["Shard Chain 1"]
-        ShardChain2["Shard Chain 2"]
-        ShardChain3["Shard Chain 3"]
+    subgraph shardChains["fa:fa-network-wired Shard Chains"]
+        style shardChains fill:#C2E0C6,stroke:#5FB483
+        shardChain1["fa:fa-link Shard Chain 1"]
+        shardChain2["fa:fa-link Shard Chain 2"]
+        shardChain3["fa:fa-link Shard Chain 3"]
     end
 
-    BeaconChain --> ShardChain1
-    BeaconChain --> ShardChain2
-    BeaconChain --> ShardChain3
+    beaconChain --> |"Links to"|shardChain1
+    beaconChain --> |"Links to"|shardChain2
+    beaconChain --> |"Links to"|shardChain3
 
-    subgraph ShardChain1
-        style ShardChain1 fill:#E6F2FF,stroke:#B8D8F2
-        ShardBlock1["Shard Block 1"]
-        ShardBlock2["Shard Block 2"]
-        ShardBlock1 --> ShardBlock2
+    subgraph shardChain1["Shard Chain 1"]
+        style shardChain1 fill:#E6F2FF,stroke:#B8D8F2
+        shardBlock1["fa:fa-cube Shard Block 1"]
+        shardBlock2["fa:fa-cube Shard Block 2"]
+        shardBlock1 --> |"Connects to"|shardBlock2
     end
 
-    subgraph ShardChain2
-        style ShardChain2 fill:#E6F2FF,stroke:#B8D8F2
-        ShardBlock3["Shard Block 3"]
-        ShardBlock4["Shard Block 4"]
-        ShardBlock3 --> ShardBlock4
+    subgraph shardChain2["Shard Chain 2"]
+        style shardChain2 fill:#E6F2FF,stroke:#B8D8F2
+        shardBlock3["fa:fa-cube Shard Block 3"]
+        shardBlock4["fa:fa-cube Shard Block 4"]
+        shardBlock3 --> |"Connects to"|shardBlock4
     end
 
-    subgraph ShardChain3
-        style ShardChain3 fill:#E6F2FF,stroke:#B8D8F2
-        ShardBlock5["Shard Block 5"]
-        ShardBlock6["Shard Block 6"]
-        ShardBlock5 --> ShardBlock6
+    subgraph shardChain3["Shard Chain 3"]
+        style shardChain3 fill:#E6F2FF,stroke:#B8D8F2
+        shardBlock5["fa:fa-cube Shard Block 5"]
+        shardBlock6["fa:fa-cube Shard Block 6"]
+        shardBlock5 --> |"Connects to"|shardBlock6
     end
+
 ```
 
 - **Beacon Chain** (Coordinator): This is the main chain that manages the entire sharded network. It assigns validators to different shard chains and ensures consensus across the network.

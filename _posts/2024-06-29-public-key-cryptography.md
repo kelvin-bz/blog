@@ -6,7 +6,6 @@ tags: [security, cryptography]
 image: "/assets/images/asymmetric_encryption.jpg"
 ---
 
-
 Public key cryptography is a method of encrypting or signing data with two different keys and making one of the keys, the public key, available for anyone to use. The other key is known as the private key. Data encrypted with the public key can only be decrypted with the private key.
 
 ## PEM Format for Keys
@@ -243,9 +242,6 @@ classDef outputNode fill:#ccffcc,stroke:#333,stroke-width:2px;
    - **Plaintext:** The original data after decryption.
 
 
-
-Absolutely! Here's the code for creating a digital signature using RSA in Node.js, along with a diagram and explanation:
-
 ### Code
 
 ```javascript
@@ -296,8 +292,6 @@ Decrypted Text: This is a secret message.
 ```
 
 ## Writing the Signing Code
-
-Absolutely! Let's break down the digital signature process into two distinct subsections: signing data and verifying the signature.
 
 ### Signing Data (Creating the Signature)
 
