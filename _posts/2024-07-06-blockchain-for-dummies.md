@@ -106,25 +106,28 @@ graph LR
 ## Mining Pool
 
 ```mermaid
-graph LR
-    subgraph Miners["fa:fa-users Miners"]
-        style Miners fill:#95E1D3,stroke:#00868B
-        Miner1["fa:fa-user Miner 1"]
-        Miner2["fa:fa-user Miner 2"]
-        Miner3["fa:fa-user Miner 3"]
-        Miner1 --> Pool
-        Miner2 --> Pool
-        Miner3 --> Pool
+graph TD
+    subgraph miners["fa:fa-users Miners"]
+        miner1["fa:fa-user Miner 1"]
+        style miner1 fill:#FFFACC,stroke:#FFD700
+        miner2["fa:fa-user Miner 2"]
+        style miner2 fill:#FFFACD,stroke:#FFD700
+        miner3["fa:fa-user Miner 3"]
+        style miner3 fill:#FFFACD,stroke:#FFD700
     end
+    
+    miner1 --> |"Computing Power"|poolServer
+    miner2 --> |"Computing Power"|poolServer
+    miner3 --> |"Computing Power"|poolServer
 
-    subgraph Pool["fa:fa-server Mining Pool"]
-        style Pool fill:#DCDCDC,stroke:#696969
-        PoolServer["fa:fa-database Pool Server"]
-    end
+    poolServer["fa:fa-database Pool Server"]
+    style poolServer fill:#AFEEEE,stroke:#40E0D0,stroke-width:2px
 
-    Pool --> |"Share Submitted"| Blockchain["fa:fa-link Blockchain"]
-    Blockchain --> |"Block Reward"| Pool
-    Pool --> |"Proportional Rewards"| Miners
+    poolServer --> |"Solution Found"| blockchain["fa:fa-link Blockchain"]
+    style blockchain fill:#98FB98,stroke:#32CD32,stroke-width:2px
+    blockchain --> |"Block Reward"| poolServer
+    poolServer --> |"Proportional Rewards"| miners
+
 ```
 
 A mining pool is a collaborative effort where multiple cryptocurrency miners combine their computational resources to increase the chances of successfully mining a block and earning rewards. The reward is distributed proportionally to the miners based on the number of shares they contributed. 
