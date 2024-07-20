@@ -374,7 +374,7 @@ contract Lottery {
             ) % max;
     }
 
-    function pickWinner() public {
+    function pickWinner() public restricted {
         uint256 index = getRandomNumber(players.length);
         address winner = players[index];
         // Transfer the contract balance to the winner

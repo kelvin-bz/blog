@@ -40,6 +40,37 @@ The window.ethereum object is injected into the browser's window object by Ether
 `window.ethereum.enable()` to request permission from the user to connect their Ethereum accounts to the DApp
 
 ## web3.eth.getAccounts() 
+
+```mermaid
+graph TD
+    subgraph reactApp["fa:fa-desktop React Application"]
+        style reactApp fill:#61DAFB,stroke:#00868B,stroke-width:2px
+        userInterface["fa:fa-laptop User Interface"]
+        style userInterface fill:#E0F7FA,stroke:#00ACC1
+        web3Provider["fa:fa-code Web3 Provider (e.g., Web3.js)"]
+        style web3Provider fill:#BBDEFB,stroke:#1E88E5
+    
+    end
+    
+        metamask["fa:fa-mask Metamask Extension"]
+        style metamask fill:#FFCA28,stroke:#FF8F00
+    subgraph blockchainNetwork["fa:fa-link Blockchain Network"]
+        style blockchainNetwork fill:#E1BEE7,stroke:#8E24AA,stroke-width:2px
+        smartContract["fa:fa-file-code Smart Contract"]
+        style smartContract fill:#D1C4E9,stroke:#7B1FA2
+    end
+    
+    userInterface --> |"User Action"|web3Provider
+    web3Provider --> |"Send Transaction"|metamask
+    metamask --> |"Confirm Transaction"|blockchainNetwork
+    blockchainNetwork --> |"Execute"|smartContract
+    smartContract --> |"Transaction Receipt"|blockchainNetwork
+    blockchainNetwork --> |"Receipt"|metamask
+    metamask --> |"Update UI"|web3Provider
+    web3Provider --> |"Update Data"|userInterface
+
+
+```
 The `web3.eth` module provides functions to interact with the Ethereum blockchain, including account management, transaction handling, and smart contract interaction.
 
 ```mermaid

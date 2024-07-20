@@ -187,6 +187,29 @@ Compiling your contracts...
 
 For more information, visit the [Ganache website](https://archive.trufflesuite.com/ganache/).
 
+After installing Ganache, start the application and quickly create a new workspace by clicking the "Quickstart" button. This will create a new workspace with 10 accounts, each loaded with 100 fake Ether (ETH).
+
+### Configure Truffle to Connect to Ganache
+
+To connect Truffle to Ganache, you need to update the truffle-config.js file in your project directory. This file contains the configuration settings for your Truffle project, including the network settings for connecting to Ethereum networks.
+
+```javascript
+// truffle-config.js
+module.exports = {
+  // See <http://truffleframework.com/docs/advanced/configuration>
+  // for more about customizing your Truffle configuration!
+  networks: {
+    development: {
+      host: "127.0.0.1",
+      port: 7545,
+      network_id: "*" // Match any network id
+    },
+    develop: {
+      port: 8545
+    }
+  }
+};
+```
 
 ## Run Migrations
 
@@ -340,6 +363,7 @@ It also cost 0.000647504871762749 ETH on the development network.
 Each time you run truffle migrate, a new contract address will be generated ONLY if you're deploying a NEW contract or a new version of an existing contract.
 
 If you're simply re-running a migration script for an already deployed contract, Truffle will recognize that the contract exists on the blockchain and won't redeploy it, thus the contract address remains the same.
+
 
 
 ```mermaid
