@@ -469,12 +469,59 @@ Is Signature Valid? true
 ### Handling Sensitive Data
 Ensure that sensitive data, such as keys and plaintext, are securely handled in your application. Avoid logging sensitive information and use secure memory management practices.
 
+## Hashing and Encryption in Blockchain Transactions and Mining
+
+Blockchain technology uses a combination of hashing, encryption, and digital signatures to secure transactions and create new blocks in the chain. Here's a simplified overview of how these cryptographic techniques work together in a blockchain system:
+
+```mermaid
+graph LR
+
+    subgraph Keys["fa:fa-key Keys"]
+        style Keys fill:#C2E0C6,stroke:#5FB483
+        PrivateKey["fa:fa-lock Private Key (Sender)"]
+        PublicKey["fa:fa-unlock Public Key (Sender/Recipient)"]
+    end
+    PrivateKey --"fa:fa-pen Signs"--> TransactionSignature
+    PublicKey --"fa:fa-check Verifies"--> TransactionSignature
+
+    subgraph Transaction["fa:fa-file-alt Transaction"]
+      style Transaction fill:#E1D5E7,stroke:#9673A6
+      TransactionSignature["fa:fa-signature Digital Signature"]
+      subgraph TransactionData["fa:fa-database Transaction Data"]
+        style TransactionData fill:#FFF2CC,stroke:#D6B656
+        TransactionDetails["fa:fa-info-circle Transaction Details<br/>(Sender, Recipient, Amount)"]
+    end
+    end
+
+    subgraph Verification["fa:fa-shield-alt Verification"]
+      style Verification fill:#D4EDDA,stroke:#4CAF50
+      BlockchainNetwork["fa:fa-network-wired Blockchain Network"]
+    end
+
+    Transaction --"fa:fa-check Verified by"--> BlockchainNetwork
+
+    subgraph Block["fa:fa-cube Block (Example)"]
+        style Block fill:#F0F0F0,stroke:#888888
+        BlockHeader["fa:fa-header Block Header"]
+        BlockData["fa:fa-database Block Data (Multiple Transactions)"]
+    end
+
+    Transaction -.-> BlockData
+    BlockHeader --> BlockHash["fa:fa-fingerprint Block Hash"]
+    BlockHeader --> PreviousBlockHash["fa:fa-link Previous Block's Hash"]
+    BlockHeader --> Nonce["fa:fa-random Nonce"]
+```
+
+- **Transaction Signing**: Transactions are digitally signed by the sender's private key. Verified by the recipient and network nodes using the sender's public key.
+- **Block Hashing**: Each block contains a header and transaction data. Miners repeatedly hash the block header with different nonce to find a valid hash, a unique code representing the block's contents. This hash must meet specific criteria set by the blockchain's protocol. The first miner to find such a hash gets to add the block to the blockchain and is rewarded with cryptocurrency.
+
+
+
 ## Keywords To Remember
 
 
 
 ```mermaid
-
 graph 
 
   subgraph 1[" "]
@@ -498,6 +545,12 @@ graph
   subgraph 4[" "]
     authenticity["fa:fa-shield-alt Authenticity"]:::authenticityNode
     integrity["fa:fa-check Integrity"]:::integrityNode
+  end
+
+  subgraph 5[" "]
+    transaction["fa:fa-paper-plane Transaction"]:::authenticityNode
+    block["fa:fa-boxes Block"]:::integrityNode
+    nounce["fa:fa-gem Nounce"]:::cipherNode
   end
 
 classDef keyNode fill:#ffcc99,stroke:#333,stroke-width:2px;
