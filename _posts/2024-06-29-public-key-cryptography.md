@@ -314,23 +314,33 @@ function signData(privateKey, data) {
 
 ```mermaid
 graph TD
+%% Styling
+linkStyle default stroke:#333,stroke-width:2px;
+
 subgraph input["fa:fa-key Input"]
 data["fa:fa-file-alt Data"]:::inputNode
 privateKey["fa:fa-lock Private Key"]:::inputNode
 end
 
-input --> signData["fa:fa-signature Sign (RSA-SHA256)"]:::signNode
-
-subgraph signData["fa:fa-signature Sign (RSA-SHA256)"]
-updateData["fa:fa-pencil-alt Update Data"]:::processNode --> sign["fa:fa-signature Sign"]:::processNode
+subgraph hashProcess["fa:fa-hashtag Hashing Process"]
+hashData["fa:fa-hashtag Hash Data (SHA-256)"]:::processNode
 end
 
-signData --> signature["fa:fa-signature Signature"]:::outputNode
+subgraph signProcess["fa:fa-signature Signing Process"]
+signHash["fa:fa-signature Sign Hash (RSA)"]:::processNode
+end
+
+input --> hashData
+hashData --> hashValue["fa:fa-hashtag Hash Value"]:::intermediateNode
+hashValue --> signHash
+privateKey --> signHash
+signHash --> signature["fa:fa-signature Signature"]:::outputNode
 
 classDef inputNode fill:#ffcccc,stroke:#333,stroke-width:2px;
-classDef signNode fill:#e6f2ff,stroke:#0066cc,stroke-width:2px;
 classDef processNode fill:#ccffcc,stroke:#333,stroke-width:2px;
+classDef intermediateNode fill:#ffffcc,stroke:#333,stroke-width:2px;
 classDef outputNode fill:#ccf,stroke:#333,stroke-width:2px;
+
 ```
 
 **Explanation:**
@@ -341,10 +351,11 @@ classDef outputNode fill:#ccf,stroke:#333,stroke-width:2px;
 
 2. **Process (`signData` function):**
    - **Create a Sign Object:** A `Sign` object is created using the `crypto.createSign()` method. The 'RSA-SHA256' algorithm is specified, meaning the signature will be generated using RSA and the SHA-256 hash function for data integrity.
+- 
    - **Update with Data:** The `sign.update(data)` method feeds the data you want to sign into the `Sign` object.
    - **Generate Signature:** The `sign.sign(privateKey, 'base64')` method uses your private key to generate the signature.  The signature is returned in base64 encoding for easy transmission and storage.
 
-3. **Output:**
+1. **Output:**
    - **`signature`:** A unique string representing the signed data.
 
 ### Verifying the Signature (Authentication) 
@@ -458,3 +469,47 @@ Is Signature Valid? true
 ### Handling Sensitive Data
 Ensure that sensitive data, such as keys and plaintext, are securely handled in your application. Avoid logging sensitive information and use secure memory management practices.
 
+## Keywords To Remember
+
+
+
+```mermaid
+
+graph 
+
+  subgraph 1[" "]
+    publicKey["fa:fa-key Public Key"]:::keyNode
+    privateKey["fa:fa-lock Private Key"]:::lockNode
+    pem["fa:fa-file-code PEM Format"]:::pemNode
+  end 
+
+  subgraph 2[" "]
+    rsa["fa:fa-lock RSA"]:::rsaNode
+    sha["fa:fa-scissors SHA256"]:::shaNode
+  end
+
+  subgraph 3[" "]
+    crypto["fa:fa-b Crypto Module"]:::cryptoNode
+    ciphertext["fa:fa-file-code Ciphertext"]:::cipherNode
+    encryption["fa:fa-lock Encryption"]:::encryptionNode
+    signing["fa:fa-signature Signing"]:::signingNode
+  end 
+
+  subgraph 4[" "]
+    authenticity["fa:fa-shield-alt Authenticity"]:::authenticityNode
+    integrity["fa:fa-check Integrity"]:::integrityNode
+  end
+
+classDef keyNode fill:#ffcc99,stroke:#333,stroke-width:2px;
+classDef lockNode fill:#99ccff,stroke:#333,stroke-width:2px;
+classDef pemNode fill:#ccff99,stroke:#333,stroke-width:2px;
+classDef rsaNode fill:#ffccff,stroke:#333,stroke-width:2px;
+classDef shaNode fill:#ff9999,stroke:#333,stroke-width:2px;
+classDef cryptoNode fill:#ccccff,stroke:#333,stroke-width:2px;
+classDef cipherNode fill:#ffff99,stroke:#333,stroke-width:2px;
+classDef encryptionNode fill:#99ffcc,stroke:#333,stroke-width:2px;
+classDef signingNode fill:#ffcc66,stroke:#333,stroke-width:2px;
+classDef authenticityNode fill:#ff9966,stroke:#333,stroke-width:2px;
+classDef integrityNode fill:#99ff66,stroke:#333,stroke-width:2px;
+  
+```

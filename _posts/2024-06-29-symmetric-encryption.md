@@ -21,7 +21,7 @@ graph TD;
 
   subgraph useCases["Use Cases"]
     securingData["fa:fa-database Securing Data at Rest"]:::dataNode
-    protectingData["fa:fa-shield-alt Protecting Data in Transit"]:::transitNode
+    protectingData["fa:fa-bus Protecting Data in Transit"]:::transitNode
     encryptingInfo["fa:fa-lock Encrypting Sensitive Information"]:::infoNode
   end
 
@@ -245,6 +245,38 @@ console.log('Tag:', tag);
 
 const decryptedText = decryptSymmetric(key, ciphertext, iv, tag);
 console.log('Decrypted Text:', decryptedText);
+```
+
+## Keywords To Remember
+
+```mermaid
+graph 
+
+  subgraph " "
+    AES["fa:fa-lock AES-256-GCM"]:::componentNode2
+    plaintext["fa:fa-file-alt Plaintext"]:::componentNode2
+    ciphertext["fa:fa-file-code Ciphertext"]:::componentNode2
+  end
+
+  subgraph " "
+    cryptoModule["fa:fa-b Crypto Module"]:::componentNode
+    key["fa:fa-key key"]:::componentNode
+    IV["fa:fa-random Initialization Vector (IV)"]:::componentNode
+    authTag["fa:fa-tag Authentication Tag"]:::componentNode
+    ciphertext["fa:fa-file-code Ciphertext"]:::componentNode
+
+  end
+
+
+  subgraph " "
+    dataAtRest["fa:fa-database Data at Rest"]:::stateNode
+    dataInTransit["fa:fa-bus Data in Transit"]:::stateNode
+  end
+
+classDef componentNode fill:#e6f2ff,stroke:#0066cc,stroke-width:2px;
+classDef componentNode2 fill:#eeffaa,stroke:#eeeeaa,stroke-width:2px;
+classDef stateNode fill:#ccffcc,stroke:#333,stroke-width:2px;
+
 ```
 
 <a href="/posts/password-hashing">Next Post: Hashing Passwords</a> 
