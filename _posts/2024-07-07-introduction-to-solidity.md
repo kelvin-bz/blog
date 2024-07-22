@@ -448,6 +448,40 @@ address public myAddress = 0x1234567890123456789012345678901234567890;
   - You need to handle text data that requires UTF-8 encoding.
   - You want to store and manipulate human-readable text.
 
+```js
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
+
+// Creating a contract
+contract ExampleTypes {   
+
+    // Initializing bool variable
+    bool public isActive = true;
+    
+    // Initializing a signed integer variable
+    int32 public temperature = -273;
+
+    // Initializing an unsigned integer variable
+    uint32 public maxSupply = 1000000;
+
+    // Initializing an address variable
+    address public wallet = 0x0000000000000000000000000000000000000000;
+ 
+    // Initializing a string variable
+    string public greeting = "Welcome";
+ 
+    // Initializing a byte variable
+    bytes1 public initial = "W";
+     
+    // Defining an enumerator
+    enum Status { PENDING, ACTIVE, INACTIVE } 
+ 
+    // Defining a function to return values stored in an enumerator
+    function getStatus() public pure returns(Status) {   
+        return Status.ACTIVE;   
+    }   
+}
+```
 
 - **Bytes Usage:**
   ```js
