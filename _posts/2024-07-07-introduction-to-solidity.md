@@ -196,6 +196,7 @@ Save and switch to the Ganache network.
 
 ## Solidity Language Fundamentals
 
+
 ### Structure of a Solidity File
 
 
@@ -231,7 +232,7 @@ import "./SafeMath.sol";
 #### Contract Definition
 
 ```mermaid
-graph LR
+graph 
     classDef license fill:#f9f,stroke:#333,stroke-width:2px;
     classDef pragma fill:#ff9,stroke:#333,stroke-width:2px;
     classDef import fill:#9f9,stroke:#333,stroke-width:2px;
@@ -242,26 +243,15 @@ graph LR
     classDef event fill:#fc9,stroke:#333,stroke-width:2px;
     classDef modifier fill:#ccf,stroke:#333,stroke-width:2px;
 
-    contractDetails["Detailed Contract Definition"]
-    stateVariables["State Variables"]:::state
-    constructorFunction["Constructor Function"]:::function
-    regularFunctions["Regular Functions"]:::function
-    modifiers["Modifiers"]:::modifier
-    events["Events"]:::event
-
-    contractDetails -->|Declares| stateVariables
-    contractDetails -->|Defines| constructorFunction
-    contractDetails -->|Implements| regularFunctions
-    contractDetails -->|Includes| modifiers
-    contractDetails -->|Logs| events
-
-    subgraph detailedContractStructure["Detailed Contract Definition"]
-        stateVariables
-        constructorFunction
-        regularFunctions
-        modifiers
-        events
+    subgraph contractDetails["📝 Detailed Contract Definition"]
+        stateVariables["fa:fa-hamburger State Variables"]:::state
+        constructorFunction["fa:fa-hammer Constructor Function"]:::function
+        regularFunctions["fa:fa-wrench Regular Functions"]:::function
+        modifiers["🛡️ Modifiers"]:::modifier
+        events["📅 Events"]:::event
     end
+
+  
 
 ```
 
@@ -605,7 +595,6 @@ function sumWhileLoop(uint256[] memory array) public pure returns (uint256) {
     return sum;
 }
 ```
-
 
 ## Writing Your First Smart Contract
 
@@ -2600,4 +2589,168 @@ This chapter covered advanced topics and best practices in Solidity development:
 
 These advanced topics and best practices are essential for writing efficient, robust, and secure smart contracts on the Ethereum blockchain.
 
+## Real-World Examples
+
+
+Let take a look to the real world example of a smart contract written in Solidity of [PanCakeSwap](https://pancakeswap.finance/) Lottery Contract. You can get the full code from this on BSCScan 
+
+ [https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code](https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code)
+
+
+
+### Inheritance
+
+```js
+// Inheritance Example
+abstract contract Ownable {
+    address private _owner;
+
+    constructor() {
+        _owner = msg.sender;
+    }
+
+    function owner() public view returns (address) {
+        return _owner;
+    }
+
+    modifier onlyOwner() {
+        require(owner() == msg.sender, "Not the owner");
+        _;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        _owner = newOwner;
+    }
+}
+
+contract MyContract is Ownable {
+    // Your contract code
+}
+
+```
+### Abstract Contracts
+
+```js
+// Abstract Contracts Example
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes calldata) {
+        return msg.data;
+    }
+}
+
+abstract contract AbstractContract is Context {
+    function abstractFunction() public view virtual returns (string memory);
+}
+
+contract ConcreteContract is AbstractContract {
+    function abstractFunction() public view override returns (string memory) {
+        return "Implemented";
+    }
+}
+```
+
+### Interfaces
+
+```js
+// Interfaces Example
+interface IPancakeSwapLottery {
+    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external;
+    // Other function signatures
+}
+
+contract LotteryContract is IPancakeSwapLottery {
+    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external override {
+        // Implementation
+    }
+    // Other function implementations
+}
+```
+
+### Events
+
+```js
+// Events Example
+contract LotteryContract {
+    event TicketsPurchase(address indexed buyer, uint256 indexed lotteryId, uint256 numberTickets);
+
+    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external {
+        // Logic to buy tickets
+        emit TicketsPurchase(msg.sender, _lotteryId, _ticketNumbers.length);
+    }
+}
+```
+### Error Handling
+
+```js
+// Error Handling Example
+contract LotteryContract {
+    uint256 public maxNumberTicketsPerBuyOrClaim = 100;
+
+    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external {
+        require(_ticketNumbers.length <= maxNumberTicketsPerBuyOrClaim, "Too many tickets");
+        // Further logic
+    }
+}
+```
+
+### Libraries
+
+Libraries in Solidity are similar to contracts but are deployed only once at a specific address and are meant to be reused by other contracts.
+
+
+Libraries provide reusable code that can be called by other contracts. They help in reducing gas costs and promoting code reuse.
+
+
+```mermaid
+graph TD
+    libraryDefinition["fa:fa-file-code Library Definition"]:::libraryColor
+    callingContract["fa:fa-cube Calling Contract"]:::callingColor
+
+    subgraph libraryGraph["Library Example"]
+        libraryDefinition --> |defines reusable functions| callingContract
+        callingContract --> |calls| libraryDefinition
+    end
+
+    classDef libraryColor fill:#ffdead,stroke:#333,stroke-width:2px;
+    classDef callingColor fill:#afeeee,stroke:#333,stroke-width:2px;
+    classDef subGraphColor fill:#cfc,stroke:#333,stroke-width:2px;
+```
+
+These sections provide a structured approach to understanding various advanced concepts in Solidity, complete with explanations and colorful illustrative Mermaid diagrams.
+
+```js
+// Libraries Example
+library SafeERC20 {
+    function safeTransfer(
+        IERC20 token,
+        address to,
+        uint256 value
+    ) internal {
+        bytes memory returndata = address(token).functionCall(
+            abi.encodeWithSelector(token.transfer.selector, to, value),
+            "SafeERC20: low-level call failed"
+        );
+        require(returndata.length == 0 || abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation failed");
+    }
+}
+
+contract LotteryContract {
+    using SafeERC20 for IERC20;
+
+    IERC20 public cakeToken;
+
+    function transferFunds(address to, uint256 amount) public {
+        cakeToken.safeTransfer(to, amount);
+    }
+}
+```
+
+
+
 <a href="/posts/lottery-smart-contract-remix">Next Post: Blockchain Basics P3 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"</a> 
+
+
