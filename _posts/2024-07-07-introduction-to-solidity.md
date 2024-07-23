@@ -91,15 +91,11 @@ contract MyContract {
 ### Data Types and Variables
 
 ```mermaid
-graph TB
-    dataTypes["Data Types and Variables"]
+graph LR
     elementaryTypes["fa:fa-list-ol Elementary Data Types"]
     arrays["fa:fa-table Arrays"]
     mappings["fa:fa-book Mappings"]
 
-    dataTypes -->|Includes| elementaryTypes
-    dataTypes -->|Includes| arrays
-    dataTypes -->|Includes| mappings
 
     subgraph dataTypesStructure["Data Types and Variables"]
         elementaryTypes
@@ -245,18 +241,15 @@ function getBalance(address account) public view returns (uint256) {
 
 ### Control Structures (if, else, loops)
 ```mermaid
-graph TB
+graph LR
     classDef conditional fill:#ff9999,stroke:#333,stroke-width:2px;
     classDef loop fill:#9999ff,stroke:#333,stroke-width:2px;
 
-    controlStructures["fa:fa-cogs Control Structures"]
+
     ifElseStatements["fa:fa-random If-Else Statements"]:::conditional
     forLoop["fa:fa-sync-alt For Loop"]:::loop
     whileLoop["fa:fa-redo While Loop"]:::loop
 
-    controlStructures -->|Includes| ifElseStatements
-    controlStructures -->|Includes| forLoop
-    controlStructures -->|Includes| whileLoop
 
     subgraph controlStructuresDescription["fa:fa-cogs Control Structures"]
         ifElseStatements
@@ -339,9 +332,6 @@ graph TD
 
 ```
 
-Functions in Solidity are blocks of code designed to perform specific tasks. They are fundamental building blocks of smart contracts, allowing developers to execute predefined instructions on the Ethereum blockchain. Let's break down the basics of functions in Solidity.
-
-
 ### Function Definition 
 
 A function in Solidity is defined using the `function` keyword, followed by the function name, parameters, visibility specifier, and the function body.
@@ -400,7 +390,7 @@ Visibility specifiers determine who can call the function. There are four types 
 - `internal`: The function can only be called from within the contract and derived contracts.
 - `private`: The function can only be called from within the contract.
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -453,7 +443,7 @@ Functions can also have state mutability specifiers to indicate whether they mod
 - `nonpayable`: Functions that do not explicitly specify any mutability keyword default to nonpayable, meaning they do not accept Ether and can read and write to the state.
 
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -512,7 +502,7 @@ contract ModifierExample {
 
 Functions can return values. The return type is specified after the visibility specifier and before the function body.
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -557,7 +547,7 @@ graph
 ```
 
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -581,7 +571,7 @@ contract EventExample {
 }
 ```
 
-**Explanation:**
+
 - **Event Declaration:** `NumberUpdated` event is declared with two parameters: `oldNumber` and `newNumber`.
 - 
 - **Emit Statement:** The `emit` keyword is used to trigger the `NumberUpdated` event inside the `updateNumber` function.
@@ -670,7 +660,7 @@ Here's an example of how you might listen for events using web3.js:
 
 To send and receive Ether in Solidity, you need to use payable functions and the appropriate transfer methods.
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -687,30 +677,15 @@ contract Payments {
         require(msg.value > 0, "Must send some Ether");
         recipient.transfer(msg.value);
     }
-
-    // Function to receive Ether
-    receive() external payable {
-        // Logic to execute when Ether is received
-    }
-
-    // Function to check contract balance
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
+    /// ...
 }
 ```
-
-**Explanation:**
-- **Send Ether:** The `sendEther` function allows sending Ether to a specified recipient. It requires the function to be called with a `msg.value` greater than zero.
-- **Receive Ether:** The `receive` function is a special function that executes when the contract receives Ether.
-- **Check Balance:** The `getBalance` function returns the current balance of the contract.
 
 
 ### Fallback Functions
 
 Fallback functions are special functions that are executed when a contract receives Ether and no other function matches the call data. They can be used to handle plain Ether transfers and interact with contracts that do not explicitly call a function.
 
-**Example:**
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -780,7 +755,6 @@ graph TB
 
 Ownership is a common pattern used to restrict access to certain functions to the contract's owner. This is typically done using an `owner` state variable and functions to transfer ownership.
 
-**Example:**
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -804,7 +778,7 @@ contract OwnershipExample {
 }
 ```
 
-**Explanation:**
+
 - **Owner State Variable:** The `owner` variable stores the address of the contract owner.
 - **Constructor:** Sets the initial owner to the address that deploys the contract.
 - **Only Owner Modifier:** Restricts access to certain functions to the owner.
@@ -815,55 +789,45 @@ contract OwnershipExample {
 ### Using Modifiers for Access Control
 
 ```mermaid
-graph LR
-    accessControlModifiers["Using Modifiers for Access Control"]
-    ownerVar["State Variable: owner"]
-    adminsMapping["Mapping: admins"]
-    constructorFunc["Constructor"]
-    onlyOwnerModifier["Modifier: onlyOwner"]
-    onlyAdminModifier["Modifier: onlyAdmin"]
-    addAdminFunc["Function: addAdmin"]
-    removeAdminFunc["Function: removeAdmin"]
-    restrictedFunc["Function: restrictedFunction"]
+graph 
+    ownerVar["fa:fa-user-shield State Variable: owner"]:::state
+    adminsMapping["fa:fa-users Mapping: admins"]:::state
+    constructorFunc["fa:fa-hammer Constructor"]:::constructor
+    onlyOwnerModifier["fa:fa-lock Modifier: onlyOwner"]:::modifier
+    onlyAdminModifier["fa:fa-key Modifier: onlyAdmin"]:::modifier
+    addAdminFunc["fa:fa-user-plus Function: addAdmin"]:::function
+    removeAdminFunc["fa:fa-user-times Function: removeAdmin"]:::function
+    restrictedFunc["fa:fa-lock Function: restrictedFunction"]:::function
 
-    accessControlModifiers -->|Defines| ownerVar
-    accessControlModifiers -->|Defines| adminsMapping
-    accessControlModifiers -->|Sets owner| constructorFunc
-    accessControlModifiers -->|Restricts access| onlyOwnerModifier
-    accessControlModifiers -->|Restricts access| onlyAdminModifier
-    accessControlModifiers -->|Adds admin| addAdminFunc
-    accessControlModifiers -->|Removes admin| removeAdminFunc
-    accessControlModifiers -->|Restricted function| restrictedFunc
-
-    subgraph accessControlStructure["Using Modifiers for Access Control"]
-        ownerVar
-        adminsMapping
+    subgraph accessControlStructure["fa:fa-lock Using Modifiers for Access Control"]
+        subgraph state["fa:fa-database State"]
+            style state fill:#ffdddd,stroke:#333,stroke-width:2px;
+            ownerVar
+            adminsMapping
+        end
         constructorFunc
-        onlyOwnerModifier
-        onlyAdminModifier
-        addAdminFunc
-        removeAdminFunc
-        restrictedFunc
+        
+        subgraph Modifiers["fa:fa-shield-alt Modifiers"]
+        style Modifiers fill:#ddffdd,stroke:#333,stroke-width:2px;
+            onlyOwnerModifier
+            onlyAdminModifier
+        end
+        subgraph Functions["fa:fa-cogs Functions"]
+          style Functions fill:#ddddff,stroke:#333,stroke-width:2px;
+            addAdminFunc
+            removeAdminFunc
+            restrictedFunc
+        end
     end
 
-    classDef state fill:#ffcccc,stroke:#333,stroke-width:2px;
-    classDef mapping fill:#ffcccc,stroke:#333,stroke-width:2px;
-    classDef function fill:#ccccff,stroke:#333,stroke-width:2px;
-    classDef modifier fill:#ccffcc,stroke:#333,stroke-width:2px;
+   
 
-    ownerVar:::state
-    adminsMapping:::mapping
-    constructorFunc:::function
-    onlyOwnerModifier:::modifier
-    onlyAdminModifier:::modifier
-    addAdminFunc:::function
-    removeAdminFunc:::function
-    restrictedFunc:::function
+  
 ```
 
 Modifiers are used to add reusable code to functions, often for access control purposes. They help ensure that only authorized users can execute specific functions.
 
-**Example:**
+
 ```js
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -900,68 +864,61 @@ contract AccessControlExample {
 }
 ```
 
-**Explanation:**
+
 - **Admin Mapping:** The `admins` mapping stores addresses with admin privileges.
 - **Only Owner Modifier:** Restricts certain functions to the owner.
 - **Only Admin Modifier:** Restricts certain functions to admins.
 - **Add/Remove Admin:** Allows the owner to manage admin privileges.
 - **Restricted Function:** Only admins can call this function.
 
-
-## Real-World Examples
-
-
-Let take a look to the real world example of a smart contract written in Solidity of [PanCakeSwap](https://pancakeswap.finance/) Lottery Contract. You can get the full code from this on BSCScan 
-
- [https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code](https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code)
-
-
+## Inheritance, Abstract Contracts, and Interfaces
 
 ### Inheritance
+```mermaid 
+graph TD
+    BaseContract["fa:fa-file-contract Base Contract\n(State Variables & Functions)"]:::base -->|is a| DerivedContract1["fa:fa-cubes Derived Contract 1\n(Inherits from Base, may override/extend)"]:::derived
+  
 
-```js
-// Inheritance Example
-abstract contract Ownable {
-    address private _owner;
-
-    constructor() {
-        _owner = msg.sender;
-    }
-
-    function owner() public view returns (address) {
-        return _owner;
-    }
-
-    modifier onlyOwner() {
-        require(owner() == msg.sender, "Not the owner");
-        _;
-    }
-
-    function transferOwnership(address newOwner) public onlyOwner {
-        _owner = newOwner;
-    }
-}
-
-contract MyContract is Ownable {
-    // Your contract code
-}
+    classDef base fill:#fff0cc,stroke:#333,stroke-width:2px;
+    classDef derived fill:#ccccff,stroke:#333,stroke-width:2px;
 
 ```
-### Abstract Contracts
 
 ```js
-// Abstract Contracts Example
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address) {
-        return msg.sender;
-    }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
 
-    function _msgData() internal view virtual returns (bytes calldata) {
-        return msg.data;
+// Inheritance Example
+contract BaseContract {
+    function baseFunction() public pure returns (string memory) {
+        return "Base function";
     }
 }
 
-abstract contract AbstractContract is Context {
+contract DerivedContract is BaseContract {
+    function derivedFunction() public pure returns (string memory) {
+        return "Derived function";
+    }
+}
+```
+
+### Abstract Contracts
+```mermaid
+graph TD
+    AbstractContract["fa:fa-puzzle-piece Abstract Contract\n(Some functions without implementation)"]:::abstract -->|Must be inherited and implemented| ConcreteContract["fa:fa-file-contract Concrete Contract\n(Implements abstract functions)"]:::contract
+
+    classDef abstract fill:#ddffdd,stroke:#333,stroke-width:2px;
+    classDef contract fill:#ffdddd,stroke:#333,stroke-width:2px;
+
+
+```
+
+```js
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
+
+// Abstract Contracts Example
+abstract contract AbstractContract {
     function abstractFunction() public view virtual returns (string memory);
 }
 
@@ -970,53 +927,37 @@ contract ConcreteContract is AbstractContract {
         return "Implemented";
     }
 }
-```
 
+```
 ### Interfaces
+```mermaid
+graph TD
+    ContractA["fa:fa-file-contract Contract A"]:::contract -->|Implements| Interface["fa:fa-plug Interface\n(Function Signatures)"]:::interface
+    ContractB["fa:fa-file-contract Contract B"]:::contract -->|Implements| Interface
+
+    classDef contract fill:#ffdddd,stroke:#333,stroke-width:2px;
+    classDef interface fill:#ddddff,stroke:#333,stroke-width:2px;
+
+```
 
 ```js
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
+
 // Interfaces Example
-interface IPancakeSwapLottery {
-    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external;
-    // Other function signatures
+interface IExampleInterface {
+    function interfaceFunction() external view returns (string memory);
 }
 
-contract LotteryContract is IPancakeSwapLottery {
-    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external override {
-        // Implementation
-    }
-    // Other function implementations
-}
-```
-
-### Events
-
-```js
-// Events Example
-contract LotteryContract {
-    event TicketsPurchase(address indexed buyer, uint256 indexed lotteryId, uint256 numberTickets);
-
-    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external {
-        // Logic to buy tickets
-        emit TicketsPurchase(msg.sender, _lotteryId, _ticketNumbers.length);
+contract ImplementingContract is IExampleInterface {
+    function interfaceFunction() external view override returns (string memory) {
+        return "Interface function implemented";
     }
 }
-```
-### Error Handling
 
-```js
-// Error Handling Example
-contract LotteryContract {
-    uint256 public maxNumberTicketsPerBuyOrClaim = 100;
-
-    function buyTickets(uint256 _lotteryId, uint32[] calldata _ticketNumbers) external {
-        require(_ticketNumbers.length <= maxNumberTicketsPerBuyOrClaim, "Too many tickets");
-        // Further logic
-    }
-}
 ```
 
-### Libraries
+## Libraries
 
 Libraries in Solidity are similar to contracts but are deployed only once at a specific address and are meant to be reused by other contracts.
 
@@ -1026,7 +967,7 @@ Libraries provide reusable code that can be called by other contracts. They help
 
 ```mermaid
 graph TD
-    libraryDefinition["fa:fa-file-code Library Definition"]:::libraryColor
+    libraryDefinition["fa:fa-book Library Definition"]:::libraryColor
     callingContract["fa:fa-cube Calling Contract"]:::callingColor
 
     subgraph libraryGraph["Library Example"]
@@ -1068,9 +1009,12 @@ contract LotteryContract {
 }
 ```
 
+## Real-World Examples
 
 
-<a href="/posts/lottery-smart-contract-remix">Next Post: Blockchain Basics P3 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"</a> 
+Let take a look to the real world example of a smart contract written in Solidity of [PanCakeSwap](https://pancakeswap.finance/) Lottery Contract. You can get the full code from this on BSCScan 
+
+ [https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code](https://bscscan.com/address/0x5af6d33de2ccec94efb1bdf8f92bd58085432d2c#code)
 
 
 ## Keywords To Remember
@@ -1115,3 +1059,6 @@ graph LR
     
 ```
 
+
+
+<a href="/posts/lottery-smart-contract-remix">Next Post: Blockchain Basics P3 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"</a> 
