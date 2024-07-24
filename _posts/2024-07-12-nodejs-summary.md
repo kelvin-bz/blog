@@ -21,10 +21,10 @@ end
 
 
 
-- **Runtime:** :The environment where your Node.js code execute
+- **Runtime** :The environment where your Node.js code execute
 
 
-- **Event Driven:** :Code reacts to events (clicks, network requests, etc.).
+- **Event Driven** :Code reacts to events (clicks, network requests, etc.).
   ```javascript
   const EventEmitter = require('events');
   const eventEmitter = new EventEmitter();
@@ -36,7 +36,7 @@ end
   eventEmitter.emit('start');
   ```
 
-- **Event Loop:** : Continuously checks for and processes events.
+- **Event Loop** : Continuously checks for and processes events.
 
   ```javascript
   console.log("Start");
@@ -112,7 +112,7 @@ end
   });
   ```
 
-- **Promise:** :A cleaner way to handle asynchronous results and errors. Prevents callback hell.
+- **Promise**: A cleaner way to handle asynchronous results and errors. Prevents callback hell.
 
   ```javascript
   const fetchData = () => {
@@ -142,13 +142,13 @@ end
 
 
 
-- **fs (File System):** : Interact with the file system.
+- **fs (File System)** : Interact with the file system.
   ```javascript
   const fs = require('fs');
   fs.writeFileSync('example.txt', 'Hello, Node.js');
   ```
 
-- **http:** : Create web servers.
+- **http** : Create web servers.
   ```javascript
   const http = require('http');
   const server = http.createServer((req, res) => {
@@ -158,19 +158,19 @@ end
   server.listen(3000);
   ```
 
-- **path:** : Work with file and directory paths.
+- **path** : Work with file and directory paths.
   ```javascript
   const path = require('path');
   console.log(path.join(__dirname, 'example.txt'));
   ```
 
-- **os:** : Get operating system information.
+- **os** : Get operating system information.
   ```javascript
   const os = require('os');
   console.log(os.platform());
   ```
 
-- **events:**: Create and manage custom events.
+- **events**: Create and manage custom events.
   ```javascript
   const EventEmitter = require('events');
   const eventEmitter = new EventEmitter();
@@ -191,7 +191,7 @@ end
 
 
 
-- **Import/Export:** : Way to define and use reusable code
+- **Import/Export** : Way to define and use reusable code
   ```javascript
   // module.js
   const message = 'Hello, Export!';
@@ -216,17 +216,17 @@ end
 
 
 
-- **process:** : Information about the current Node.js process
+- **process** : Information about the current Node.js process
   ```javascript
   console.log(process.platform);
   ```
 
-- **__dirname:** : Absolute path of the current directory
+- **__dirname** : Absolute path of the current directory
   ```javascript
   console.log(__dirname);
   ```
 
-- **__filename:** : Absolute path of the current file
+- **__filename** : Absolute path of the current file
   ```javascript
   console.log(__filename);
   ```
@@ -243,13 +243,13 @@ end
 
 
 
-- **Buffer:**: Represents raw binary data (e.g., images, audio).
+- **Buffer**: Represents raw binary data (e.g., images, audio).
   ```javascript
   const buffer = Buffer.from('Hello');
   console.log(buffer.toString());
   ```
 
-- **Stream:** : Efficiently read or write large amounts of data in chunks.
+- **Stream** : Efficiently read or write large amounts of data in chunks.
   ```javascript
   const fs = require('fs');
   const readStream = fs.createReadStream('example.txt');
@@ -271,7 +271,7 @@ end
 
 
 
-- **Catch:** : Handle errors using try-catch blocks.
+- **Catch** : Handle errors using try-catch blocks.
   ```javascript
   try {
     throw new Error('Something went wrong');
@@ -280,7 +280,7 @@ end
   }
   ```
 
-- **Error-First:** : Convention where callbacks take an error as the first argument.
+- **Error-First** : Convention where callbacks take an error as the first argument.
   ```javascript
   const fs = require('fs');
   fs.readFile('nonexistentfile.txt', (err, data) => {
