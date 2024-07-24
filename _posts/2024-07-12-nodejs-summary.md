@@ -2,7 +2,7 @@
 title: "Node.js Summary: A Quick Overview"
 categories: [tech]
 date: 2024-07-11 00:00:00
-tags: [solidity, smart-contracts]
+tags: [nodejs, js]
 image: "/assets/images/nodejs.jpg"
 ---
 
