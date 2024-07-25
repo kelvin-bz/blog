@@ -297,11 +297,6 @@ graph LR
 
 ```mermaid
 graph 
-  subgraph Architecture[" "]
-    microservices["fa:fa-cubes"]
-    modularMonolith["fa:fa-layer-group"]
-    distributedMonolith["fa:fa-network-wired"]
-  end
 
   subgraph Characteristics["✨ "]
     teamAutonomy["fa:fa-users"]
@@ -310,4 +305,24 @@ graph
     deployment["fa:fa-rocket"]
     coupling["🔗"]
   end
+
+  subgraph  
+    microservices["fa:fa-cubes"]
+    async["☕"]
+    eventual-consistency["❄️"]
+  end
+
+  subgraph  
+    distributedMonolith["fa:fa-network-wired"]
+    sync["🕙"]
+    strong-consistency["🪨"]
+  end
+
+
+  subgraph  [" "]
+    modularMonolith["fa:fa-layer-group"]
+    single["fa:fa-1"]
+  end
+
+
 ```
