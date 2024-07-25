@@ -162,10 +162,17 @@ graph
     concurrency["🛍️"]
     race[""fa:fa-motorcycle""]
  end
+
  subgraph  
- Lock-Acquisition["fa:fa-lock"]
- unlock["fa:fa-key"]
- conflict["🔥"]
- version["fa:fa-tag"]
+  pessimistic["fa:fa-face-frown"]
+  Lock-Acquisition["fa:fa-lock"]
+  unlock["fa:fa-key"]
+ end 
+ 
+ subgraph  
+  optimistic["fa:fa-face-smile"]
+  conflict["🔥"]
+   version["fa:fa-tag"]
  end
+
 ```
