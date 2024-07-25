@@ -18,17 +18,6 @@ graph LR
    end
 ```
 
-## Microservices
-
-Microservices are a distributed architecture composed of small, independent services, each responsible for a specific function. These services communicate over a network, enabling flexibility, scalability, and resilience.
-
-```mermaid
-
-graph LR
-  microservices["fa:fa-cubes Microservices"] --> serviceOne["fa:fa-server Service 1"]
-  microservices --> serviceTwo["fa:fa-server Service 2"]
-  microservices --> serviceThree["fa:fa-server Service 3"]
-```
 
 ## Modular Monoliths
 
@@ -42,7 +31,47 @@ graph LR
   modularMonolith --> moduleThree["🟦 Module 3"]
 ```
 
-## What are Distributed Monoliths?
+```mermaid
+graph LR
+    subgraph deployment["Deployment"]
+    eCommerceMonolith["fa:fa-box E-commerce Monolith"]
+    end
+
+    subgraph dataStore["Data Store"]
+    monolithDatabase["fa:fa-database Monolith Database"]
+    end
+
+    subgraph modules["Modules"]
+    productCatalogModule["fa:fa-folder Product Catalog Module"]
+    orderModule["fa:fa-folder Order Module"]
+    paymentModule["fa:fa-folder Payment Module"]
+    userModule["fa:fa-folder User Module"]
+    end
+
+    eCommerceMonolith --> |read/write| monolithDatabase
+    productCatalogModule -.-> eCommerceMonolith
+    orderModule -.-> eCommerceMonolith
+    paymentModule -.-> eCommerceMonolith
+    userModule -.-> eCommerceMonolith
+
+
+    style eCommerceMonolith fill:#add8e6,stroke:#000
+    style monolithDatabase fill:#add8e6,stroke:#000
+    style productCatalogModule fill:#c7f0f2,stroke:#000
+    style orderModule fill:#fff2cc,stroke:#000
+    style paymentModule fill:#d9ead3,stroke:#000
+    style userModule fill:#f4cccc,stroke:#000
+    style deployment fill:#f0f0f0,stroke:#000
+    style dataStore fill:#f0f0f0,stroke:#000
+    style modules fill:#f0f0f0,stroke:#000
+```
+
+- Modules are organized by domain or feature, with clear boundaries and interfaces.
+- Shared database for all modules, but with well-defined access patterns.
+- Changes to one module can be deployed independently, but the entire application is deployed as a single unit.
+- Communication between modules is direct (function calls, shared memory).
+
+## Distributed Monoliths
 
 Distributed monoliths are a variation of monolithic architecture where the application is split into multiple components that communicate over a network. While they offer some benefits of distributed systems, they can still suffer from the drawbacks of monolithic architecture.
 ```mermaid
@@ -53,6 +82,103 @@ graph LR
   serviceA --> serviceB
   serviceB --> serviceA
 ```
+
+
+```mermaid
+graph LR
+    subgraph deployment["Deployment"]
+    productCatalogService["fa:fa-box Product Catalog Service"]
+    orderService["fa:fa-box Order Service"]
+    paymentService["fa:fa-box Payment Service"]
+    userService["fa:fa-box User Service"]
+    end
+
+    subgraph dataStore["Data Store"]
+    sharedDatabase["fa:fa-database Shared Database"]
+    end
+
+    productCatalogService -->|read/write product data|sharedDatabase
+    orderService -->|read/write order data|sharedDatabase
+    paymentService -->|read/write payment data|sharedDatabase
+    userService -->|read/write user data|sharedDatabase
+
+    orderService -->|process payment|paymentService
+    orderService -->|get user info|userService
+    orderService -->|get product info|productCatalogService
+
+    style productCatalogService fill:#c7f0f2,stroke:#000
+    style orderService fill:#fff2cc,stroke:#000
+    style paymentService fill:#d9ead3,stroke:#000
+    style userService fill:#f4cccc,stroke:#000
+    style sharedDatabase fill:#d5a6bd,stroke:#000 
+    style deployment fill:#dae3f3,stroke:#000
+    style dataStore fill:#dae3f3,stroke:#000
+
+```
+
+- They share a single database (e.g., one big database for products, orders, users, and payments).
+- They communicate through synchronous calls (e.g., the Order Service directly calls the Payment Service to process a payment).
+- Changes to one service often require coordinated deployments of other services.
+
+## Microservices
+
+Microservices are a distributed architecture composed of small, independent services, each responsible for a specific function. These services communicate over a network, enabling flexibility, scalability, and resilience.
+
+```mermaid
+
+graph LR
+  microservices["fa:fa-cubes Microservices"] --> serviceOne["fa:fa-server Service 1"]
+  microservices --> serviceTwo["fa:fa-server Service 2"]
+  microservices --> serviceThree["fa:fa-server Service 3"]
+```
+
+```mermaid
+graph LR
+    subgraph deployment["Deployment"]
+    productCatalogService["fa:fa-box Product Catalog Service"]
+    orderService["fa:fa-box Order Service"]
+    paymentService["fa:fa-box Payment Service"]
+    userService["fa:fa-box User Service"]
+    end
+
+    subgraph dataStore["Data Store"]
+    productCatalogDB["fa:fa-database Product Catalog DB"]
+    orderDB["fa:fa-database Order DB"]
+    paymentDB["fa:fa-database Payment DB"]
+    userDB["fa:fa-database User DB"]
+    end
+
+    subgraph messageQueue["Message Queue"]
+    messageBroker["fa:fa-exchange Message Broker"]
+    end
+
+    productCatalogService -->|read/write|productCatalogDB
+    orderService -->|read/write|orderDB
+    paymentService -->|read/write|paymentDB
+    userService -->|read/write|userDB
+
+    orderService -.->|publish event|messageBroker
+    paymentService -.->|consume event|messageBroker
+    orderService -.->|get user info|userService
+    orderService -.->|get product info|productCatalogService
+
+    style productCatalogService fill:#c7f0f2,stroke:#000
+    style orderService fill:#fff2cc,stroke:#000
+    style paymentService fill:#d9ead3,stroke:#000
+    style userService fill:#f4cccc,stroke:#000
+    style productCatalogDB fill:#c7f0f2,stroke:#000
+    style orderDB fill:#fff2cc,stroke:#000
+    style paymentDB fill:#d9ead3,stroke:#000
+    style userDB fill:#f4cccc,stroke:#000
+    style messageBroker fill:#c5cae9,stroke:#000
+    style deployment fill:#f0f0f0,stroke:#000
+    style dataStore fill:#f0f0f0,stroke:#000
+    style messageQueue fill:#f0f0f0,stroke:#000
+```
+
+- Each service has its own dedicated database (or can share with related services, but with clear boundaries)
+- Asynchronous communication (message queues, event-driven) preferred, but can use synchronous when necessary with careful design
+
 
 ## Scalability
 
@@ -122,6 +248,18 @@ graph LR
   microservices["fa:fa-cubes Microservices"] --> errorIsolation["fa:fa-shield-alt Error Isolation"]
   modularMonolith["fa:fa-layer-group Modular Monolith"] --> sharedRisk["fa:fa-exclamation-triangle Shared Risk"]
   distributedMonolith["fa:fa-network-wired Distributed Monolith"] --> sharedRisk
+```
+
+
+## Data Consistency
+
+Microservices face challenges in maintaining data consistency across services due to distributed transactions and eventual consistency patterns. Modular monoliths and distributed monoliths, with shared databases, can enforce consistency more easily but may face challenges in scaling and maintaining clear boundaries.
+
+```mermaid
+graph LR
+  microservices["fa:fa-cubes Microservices"] --> eventualConsistency["❄️  Eventual Consistency"]
+  modularMonolith["fa:fa-layer-group Modular Monolith"] --> strongConsistency["🪨 Strong Consistency"]
+  distributedMonolith["fa:fa-network-wired Distributed Monolith"] --> strongConsistency
 ```
 
 ## How to Choose the Right Architecture
