@@ -134,23 +134,33 @@ graph LR
 
 ```mermaid
 graph LR
+    subgraph external["External"]
+        client["fa:fa-user Client"]
+    end
     subgraph deployment["Deployment"]
-    productCatalogService["fa:fa-box Product Catalog Service"]
-    orderService["fa:fa-box Order Service"]
-    paymentService["fa:fa-box Payment Service"]
-    userService["fa:fa-box User Service"]
+        apiGateway["fa:fa-door-open API Gateway"]
+        productCatalogService["fa:fa-box Product Catalog Service"]
+        orderService["fa:fa-box Order Service"]
+        paymentService["fa:fa-box Payment Service"]
+        userService["fa:fa-box User Service"]
     end
 
     subgraph dataStore["Data Store"]
-    productCatalogDB["fa:fa-database Product Catalog DB"]
-    orderDB["fa:fa-database Order DB"]
-    paymentDB["fa:fa-database Payment DB"]
-    userDB["fa:fa-database User DB"]
+        productCatalogDB["fa:fa-database Product Catalog DB"]
+        orderDB["fa:fa-database Order DB"]
+        paymentDB["fa:fa-database Payment DB"]
+        userDB["fa:fa-database User DB"]
     end
 
     subgraph messageQueue["Message Queue"]
-    messageBroker["fa:fa-exchange Message Broker"]
+        messageBroker["fa:fa-exchange Message Broker"]
     end
+    
+    client -->|API requests|apiGateway
+    apiGateway -->|route requests|productCatalogService
+    apiGateway -->|route requests|orderService
+    apiGateway -->|route requests|paymentService
+    apiGateway -->|route requests|userService
 
     productCatalogService -->|read/write|productCatalogDB
     orderService -->|read/write|orderDB
@@ -162,6 +172,7 @@ graph LR
     orderService -.->|get user info|userService
     orderService -.->|get product info|productCatalogService
 
+    style apiGateway fill:#e6b8af,stroke:#000
     style productCatalogService fill:#c7f0f2,stroke:#000
     style orderService fill:#fff2cc,stroke:#000
     style paymentService fill:#d9ead3,stroke:#000
@@ -174,6 +185,9 @@ graph LR
     style deployment fill:#f0f0f0,stroke:#000
     style dataStore fill:#f0f0f0,stroke:#000
     style messageQueue fill:#f0f0f0,stroke:#000
+    style client fill:#b7b7b7,stroke:#000
+    style external fill:#f0f0f0,stroke:#000
+
 ```
 
 - Each service has its own dedicated database (or can share with related services, but with clear boundaries)
