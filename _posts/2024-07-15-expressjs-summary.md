@@ -3,7 +3,7 @@ title: "Express.js Summary: A Quick Overview"
 categories: [tech]
 date: 2024-07-15 00:00:00
 tags: [expressjs, js, nodejs]
-image: "/assets/images/expressjs.png"
+image: "/assets/images/express_js.png"
 ---
 
 ## Fundamentals
