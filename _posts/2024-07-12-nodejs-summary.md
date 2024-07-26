@@ -235,21 +235,42 @@ end
 
 ```mermaid
 graph LR
-subgraph Data["📄 Data"]
+subgraph Data["🗃️ Data Handling in Node.js"]
     buffer["📦 Buffer"]
     stream["🌊 Stream"]
 end
+
+buffer --> smallFile["📄 Small Files"]
+buffer --> fullAccess["🔍 Full File Access"]
+buffer --> simplicity["🧩 Simplicity"]
+stream --> largeFile["📚 Large Files"]
+stream --> networkData["🌐 Network Data"]
+stream --> realTime["⏳ Real-Time Processing"]
+
+style buffer fill:#f9f,stroke:#333,stroke-width:2px
+style stream fill:#ccf,stroke:#f66,stroke-width:2px
+style smallFile fill:#ff9,stroke:#333,stroke-width:2px
+style largeFile fill:#9cf,stroke:#333,stroke-width:2px
+style networkData fill:#f66,stroke:#333,stroke-width:2px
+style realTime fill:#ccc,stroke:#333,stroke-width:2px
+style fullAccess fill:#e6b8af,stroke:#333,stroke-width:2px
+style simplicity fill:#d8bfd8,stroke:#333,stroke-width:2px
+
 ```
 
 
+**Buffer**: Represents raw binary data (e.g., images, audio).
 
-- **Buffer**: Represents raw binary data (e.g., images, audio).
+* **Suitable for small files:** If you're working with small files that easily fit in memory, using buffers can be simpler and more convenient.
+* **Full file access:** When you read a file into a buffer, you have immediate access to the entire file contents, making it easy to perform operations on the whole data set.
+* **Simplicity:** Working with buffers is often more straightforward for simple use cases where you don't need the advanced features of streams.
+
   ```javascript
   const buffer = Buffer.from('Hello');
   console.log(buffer.toString());
   ```
 
-- **Stream** : Efficiently read or write large amounts of data in chunks.
+**Stream** : Efficiently read or write large amounts of data in chunks.
   ```javascript
   const fs = require('fs');
   const readStream = fs.createReadStream('example.txt');
@@ -257,6 +278,14 @@ end
     console.log(chunk.toString());
   });
   ```
+
+
+* **Ideal for large files:** Streams are designed to handle large amounts of data efficiently. They read the file in chunks, so you don't have to load the entire file into memory at once. This is crucial when dealing with files that might be too big to fit comfortably in memory.
+* **Processing data on-the-fly:** Streams allow you to process the file data as it's being read. This is useful if you need to transform, filter, or modify the data without waiting for the entire file to be loaded.
+* **Memory efficiency:** Since streams work with smaller chunks of data, they consume significantly less memory compared to loading the entire file into a buffer.
+* **Network operations:** Streams are commonly used for network operations, as data is typically transmitted over the network in chunks.
+
+
 
 ## Error Handling
 
