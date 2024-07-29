@@ -365,3 +365,76 @@ style hardwareModules fill:#ccffcc,stroke:#080
   - **Stay updated** with the latest security guidelines and consider upgrading algorithms as needed.
   - **Key stretching:** Applies the hash function multiple times to further slow down attackers.
   - **Hardware Security Modules (HSMs):** Dedicated hardware for secure cryptographic operations, offering an extra layer of protection.
+
+## Use Hash to ensure data integrity
+
+Hash functions are not only used for password hashing but also for ensuring data integrity. Hash-based message authentication codes (HMACs) combine a secret key with a hash function to create a secure way to verify data integrity.
+
+```mermaid
+graph 
+   subgraph message
+    style message fill:#ccffcc,stroke:#,stroke-width:2px
+    data["💽 data"]
+    subgraph hash["HMAC"]
+        subgraph sha["✂️ SHA-256"]
+            style sha fill:#ccffff,stroke:#,stroke-width:2px
+            data1["💽 data"]
+            secret["㊙️ secret"]
+        end
+  end
+end
+
+```
+
+Create a hash-based message authentication 
+
+```js
+const crypto = require('crypto');
+const secretKey = 'your-secret-key';
+const data = 'your-message-data';
+
+const hmac = crypto.createHmac('sha256', secretKey);
+hmac.update(data);
+const hash = hmac.digest('hex');
+
+console.log('HMAC:', hash);
+```
+
+Verify the integrity of the data using the HMAC
+
+```js
+const receivedData = 'your-message-data';
+const receivedHMAC = 'received-hmac-value';  // This should be the HMAC value received along with the data
+
+const verifyHmac = crypto.createHmac('sha256', secretKey);
+verifyHmac.update(receivedData);
+const newHash = verifyHmac.digest('hex');
+
+if (newHash === receivedHMAC) {
+    console.log('Data integrity verified');
+} else {
+    console.log('Data has been tampered with');
+}
+```
+
+
+## Keywords To Remember
+
+```mermaid
+graph 
+
+  
+ subgraph  
+    data["💽"]
+    salt["🧂"]
+  end
+
+  subgraph  
+    hmac["#️"]
+    secret["㊙️"]
+  end
+  pepper["🌶️"] 
+  hash["✂️"]
+  
+  
+```
