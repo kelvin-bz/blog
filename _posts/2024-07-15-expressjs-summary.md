@@ -585,6 +585,275 @@ graph TD
     style response fill:#9cf,stroke:#333,stroke-width:2px
 ```
 
+### Explain the order of router precedence ?
+
+- **Exact Match**: Routes with exact matches take precedence over dynamic routes.
+- **Dynamic Routes**: Routes with dynamic parameters (e.g., `/users/:id`) are matched next.
+- **Wildcard Routes**: Routes with wildcards (e.g., `/users/*`) are matched last.
+
+```javascript
+app.get('/users', (req, res) => {
+    res.send('All users');
+});
+
+app.get('/users/new', (req, res) => {
+    res.send('New user form');
+});
+
+app.get('/users/:id', (req, res) => {
+    res.send(`User ID: ${req.params.id}`);
+});
+
+app.get('/users/*', (req, res) => {
+    res.send('Wildcard route');
+});
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        usersRoute["/users"]
+        newUserRoute["/users/new"]
+        userIdRoute["/users/:id"]
+        wildcardRoute["/users/*"]
+        response["🔵 Response"]
+    end
+
+    request --> usersRoute
+    usersRoute --> response
+
+    request --> newUserRoute
+    newUserRoute --> response
+
+    request --> userIdRoute
+    userIdRoute --> response
+
+    request --> wildcardRoute
+    wildcardRoute --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style usersRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style newUserRoute fill:#ff9,stroke:#333,stroke-width:2px
+    style userIdRoute fill:#9cf,stroke:#333,stroke-width:2px
+    style wildcardRoute fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How to handle file uploads ?
+
+- **`express-fileupload`**: Middleware to handle file uploads.
+- **`req.files`**: Object containing uploaded files.
+
+```javascript
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const app = express();
+
+app.use(fileUpload());
+
+app.post('/upload', (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    let uploadedFile = req.files.file; // assuming the form field name is 'file'
+
+    // Read the content of the file
+    const fileContent = uploadedFile.data.toString();
+
+    // Process the file content
+    const updatedContent = processFile(fileContent);
+    // ...
+    res.send(updatedContent);
+});
+
+```
+
+### How to protect SQL Injection?
+
+- **`express-mongo-sanitize`**: Middleware to sanitize user input and prevent NoSQL injection.
+
+- **`xss-clean`**: Middleware to sanitize user input and prevent XSS attacks.
+
+```javascript
+const express = require('express');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const app = express();
+
+app.use(mongoSanitize());
+app.use(xss());
+
+///
+app.listen(3000);
+```
+
+```mermaid
+
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        mongoSanitize["express-mongo-sanitize 🛡️"]
+        xssClean["xss-clean 🧹"]
+        handler["fa:fa-wrench Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> mongoSanitize
+    mongoSanitize --> xssClean
+    xssClean --> handler
+    handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style mongoSanitize fill:#ccf,stroke:#f66,stroke-width:2px
+    style xssClean fill:#ff9,stroke:#333,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How to implement rate limiting?
+
+- **`express-rate-limit`**: Middleware to limit the number of requests from an IP address.
+
+```javascript
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const app = express();
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+
+app.use('/auth', authLimiter);
+
+app.post('/auth/login', (req, res) => {
+    // Handle login logic
+});
+
+app.listen(3000);
+```
+
+```mermaid
+
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        authRoute["/auth/login"]
+        authLimiter["authLimiter (Rate Limiter) 🚦"]
+        handler["fa:fa-wrench Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> authRoute
+    authRoute --> authLimiter
+    authLimiter --> handler
+    handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style authRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style authLimiter fill:#ff9,stroke:#333,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How to handle versioning in APIs?
+
+- **Route Prefixing**: Use a common prefix for all routes of a specific version.
+
+```javascript
+const express = require('express');
+const app = express();
+
+const v1Router = express.Router();
+const v2Router = express.Router();
+
+v1Router.get('/users', (req, res) => {
+    res.send('Users v1');
+});
+
+v2Router.get('/users', (req, res) => {
+    res.send('Users v2');
+});
+
+app.use('/v1', v1Router);
+app.use('/v2', v2Router);
+
+app.listen(3000);
+```
+
+```mermaid
+
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        v1Route["/v1/users"]
+        v2Route["/v2/users"]
+        v1Handler["fa:fa-wrench Users v1 Handler"]
+        v2Handler["fa:fa-wrench Users v2 Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> v1Route
+    v1Route --> v1Handler
+    v1Handler --> response
+
+    request --> v2Route
+    v2Route --> v2Handler
+    v2Handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style v1Route fill:#ccf,stroke:#f66,stroke-width:2px
+    style v2Route fill:#ff9,stroke:#333,stroke-width:2px
+    style v1Handler fill:#9cf,stroke:#333,stroke-width:2px
+    style v2Handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How to handle CORS in Express.js?
+
+- **`cors`**: Middleware to enable Cross-Origin Resource Sharing (CORS) in Express.
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors( { origin: 'http://example.com' } ));
+
+app.get('/users', (req, res) => {
+    res.send('Users');
+});
+
+app.listen(3000);
+```
+
+```mermaid
+
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        corsRoute["/users"]
+        cors["cors 🌐"]
+        handler["fa:fa-wrench Users Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> corsRoute
+    corsRoute --> cors
+    cors --> handler
+    handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style corsRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style cors fill:#ff9,stroke:#333,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
 
 ## Keywords To Remember
 
