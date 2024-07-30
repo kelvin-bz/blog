@@ -23,12 +23,12 @@ Express.js is a popular web application framework for Node.js that simplifies bu
 graph 
     subgraph expressApp["fa:fa-server Express.js Application"]
             request["🔴 Request"]
-            middleware1["fa:fa-layer-group Middleware 1"]
-            middleware2["fa:fa-layer-group Middleware 2"]
+            middleware1["🚪Middleware 1"]
+            middleware2["🚪Middleware 2"]
             router["fa:fa-sitemap Router"]
-            routerMiddleware["fa:fa-layer-group Router Middleware"]
+            routerMiddleware["🚪Router Middleware"]
             handler["fa:fa-wrench Handler"]
-            errorMiddleware["fa:fa-exclamation-triangle Error Middleware"]
+            errorMiddleware["🚨 Error Middleware"]
             response["🔵 Response"]
     end
 
@@ -42,7 +42,7 @@ graph
     style router fill:#ccf,stroke:#f66,stroke-width:2px
     style routerMiddleware fill:#add8e6,stroke:#333,stroke-width:2px
     style handler fill:#9cf,stroke:#333,stroke-width:2px
-    style errorMiddleware fill:#f66,stroke:#333,stroke-width:2px
+    style errorMiddleware stroke:#333,stroke-width:2px
     style response fill:#9cf,stroke:#333,stroke-width:2px
 
     classDef requestClass fill:#f9f,stroke:#333,stroke-width:2px;
@@ -50,32 +50,37 @@ graph
     classDef routerClass fill:#ccf,stroke:#f66,stroke-width:2px;
     classDef routerMiddlewareClass fill:#add8e6,stroke:#333,stroke-width:2px;
     classDef handlerClass fill:#9cf,stroke:#333,stroke-width:2px;
-    classDef errorClass fill:#f66,stroke:#333,stroke-width:2px;
+    classDef errorClass stroke:#333,stroke-width:2px;
     classDef responseClass fill:#9cf,stroke:#333,stroke-width:2px;
 
 ```
   
 ## Middleware
 
+A **request-response cycle** in Express.js involves a series of middleware functions that execute sequentially. Each middleware can modify the request and response objects, end the request-response cycle, or call the next middleware in the stack.
+
 ```mermaid
 graph 
     subgraph expressApp["fa:fa-server Express.js Application"]
             request["🔴 Request"]
-            middleware1["fa:fa-layer-group Middleware 1"]
-            middleware2["fa:fa-layer-group Middleware 2"]
-            router["fa:fa-sitemap Router"]
+            middleware1["🚪 Middleware 1"]
+            middleware2["🚪Middleware 2"]
+            endRequest["fa:fa-stop End Request"]
+            throwError["fa:fa-exclamation-triangle Error Middleware"]
     end
 
-    request --> middleware1 --> middleware2 --> router
+    request --> middleware1
+    middleware1 --> |chain| middleware2
+    middleware1 --> |end| endRequest
+    middleware1 --> |error| throwError
 
     style request fill:#f9f,stroke:#333,stroke-width:2px
     style middleware1 fill:#ccf,stroke:#f66,stroke-width:2px
     style middleware2 fill:#ff9,stroke:#333,stroke-width:2px
-    style router fill:#ccf,stroke:#f66,stroke-width:2px
+    style endRequest fill:#fcc,stroke:#333,stroke-width:2px
+    style throwError stroke:#333,stroke-width:2px
 
-    classDef requestClass fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef middlewareClass fill:#ccf,stroke:#f66,stroke-width:2px;
-    classDef routerClass fill:#ccf,stroke:#f66,stroke-width:2px;
+
   
 ```
 **Middleware Functions**: Execute sequentially, each modifying the request/response objects or ending the request-response cycle. Examples: Logging, authentication, parsing data
@@ -83,7 +88,7 @@ graph
   const express = require('express');
   const app = express();
 
-  app.use((req, res, next) => {
+  app.use((req, res, next) => { // ( 🔴, 🔵, 🚪)
     console.log('Middleware 1');
     next();
   });
@@ -115,7 +120,7 @@ graph TD
         style passportInitialize fill:#ccf,stroke:#f66,stroke-width:2px
         style authLimiter fill:#ff9,stroke:#333,stroke-width:2px
         style routes fill:#9cf,stroke:#333,stroke-width:2px
-        style docsRoute fill:#f66,stroke:#333,stroke-width:2px
+        style docsRoute stroke:#333,stroke-width:2px
         style notFoundHandler fill:#ccc,stroke:#333,stroke-width:2px
         style errorConverter fill:#fcc,stroke:#333,stroke-width:2px
         style errorHandler fill:#faa,stroke:#333,stroke-width:2px
@@ -137,7 +142,7 @@ graph TD
         style morgan fill:#ccf,stroke:#f66,stroke-width:2px
         style helmet fill:#ff9,stroke:#333,stroke-width:2px
         style expressJson fill:#9cf,stroke:#333,stroke-width:2px
-        style expressUrlEncoded fill:#f66,stroke:#333,stroke-width:2px
+        style expressUrlEncoded stroke:#333,stroke-width:2px
         style expressFileupload fill:#ccc,stroke:#333,stroke-width:2px
         style xss fill:#fcc,stroke:#333,stroke-width:2px
         style mongoSanitize fill:#faa,stroke:#333,stroke-width:2px
@@ -155,7 +160,7 @@ graph TD
 ```mermaid
 graph 
 subgraph expressApp["fa:fa-server Express.js Application"]
-  request["🔴 Request"] --> middleware1["fa:fa-layer-group Middlewares"] 
+  request["🔴 Request"] --> middleware1["🚪Middlewares"] 
   middleware1 --> router
 
   subgraph router["fa:fa-sitemap Router"]
@@ -166,7 +171,7 @@ subgraph expressApp["fa:fa-server Express.js Application"]
     notFoundRoute["404"]
   end
 
-  router --> errorMiddleware["fa:fa-exclamation-triangle Error Middleware"]
+  router --> errorMiddleware["🚨 Error Middleware"]
   errorMiddleware --> response["🔵 Response"]
 end
 
@@ -174,10 +179,10 @@ style request fill:#f9f,stroke:#333,stroke-width:2px
 style middleware1 fill:#ccf,stroke:#f66,stroke-width:2px
 style router fill:#add8e6,stroke:#333,stroke-width:2px
 style authRoute fill:#9cf,stroke:#333,stroke-width:2px
-style userRoute fill:#f66,stroke:#333,stroke-width:2px
+style userRoute stroke:#333,stroke-width:2px
 style clientRoute fill:#ccc,stroke:#333,stroke-width:2px
 style notFoundRoute fill:#faa,stroke:#333,stroke-width:2px
-style errorMiddleware fill:#f66,stroke:#333,stroke-width:2px
+style errorMiddleware stroke:#333,stroke-width:2px
 style response fill:#9cf,stroke:#333,stroke-width:2px
 
 
@@ -185,7 +190,7 @@ classDef requestClass fill:#f9f,stroke:#333,stroke-width:2px;
 classDef middlewareClass fill:#ccf,stroke:#f66,stroke-width:2px;
 classDef routerClass fill:#add8e6,stroke:#333,stroke-width:2px;
 classDef routeHandlerClass fill:#9cf,stroke:#333,stroke-width:2px;
-classDef errorClass fill:#f66,stroke:#333,stroke-width:2px;
+classDef errorClass stroke:#333,stroke-width:2px;
 classDef responseClass fill:#9cf,stroke:#333,stroke-width:2px;
 
 ```
@@ -333,33 +338,30 @@ app.get('/download-csv', (req, res) => {
 
 
 ```mermaid
-graph LR
-    subgraph Middleware["Middleware Flow"]
-        request["🔴 Request"] --> middleware1["fa:fa-layer-group Middleware 1"]
-        middleware1 --> middleware2["fa:fa-layer-group Middleware 2"]
-        middleware2 --> routeHandler["fa:fa-wrench Route Handler"]
-        routeHandler --> response["🔵 Response"]
-    end
+graph TD 
+   
+    routeHandler --error--> nextError["fa:fa-exclamation next(err)"]
+    request["🔴"] --> middleware1["🚪Middleware 1"] --error--> nextError["fa:fa-door-open next"]
+    middleware2 --error--> nextError
+    middleware1 --> middleware2["🚪Middleware 2"]
+    middleware2 --> routeHandler["fa:fa-wrench Route Handler"]
+    routeHandler --> response["🔵"]
+    nextError --> logErrors["logErrors 📝"]
+    logErrors --> clientErrorHandler["clientErrorHandler 👥"]
+    clientErrorHandler --> errorHandler["errorHandler 🚫"]
+    errorHandler --> response
 
-    subgraph ErrorHandling["fa:fa-exclamation-triangle Error Handling Flow"]
-        routeHandler --> nextError["fa:fa-exclamation next(err)"]
-        middleware1 --> nextError
-        middleware2 --> nextError
-        nextError --> logErrors["logErrors 📝"]
-        logErrors --> clientErrorHandler["clientErrorHandler 👥"]
-        clientErrorHandler --> errorHandler["errorHandler 🚫"]
-        errorHandler --> response
-    end
 
+    
     style request fill:#f9f,stroke:#333,stroke-width:2px
     style middleware1 fill:#ccf,stroke:#f66,stroke-width:2px
     style middleware2 fill:#ff9,stroke:#333,stroke-width:2px
     style routeHandler fill:#ccf,stroke:#f66,stroke-width:2px
     style response fill:#9cf,stroke:#333,stroke-width:2px
-    style nextError fill:#f66,stroke:#333,stroke-width:2px
+    style nextError stroke:#333,stroke-width:2px
     style logErrors fill:#a0d2eb,stroke:#333,stroke-width:2px
     style clientErrorHandler fill:#f0e68c,stroke:#333,stroke-width:2px
-    style errorHandler fill:#f66,stroke:#333,stroke-width:2px
+    style errorHandler stroke:#333,stroke-width:2px
 
 ```
 
@@ -368,7 +370,7 @@ Error handling ensures your Express application gracefully manages errors that a
 
 ```mermaid
 graph LR
-    subgraph ErrorHandling["fa:fa-exclamation-triangle Error Handling in Express.js"]
+    subgraph ErrorHandling["🚨 Error Handling in Express.js"]
         SynchronousErrors["fa:fa-bolt Synchronous Errors"]
         AsynchronousErrors["fa:fa-cloud Asynchronous Errors"]
         CallbackErrors["📞 Callback Errors"]
@@ -441,18 +443,161 @@ function errorHandler(err, req, res, next) {
 }
 ```
 
-### Keywords To Remember
+## Q&A
+
+Sure, here’s a concise Q&A summary:
+
+### How does Express.js determine whether to call the next middleware or an error-handling middleware?
+
+**It depends on how the `next` function is called:**
+- **`next()`**: Without arguments, it proceeds to the next regular middleware.
+- **`next(err)`**: With an error argument, it skips to the error-handling middleware.
+
+
+```javascript
+app.use((req, res, next) => {
+    next(); // Calls the next regular middleware
+});
+
+app.use((req, res, next) => {
+    next(new Error('Error occurred')); // Calls the error-handling middleware
+});
+
+app.use((err, req, res, next) => {
+    res.status(500).send('Something broke!');
+});
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        middleware1["🔵Middleware 1"]
+        middleware2["🚪Middleware 2"]
+        errorHandler["⚠️ Error Handler"]
+        finalHandler["✅ Final Handler"]
+    end
+
+    request --> |"next()"| middleware1
+    middleware1 --> |"next()"| middleware2
+    middleware1 --> |"next(err)"| errorHandler
+    middleware2 --> |"next()"| finalHandler
+    middleware2 --> |"next(err)"| errorHandler
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style middleware1 fill:#ccf,stroke:#f66,stroke-width:2px
+    style middleware2 fill:#ff9,stroke:#333,stroke-width:2px
+    style errorHandler fill:#f66,stroke:#333,stroke-width:2px
+    style finalHandler fill:#cfc,stroke:#333,stroke-width:2px
+```
+
+### What are the differences between req.query and req.params ?
+
+- **`req.query`**: Contains the query parameters in the URL (e.g., `/users?name=John&age=30`).
+- **`req.params`**: Contains route parameters defined in the route path (e.g., `/users/:id`).
+
+```javascript
+app.get('/users', (req, res) => {
+    const { name, age } = req.query;
+    res.send(`Name: ${name}, Age: ${age}`);
+});
+
+app.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+    res.send(`User ID: ${id}`);
+});
+```
+
+```mermaid
+
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        queryRoute["/users?name=John&age=30"]
+        paramsRoute["/users/:id"]
+        queryHandler["fa:fa-wrench Query Handler"]
+        paramsHandler["fa:fa-wrench Params Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> queryRoute
+    queryRoute --> queryHandler
+    queryHandler --> response
+
+    request --> paramsRoute
+    paramsRoute --> paramsHandler
+    paramsHandler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style queryRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style paramsRoute fill:#ff9,stroke:#333,stroke-width:2px
+    style queryHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style paramsHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How to parse the request body? 
+
+- **`express.json()`**: Middleware to parse JSON bodies.
+- **`express.urlencoded()`**: Middleware to parse URL-encoded bodies.
+- **`express.text()`**: Middleware to parse text bodies.
+- **`express.raw()`**: Middleware to parse raw bodies.
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
+app.post('/users', (req, res) => {
+    const { name, age } = req.body;
+    res.send(`Name: ${name}, Age: ${age}`);
+});
+
+app.listen(3000);
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        jsonBody["{ name: 'John', age: 30 }"]
+        urlEncodedBody["name=John&age=30"]
+        jsonHandler["fa:fa-wrench JSON Handler"]
+        urlEncodedHandler["fa:fa-wrench URL-Encoded Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> jsonBody
+    jsonBody --> jsonHandler
+    jsonHandler --> response
+
+    request --> urlEncodedBody
+    urlEncodedBody --> urlEncodedHandler
+    urlEncodedHandler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style jsonBody fill:#ccf,stroke:#f66,stroke-width:2px
+    style urlEncodedBody fill:#ff9,stroke:#333,stroke-width:2px
+    style jsonHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style urlEncodedHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
+## Keywords To Remember
 
 ```mermaid
 graph 
     subgraph expressApp["fa:fa-server Express.js Application"]
             request["🔴 "]
-            middleware1["fa:fa-layer-group"]
-            middleware2["fa:fa-layer-group"]
+            middleware1["🚪"]
+            middleware2["🚪"]
             router["fa:fa-sitemap"]
-            routerMiddleware["fa:fa-layer-group"]
+            routerMiddleware["🚪"]
             handler["fa:fa-wrench "]
-            errorMiddleware["fa:fa-exclamation-triangle"]
+            errorMiddleware["🚨"]
             response["🔵 "]
     end
 
@@ -466,7 +611,7 @@ graph
     style router fill:#ccf,stroke:#f66,stroke-width:2px
     style routerMiddleware fill:#add8e6,stroke:#333,stroke-width:2px
     style handler fill:#9cf,stroke:#333,stroke-width:2px
-    style errorMiddleware fill:#f66,stroke:#333,stroke-width:2px
+    style errorMiddleware stroke:#333,stroke-width:2px
     style response fill:#9cf,stroke:#333,stroke-width:2px
 
     classDef requestClass fill:#f9f,stroke:#333,stroke-width:2px;
@@ -474,6 +619,6 @@ graph
     classDef routerClass fill:#ccf,stroke:#f66,stroke-width:2px;
     classDef routerMiddlewareClass fill:#add8e6,stroke:#333,stroke-width:2px;
     classDef handlerClass fill:#9cf,stroke:#333,stroke-width:2px;
-    classDef errorClass fill:#f66,stroke:#333,stroke-width:2px;
+    classDef errorClass fill:#f61,stroke:#333,stroke-width:2px;
     classDef responseClass fill:#9cf,stroke:#333,stroke-width:2px;
 ```
