@@ -1,8 +1,8 @@
 ---
-title: "Express.js Summary: A Quick Overview"
+title: "MERN - Express.js Fundamentals"
 categories: [tech]
-date: 2024-07-15 00:00:00
-tags: [expressjs, js, nodejs]
+date: 2024-07-19 00:00:00
+tags: [expressjs, js, nodejs, mern]
 image: "/assets/images/express_js.png"
 ---
 

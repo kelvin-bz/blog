@@ -1,7 +1,7 @@
 ---
-title: "Node.js Summary: A Quick Overview"
+title: "MERN - Node.js Fundamentals"
 categories: [tech]
-date: 2024-07-11 00:00:00
+date: 2024-07-17 00:00:00
 tags: [nodejs, js]
 image: "/assets/images/nodejs.jpg"
 ---
