@@ -564,25 +564,26 @@ graph TD
         request["🔴 Request"]
         jsonBody["{ name: 'John', age: 30 }"]
         urlEncodedBody["name=John&age=30"]
-        jsonHandler["fa:fa-wrench JSON Handler"]
-        urlEncodedHandler["fa:fa-wrench URL-Encoded Handler"]
+        jsonMiddleware["{ } express.json()"]
+        urlEncodedMiddleware["&  express.urlencoded() "]
         response["🔵 Response"]
     end
 
     request --> jsonBody
-    jsonBody --> jsonHandler
-    jsonHandler --> response
+    jsonBody --> jsonMiddleware
+    jsonMiddleware --> response
 
     request --> urlEncodedBody
-    urlEncodedBody --> urlEncodedHandler
-    urlEncodedHandler --> response
+    urlEncodedBody --> urlEncodedMiddleware
+    urlEncodedMiddleware --> response
 
     style request fill:#f9f,stroke:#333,stroke-width:2px
     style jsonBody fill:#ccf,stroke:#f66,stroke-width:2px
     style urlEncodedBody fill:#ff9,stroke:#333,stroke-width:2px
-    style jsonHandler fill:#9cf,stroke:#333,stroke-width:2px
-    style urlEncodedHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style jsonMiddleware fill:#9cf,stroke:#333,stroke-width:2px
+    style urlEncodedMiddleware fill:#9cf,stroke:#333,stroke-width:2px
     style response fill:#9cf,stroke:#333,stroke-width:2px
+
 ```
 
 ### Explain the order of router precedence ?
@@ -812,7 +813,7 @@ graph TD
     style response fill:#9cf,stroke:#333,stroke-width:2px
 ```
 
-### How to handle CORS in Express.js?
+### How to handle CORS ?
 
 - **`cors`**: Middleware to enable Cross-Origin Resource Sharing (CORS) in Express.
 
@@ -853,6 +854,206 @@ graph TD
     style response fill:#9cf,stroke:#333,stroke-width:2px
 ```
 
+### How to document APIs?
+
+- **Swagger/OpenAPI**: Use tools like Swagger UI or OpenAPI to document your APIs.
+
+```javascript
+const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.listen(3000);
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        swaggerRoute["/api-docs"]
+        swaggerUi["swagger-ui-express 📄"]
+        swaggerDocument["swagger.json 📄"]
+        response["🔵 Response"]
+    end
+
+    request --> swaggerRoute
+    swaggerRoute --> swaggerUi
+    swaggerUi --> swaggerDocument
+    swaggerDocument --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style swaggerRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style swaggerUi fill:#ff9,stroke:#333,stroke-width:2px
+    style swaggerDocument fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
+### How to manage environment variables ?
+
+- **`dotenv`**: Package to load environment variables from a `.env` file.
+
+```javascript
+require('dotenv').config();
+
+const express = require('express');
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        dotenv["dotenv 📄"]
+        handler["fa:fa-wrench Handler \n process.env"]
+    end
+
+  
+    style dotenv fill:#ccf,stroke:#f66,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+
+```
+
+
+### How to nest routers?
+
+- **Router Nesting**: Mount routers within other routers to create a nested routing structure.
+
+```javascript
+const express = require('express');
+const app = express();
+
+const userRouter = express.Router();
+const profileRouter = express.Router();
+
+userRouter.use('/profile', profileRouter);
+
+profileRouter.get('/', (req, res) => {
+    res.send('Profile');
+});
+
+app.use('/users', userRouter);
+
+app.listen(3000);
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        userRoute["/users"]
+        profileRoute["/profile"]
+        profileHandler["fa:fa-wrench Profile Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> userRoute
+    userRoute --> profileRoute
+    profileRoute --> profileHandler
+    profileHandler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style userRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style profileRoute fill:#ff9,stroke:#333,stroke-width:2px
+    style profileHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width
+
+```
+
+### How to compress responses in Express.js?
+
+- **`compression`**: Middleware to compress responses using gzip or deflate.
+
+```javascript
+
+const express = require('express');
+const compression = require('compression');
+
+const app = express();
+
+app.use(compression());
+
+app.get('/users', (req, res) => {
+    res.send('Users');
+});
+
+app.listen(3000);
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        compression["compression 🗜️"]
+        handler["fa:fa-wrench Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> compression
+    compression --> handler
+    handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style compression fill:#ccf,stroke:#f66,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
+### How to validate request data ?
+
+- **`express-validator`**: Middleware to validate and sanitize request data.
+
+```javascript
+const express = require('express');
+const { body, validationResult } = require('express-validator');
+
+const app = express();
+
+app.post('/users', 
+    body('email').isEmail(),
+    body('password').isLength({ min: 6 }),
+    (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        res.send('User created');
+    });
+
+app.listen(3000);
+
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        validationRoute["/users"]
+        validationMiddleware["express-validator 🛡️"]
+        handler["fa:fa-wrench Handler"]
+        response["🔵 Response"]
+    end
+
+    request --> validationRoute
+    validationRoute --> validationMiddleware
+    validationMiddleware --> handler
+    handler --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style validationRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style validationMiddleware fill:#ff9,stroke:#333,stroke-width:2px
+    style handler fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
 
 
 ## Keywords To Remember
