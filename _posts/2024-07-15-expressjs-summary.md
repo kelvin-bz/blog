@@ -445,7 +445,6 @@ function errorHandler(err, req, res, next) {
 
 ## Q&A
 
-Sure, here’s a concise Q&A summary:
 
 ### How does Express.js determine whether to call the next middleware or an error-handling middleware?
 

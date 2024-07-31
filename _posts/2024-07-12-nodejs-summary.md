@@ -321,6 +321,175 @@ end
   });
   ```
 
+## Q&A
+
+### How does Node.js handle asynchronous operations?
+
+Node.js uses an event-driven, non-blocking I/O model to handle asynchronous operations. When an asynchronous operation is initiated, Node.js registers a callback function to be executed when the operation completes. This allows Node.js to continue executing other code while waiting for the operation to finish.
+
+```javascript
+setTimeout(() => {
+  console.log('Async operation');
+}, 1000);
+
+console.log('Continuing execution');
+```
+
+```mermaid
+graph TD
+    subgraph eventLoop["🔄 Event Loop"]
+    end
+
+    callStack["📚 Call Stack"]
+    
+    subgraph callbackQueue["fa:fa-lines-leaning Callback Queue"]
+        callback1([📞 Callback 1])
+        callback2([📞 Callback 2])
+    end
+
+    subgraph webAPIs["🌐 APIs"]
+        setTimeout["⏳ setTimeout()"]
+        fetch["🌐 fetch()"]
+        readFile["📂 fs.readFile()"]
+    end
+
+    eventLoop --> callStack
+    eventLoop --> callbackQueue
+    webAPIs --> callbackQueue
+    
+    style eventLoop fill:#f9f,stroke:#333,stroke-width:2px
+    style callStack fill:#ccf,stroke:#f66,stroke-width:2px
+    style callbackQueue fill:#ff9,stroke:#333,stroke-width:2px
+    style webAPIs fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### How does Node.js handle errors?
+
+Node.js uses a combination of error-first callbacks and try-catch blocks to handle errors. Error-first callbacks are a convention where the first argument of a callback function is reserved for an error object. If an error occurs during an asynchronous operation, the error object is passed to the callback function. Developers can then check for the presence of an error and handle it accordingly.
+
+```javascript
+const fs = require('fs');
+fs.readFile('nonexistentfile.txt', (err, data) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(data);
+  }
+});
+```
+
+```javascript
+
+try {
+  throw new Error('Something went wrong');
+} catch (error) {
+  console.log(error.message);
+}
+```
+
+```mermaid
+
+graph LR
+subgraph Error["⚠️ Error Handling"]
+    catch["🚫 catch"]
+    errorfirst["🚨 Error-First"]
+end
+```
+
+### How does Node.js handle modules?
+
+Node.js uses the CommonJS module system to handle modules. Modules in Node.js are reusable pieces of code that can be imported and exported between files. The `require` function is used to import modules, and the `module.exports` object is used to export values from a module. This allows developers to organize their code into separate files and share functionality across different parts of an application.
+
+```javascript
+// module.js
+const message = 'Hello, Export!';
+module.exports = message;
+
+// main.js
+const message = require('./module');
+console.log(message);
+```
+
+```mermaid
+graph LR
+subgraph Modules["📥 Modules"]
+    import["🔽 import"]
+    export["🔼 export"]
+end
+```
+
+### How does Node.js handle data?
+
+Node.js provides two main mechanisms for handling data: buffers and streams. Buffers are used to represent raw binary data, such as images or audio files. They are suitable for working with small files that easily fit in memory and provide full access to the entire file contents. Streams, on the other hand, are used to efficiently read or write large amounts of data in chunks. They are ideal for handling large files, processing data on-the-fly, and consuming less memory compared to buffers.
+
+```javascript
+const buffer = Buffer.from('Hello');
+console.log(buffer.toString());
+```
+
+```javascript
+const fs = require('fs');
+const read
+Stream = fs.createReadStream('example.txt');
+readStream.on('data', chunk => {
+  console.log(chunk.toString());
+});
+```
+
+```mermaid
+graph LR
+subgraph Data["🗃️ Data Handling in Node.js"]
+    buffer["📦 Buffer"]
+    stream["🌊 Stream"]
+end
+
+
+```
+
+### How to build a web server in Node.js? 
+
+Node.js provides a built-in `http` module that allows you to create web servers. You can use the `http.createServer` method to create a server that listens for incoming requests and sends responses. You can define request handlers to process incoming requests and generate responses. Here's an example of how to build a simple web server in Node.js:
+
+```javascript
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello, World!');
+});
+
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+```
+
+```mermaid
+graph LR
+subgraph CoreModules["📦 Core Modules"]
+    http["🌐 http"]
+end
+```
+
+### How to know the current directory and file in Node.js?
+
+Node.js provides two global variables, `__dirname` and `__filename`, that allow you to access the current directory and file path, respectively. `__dirname` returns the absolute path of the current directory, while `__filename` returns the absolute path of the current file. You can use these variables to reference files or directories relative to the current location.
+
+```javascript
+console.log(__dirname);
+console.log(__filename);
+```
+
+```mermaid
+graph LR
+subgraph Globals["🌐 Globals"]
+    dirname["📁 __dirname"]
+    filename["📄 __filename"]
+end
+```
+
+
+
 
 ## Keywords To Remember
 
