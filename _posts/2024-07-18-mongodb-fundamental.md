@@ -7,18 +7,13 @@ image: "/assets/images/mongodb.png"
 ---
 
 
-## MongoDB Summary
-
+## MongoDB Architecture
 
 MongoDB is a popular NoSQL database designed for high performance, high availability, and easy scalability. It stores data in flexible, JSON-like documents, making it easy to work with structured, semi-structured, and unstructured data.
 
 - **Database**: A container for collections.
 - **Collection**: A group of MongoDB documents.
 - **Document**: A set of key-value pairs (similar to JSON objects).
-
-### MongoDB Architecture
-
-The architecture of MongoDB involves a hierarchical structure of databases, collections, and documents.
 
 ```mermaid
 graph 
@@ -35,42 +30,9 @@ graph
 ```
 
 
-### CRUD Operations
+## CRUD Operations
 
 CRUD stands for Create, Read, Update, and Delete. These are the basic operations for interacting with data in MongoDB.
-
-#### Create
-
-To insert a new document into a collection, you use the `insertOne()` or `insertMany()` methods.
-
-```javascript
-db.collection('users').insertOne({ name: 'Alice', age: 25 });
-```
-
-#### Read
-
-To read documents from a collection, you use the `find()` method.
-
-```javascript
-db.collection('users').find({ name: 'Alice' });
-```
-
-#### Update
-
-To update existing documents, you use the `updateOne()` or `updateMany()` methods.
-
-```javascript
-db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26 } });
-```
-
-#### Delete
-
-To delete documents from a collection, you use the `deleteOne()` or `deleteMany()` methods.
-
-```javascript
-db.collection('users').deleteOne({ name: 'Alice' });
-```
-
 
 ```mermaid
 graph
@@ -87,11 +49,113 @@ graph
   style delete fill:#faa,stroke:#333,stroke-width:2px
 ```
 
-### Indexing
+### Create
 
-Indexing improves the performance of search operations in MongoDB. Indexes are special data structures that store a small portion of the collection's data set in an easy-to-traverse form.
+To insert a new document into a collection, you use the `insertOne()` or `insertMany()` methods.
 
-#### Creating an Index
+```javascript
+db.collection('users').insertOne({ name: 'Alice', age: 25 });
+```
+
+### Read
+
+To read documents from a collection, you use the `find()` method.
+
+```javascript
+db.collection('users').find({ name: 'Alice' });
+```
+
+
+### Update
+
+To update existing documents, you use the `updateOne()` or `updateMany()` methods.
+
+```javascript
+db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26 } });
+
+db.collection('users').updateMany({ city: 'New York' }, { $set: { city: 'San Francisco' } });
+```
+
+#### Update Operators
+Operators in MongoDB are used to perform specific operations on fields in documents.
+
+```mermaid
+
+graph LR
+  subgraph updateOperators["fa:fa-sync Update Operators"]
+    set["fa:fa-equals $set"]
+    inc["fa:fa-plus $inc"]
+    mul["fa:fa-times $mul"]
+    unset["fa:fa-trash-alt $unset"]
+    rename["fa:fa-i-cursor $rename"]
+  end
+
+  style updateOperators stroke:#333,stroke-width:2px
+  style set fill:#ccf,stroke:#f66,stroke-width:2px
+  style inc fill:#add8e6,stroke:#333,stroke-width:2px
+  style mul fill:#9cf,stroke:#333,stroke-width:2px
+  style unset fill:#faa,stroke:#333,stroke-width:2px
+  style rename fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+
+```javascript
+// $set operator to update fields
+db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26, city: 'New York' } });
+
+// $inc operator to increment a field
+db.collection('users').updateOne({ name: 'Alice' }, { $inc: { age: 1 } });
+
+// $mul operator to multiply a field value
+db.collection('users').updateOne({ name: 'Alice' }, { $mul: { age: 2 } });
+
+// $unset operator to remove a field
+db.collection('users').updateOne({ name: 'Alice' }, { $unset: { city: '' } });
+
+// $rename operator to rename a field
+db.collection('users').updateOne({ name: 'Alice' }, { $rename: { city: 'location' } });
+
+```
+
+
+
+### Delete
+
+To delete documents from a collection, you use the `deleteOne()` or `deleteMany()` methods.
+
+```javascript
+db.collection('users').deleteOne({ name: 'Alice' });
+
+db.collection('users').deleteMany({ city: 'New York' });
+```
+
+
+## Indexing
+
+Indexing in MongoDB improves query performance by creating efficient data structures for faster data retrieval.
+
+```mermaid
+graph LR
+  subgraph indexing["fa:fa-search Indexing"]
+    singleField["fa:fa-file $singleField"]
+    compound["fa:fa-layer-group $compound"]
+    multikey["fa:fa-list $multikey"]
+    text["fa:fa-font $text"]
+  end
+
+  style indexing stroke:#333,stroke-width:2px
+  style singleField fill:#ccf,stroke:#f66,stroke-width:2px
+  style compound fill:#add8e6,stroke:#333,stroke-width:2px
+  style multikey fill:#9cf,stroke:#333,stroke-width:2px
+  style text fill:#faa,stroke:#333,stroke-width:2px
+```
+
+- **Single Field Index**: Index on a single field of a document.
+- **Compound Index**: Index on multiple fields.
+- **Multikey Index**: Index on array fields.
+- **Text Index**: Supports text search queries on string content.
+  
+## Single Field Index
 
 To create an index, you use the `createIndex()` method.
 
@@ -99,25 +163,89 @@ To create an index, you use the `createIndex()` method.
 db.collection('users').createIndex({ name: 1 });
 ```
 
+## Compound Index
+
+A compound index in MongoDB is an index on multiple fields in a document.
+
 ```mermaid
-graph
-  subgraph indexing["fa:fa-search Indexing"]
-    index["fa:fa-key Index"]
-    index --> collection
-    collection --> search["fa:fa-search Search"]
+graph LR
+  subgraph compoundIndex["fa:fa-layer-group Compound Index"]
+    field1["fa:fa-file Field 1"]
+    field2["fa:fa-file Field 2"]
+    field3["fa:fa-file Field 3"]
   end
 
-  style indexing stroke:#333,stroke-width:2px
-  style index fill:#ccf,stroke:#f66,stroke-width:2px
-  style collection fill:#add8e6,stroke:#333,stroke-width:2px
-  style search fill:#9cf,stroke:#333,stroke-width:2px
+  style compoundIndex stroke:#333,stroke-width:2px
+  style field1 fill:#ccf,stroke:#f66,stroke-width:2px
+  style field2 fill:#add8e6,stroke:#333,stroke-width:2px
+  style field3 fill:#9cf,stroke:#333,stroke-width:2px
 ```
 
-### Array Operations
+
+```javascript
+db.collection('users').createIndex({ name: 1, age: 1, city: 1, country: 1, hobbies: 1 });
+```
+
+Prefixes of a compound index can be used to satisfy queries that match the index fields from left to right.
+
+```javascript
+db.collection('users').find({ name: 'Alice', age: 25 });
+db.collection('users').find({ name: 'Alice', age: 25, city: 'New York' });
+```
+
+
+## Multikey Index
+
+A multikey index in MongoDB is an index on an array field.
+
+
+
+```mermaid
+graph LR
+  subgraph multikeyIndex["fa:fa-list Multikey Index"]
+    arrayField["fa:fa-list Array Field"]
+  end
+
+  style multikeyIndex stroke:#333,stroke-width:2px
+  style arrayField fill:#ccf,stroke:#f66,stroke-width:2px
+```
+
+
+
+```javascript
+db.collection('users').createIndex({ hobbies: 1 });
+```
+
+### Limitations of Multikey Indexes
+
+- you cannot create a compound index if more than one field is an array.
+
+```javascript
+db.collection('users').createIndex({ "hobbies": 1, "tags": 1 }); // Not allowed if both hobbies and tags are arrays
+```
+
+
+## Text Index
+
+A text index in MongoDB is used for text search queries on string content.
+
+```javascript
+db.collection('articles').createIndex({ content: 'text' });
+```
+
+Querying with a text index:
+
+```javascript
+db.collection('articles').find({ $text: { $search: 'database' } });
+```
+
+
+## Array Operations
 
 MongoDB supports a variety of array operations for working with arrays in documents.
 
-#### Adding Elements to an Array
+### Adding Elements to an Array
+
 
 To add elements to an array in a document, you use the `$push` operator.
 
@@ -125,34 +253,9 @@ To add elements to an array in a document, you use the `$push` operator.
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { hobbies: 'Reading' } });
 ```
 
-#### Removing Elements from an Array
+### Querying Arrays with `$elemMatch`
 
-To remove elements from an array in a document, you use the `$pull` operator.
-
-```javascript
-
-db.collection('users').updateOne({ name: 'Alice' }, { $pull: { hobbies: 'Reading' } });
-```
-
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    add["fa:fa-plus Add"] --> remove["fa:fa-minus Remove"]
-  end
-
-  style arrayOperations stroke:#333,stroke-width:2px
-  style add fill:#ccf,stroke:#f66,stroke-width:2px
-  style remove fill:#add8e6,stroke:#333,stroke-width:2px
-```
-
-
-#### Querying Arrays with `$elemMatch`
-
-Absolutely! Let's dive into how MongoDB's `$elemMatch` operator works with array queries and demonstrate why it's different from querying arrays without it.
-
-**Scenario:**
-
-Imagine a collection of documents representing students with their test scores:
+Given a collection of students with scores in different subjects:
 
 ```javascript
 {
@@ -173,16 +276,6 @@ Imagine a collection of documents representing students with their test scores:
 }
 ```
 
-**Querying without $elemMatch:**
-
-we want to find students who scored above 90 in any subject. We might try this query:
-
-```javascript
-db.students.find({ "scores.score": { $gt: 90 } })
-```
-
-**Result:** This will return **both** Alice and Bob, even though Bob didn't score above 90 in Math. This is because the query looks for any document where *at least one* score in the array matches the condition.
-
 **Querying with $elemMatch:**
 
 To find students who specifically scored above 90 in Math, we need `$elemMatch`:
@@ -197,7 +290,9 @@ db.students.find({
 
 **Result:** This will return only Alice, as she is the only student with a score above 90 in the "Math" subject. `$elemMatch` ensures that *all* the conditions within the array element must be met.
 
-Without $elemMatch, each condition in the query is evaluated independently against the array elements. With $elemMatch, all conditions within it must be true for the same array element to match.
+
+Without `$elemMatch` - This will return both Alice and Bob, as they both have scores above 90 in different subjects and not necessarily in the "Math" subject.
+
 
 
 ```mermaid
@@ -223,7 +318,7 @@ graph
 
 ```
 
-#### Updating Arrays with `$addToSet`
+### Add Unique - `$addToSet`
 
 The `$addToSet` operator in MongoDB is used to add elements to an array only if they are not already present. This prevents duplicate entries in the array.
 
@@ -231,56 +326,8 @@ The `$addToSet` operator in MongoDB is used to add elements to an array only if 
 db.collection('users').updateOne({ name: 'Alice' }, { $addToSet: { hobbies: 'Reading' } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    addUnique["fa:fa-plus Add Unique"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style addUnique fill:#ccf,stroke:#f66,stroke-width:2px
-```
-
-
-#### Updating Arrays with `$pullAll`
-
-The `$pullAll` operator in MongoDB is used to remove all occurrences of specified values from an array.
-
-```javascript
-db.collection('users').updateOne({ name: 'Alice' }, { $pullAll: { hobbies: ['Reading', 'Swimming'] } });
-```
-
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    removeMultiple["fa:fa-minus Remove Multiple"]
-  end
-
-  style arrayOperations stroke:#333,stroke-width:2px
-  style removeMultiple fill:#ccf,stroke:#f66,stroke-width:2px
-```
-
-#### Updating Arrays with `$pop`
-
-The `$pop` operator in MongoDB is used to remove the first or last element from an array.
-
-```javascript
-db.collection('users').updateOne({ name: 'Alice' }, { $pop: { hobbies: 1 } });
-```
-
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    popFirst["fa:fa-arrow-up Pop First"]
-    popLast["fa:fa-arrow-down Pop Last"]
-  end
-
-  style arrayOperations stroke:#333,stroke-width:2px
-  style popFirst fill:#ccf,stroke:#f66,stroke-width:2px
-  style popLast fill:#add8e6,stroke:#333,stroke-width:2px
-```
-
-#### Updating Arrays with `$push` and `$each`
+### Add Multiple  `$push` and `$each`
 
 The `$push` operator in MongoDB is used to add elements to an array. The `$each` modifier allows you to add multiple elements to the array.
 
@@ -288,17 +335,9 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$each`
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { hobbies: { $each: ['Reading', 'Swimming'] } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    pushMultiple["fa:fa-plus Add Multiple"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style pushMultiple fill:#ccf,stroke:#f66,stroke-width:2px
-```
 
-#### Updating Arrays with `$push` and `$sort`
+### Add Sorted -  `$push` and `$sort`
 
 The `$push` operator in MongoDB is used to add elements to an array. The `$sort` modifier allows you to sort the array elements.
 
@@ -306,17 +345,8 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$sort`
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $sort: -1 } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    pushSorted["fa:fa-plus Add Sorted"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style pushSorted fill:#ccf,stroke:#f66,stroke-width:2px
-```
-
-#### Updating Arrays with `$push` and `$slice`
+### Add Limited -  `$push` and `$slice`
 
 The `$push` operator in MongoDB is used to add elements to an array. The `$slice` modifier allows you to limit the number of elements in the array.
 
@@ -324,17 +354,8 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$slice
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $slice: -3 } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    pushLimited["fa:fa-plus Add Limited"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style pushLimited fill:#ccf,stroke:#f66,stroke-width:2px
-```
-
-#### Updating Arrays with `$push` and `$position`
+### Add Position - `$push` and `$position`
 
 The `$push` operator in MongoDB is used to add elements to an array. The `$position` modifier allows you to specify the position where the elements should be added.
 
@@ -342,17 +363,35 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$posit
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $position: 0 } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    pushPosition["fa:fa-plus Add Position"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style pushPosition fill:#ccf,stroke:#f66,stroke-width:2px
+### Removing Elements from an Array
+
+To remove elements from an array in a document, you use the `$pull` operator.
+
+```javascript
+
+db.collection('users').updateOne({ name: 'Alice' }, { $pull: { hobbies: 'Reading' } });
 ```
 
-#### Updating Arrays with `$pull` and `$in`
+
+### Remove the first or last element - `$pop` 
+
+The `$pop` operator in MongoDB is used to remove the first or last element from an array.
+
+```javascript
+db.collection('users').updateOne({ name: 'Alice' }, { $pop: { hobbies: 1 } });
+```
+
+
+### Remove Multiple -  `$pullAll`
+
+The `$pullAll` operator in MongoDB is used to remove all occurrences of specified values from an array.
+
+```javascript
+db.collection('users').updateOne({ name: 'Alice' }, { $pullAll: { hobbies: ['Reading', 'Swimming'] } });
+```
+
+### Remove Multiple - `$pull` and `$in`
 
 The `$pull` operator in MongoDB is used to remove elements from an array. The `$in` modifier allows you to specify multiple values to remove.
 
@@ -360,35 +399,16 @@ The `$pull` operator in MongoDB is used to remove elements from an array. The `$
 db.collection('users').updateOne({ name: 'Alice' }, { $pull: { hobbies: { $in: ['Reading', 'Swimming'] } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    removeMultiple["fa:fa-minus Remove Multiple"]
-  end
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style removeMultiple fill:#ccf,stroke:#f66,stroke-width:2px
-```
 
-#### Updating Arrays with `$pull` and `$gt`
+### Remove Condition - `$pull` and `$gt`
 
 The `$pull` operator in MongoDB is used to remove elements from an array. The `$gt` modifier allows you to specify a condition for removing elements.
 
 ```javascript
 db.collection('users').updateOne({ name: 'Alice' }, { $pull: { scores: { $gt: 85 } } });
 ```
-
-```mermaid
-
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    removeCondition["fa:fa-minus Remove Condition"]
-  end
-
-  style arrayOperations stroke:#333,stroke-width:2px
-  style removeCondition fill:#ccf,stroke:#f66,stroke-width:2px
-```
-#### Updating Arrays with `$pull` and `$ne`
+### Remove Not Equal - `$pull` and `$ne`
 
 The `$pull` operator in MongoDB is used to remove elements from an array. The `$ne` modifier allows you to specify a condition for removing elements that are not equal to a value.
 
@@ -396,58 +416,42 @@ The `$pull` operator in MongoDB is used to remove elements from an array. The `$
 db.collection('users').updateOne({ name: 'Alice' }, { $pull: { scores: { $ne: 85 } } });
 ```
 
-```mermaid
-graph
-  subgraph arrayOperations["fa:fa-list Array Operations"]
-    removeNotEqual["fa:fa-minus Remove Not Equal"]
-  end
+### Update Condition - `$set` and `$`
 
-  style arrayOperations stroke:#333,stroke-width:2px
-  style removeNotEqual fill:#ccf,stroke:#f66,stroke-width:2px
-```
-
-### Text Search
-
-MongoDB provides text search capabilities to query string content in documents.
-
-#### Creating a Text Index
-
-To perform text search queries, you need to create a text index on the fields you want to search.
+The `$set` operator in MongoDB is used to update fields in a document. The `$` positional operator allows you to update the first element that matches a condition in an array.
 
 ```javascript
-db.collection('articles').createIndex({ content: 'text' });
+db.collection('users').updateOne({ name: 'Alice', 'scores.subject': 'Math' }, { $set: { 'scores.$.score': 90 } });
 ```
 
-#### Performing a Text Search
+### Update All - `$[]`
 
-To perform a text search query, you use the `$text` operator.
+The `$[]` operator in MongoDB is used to update all elements in an array that match a condition.
 
 ```javascript
-db.collection('articles').find({ $text: { $search: 'database' } });
+db.collection('users').updateOne({ name: 'Alice' }, { $set: { 'scores.$[].score': 90 } });
 ```
 
-```mermaid
-graph
-  subgraph textSearch["fa:fa-search Text Search"]
-    index["fa:fa-key Index"]
-    index --> collection
-    collection --> search["fa:fa-search Search"]
-  end
+To increment a field in all elements of an array, you can use the `$[]` operator with the `$inc` operator.
 
-  style textSearch stroke:#333,stroke-width:2px
-  style index fill:#ccf,stroke:#f66,stroke-width:2px
-  style collection fill:#add8e6,stroke:#333,stroke-width:2px
-  style search fill:#9cf,stroke:#333,stroke-width:2px
+```javascript
+db.collection('users').updateOne({ name: 'Alice' }, { $inc: { 'scores.$[].score': 5 } });
+```
+### Update Filtered - `$[<identifier>]`
+
+The `$[<identifier>]` operator in MongoDB is used to update elements in an array that match a condition.
+
+```javascript
+db.collection('users').updateOne({ name: 'Alice' }, { $set: { 'scores.$[elem].score': 90 } }, { arrayFilters: [{ 'elem.subject': 'Math' }] });
 ```
 
 
 
-
-### Aggregation
+## Aggregation
 
 Aggregation operations process data records and return computed results. Aggregation allows you to perform complex data processing and transformation.
 
-#### Aggregation Pipeline
+### Aggregation Pipeline
 
 The aggregation framework in MongoDB uses a pipeline approach, where multiple stages transform the documents.
 
@@ -473,11 +477,100 @@ graph
 
 ```
 
-### Replica Sets
+
+
+
+### Join Collections
+
+MongoDB does not support joins like relational databases. Instead, you can use the `$lookup` operator to perform a left outer join between two collections.
+
+```javascript
+db.collection('orders').aggregate([
+  {
+    $lookup: {
+      from: 'customers',
+      localField: 'cust_id',
+      foreignField: '_id',
+      as: 'customer'
+    }
+  }
+]);
+```
+
+
+```mermaid
+
+graph
+  subgraph joinCollections["fa:fa-link Join Collections"]
+    orders["fa:fa-folder-open Orders"]
+    customers["fa:fa-folder-open Customers"]
+  end
+
+  orders --> |$lookup| customers
+
+  style joinCollections stroke:#333,stroke-width:2px
+  style orders fill:#ccf,stroke:#f66,stroke-width:2px
+  style customers fill:#add8e6,stroke:#333,stroke-width:2px
+```
+
+
+### Unwind Arrays
+
+The `$unwind` operator in MongoDB is used to deconstruct an array field into multiple documents.
+
+```javascript
+db.collection('orders').aggregate([
+  { $unwind: '$items' }
+]);
+```
+
+### Group Documents
+
+The `$group` operator in MongoDB is used to group documents by a specified key.
+
+```javascript
+db.collection('orders').aggregate([
+  { $group: { _id: '$cust_id', total: { $sum: '$amount' } } }
+]);
+```
+
+### Project Fields
+
+The `$project` operator in MongoDB is used to include, exclude, or rename fields in the output documents.
+
+```javascript
+db.collection('orders').aggregate([
+  { $project: { _id: 0, cust_id: 1, amount: 1 } }
+]);
+```
+
+### Run Multiple Aggregations
+
+You can run multiple aggregation pipelines in a single query using the `$facet` operator.
+
+```javascript
+db.collection('orders').aggregate([
+  {
+    $facet: {
+      totalAmount: [
+        { $group: { _id: null, total: { $sum: '$amount' } } }
+      ],
+      averageAmount: [
+        { $group: { _id: null, average: { $avg: '$amount' } } }
+      ]
+    }
+  }
+]);
+```
+
+
+
+
+## Replica Sets
 
 A replica set is a group of MongoDB instances that maintain the same data set. Replica sets provide redundancy and high availability.
 
-#### Components of a Replica Set
+### Components of a Replica Set
 
 - **Primary**: Receives all write operations.
 - **Secondary**: Replicates data from the primary. Can be used for read operations.
@@ -502,3 +595,215 @@ graph
   style secondary2 fill:#add8e6,stroke:#333,stroke-width:2px
   style arbiter fill:#9cf,stroke:#333,stroke-width:2px
 ```
+
+### Replica Set Configuration
+
+To configure a replica set, you use the `rs.initiate()` method.
+
+```javascript
+rs.initiate({
+  _id: 'rs0',
+  members: [
+    { _id: 0, host: 'mongo1:27017' },
+    { _id: 1, host: 'mongo2:27017' },
+    { _id: 2, host: 'mongo3:27017', arbiterOnly: true }
+  ]
+});
+```
+
+### Read Preference
+
+Read preference in MongoDB determines how read operations are distributed across the replica set.
+
+```mermaid
+graph LR
+  subgraph readPreference["fa:fa-eye Read Preference"]
+    primary["fa:fa-database Primary"]
+    secondary["fa:fa-database Secondary"]
+    primaryPreferred["fa:fa-database PrimaryPreferred"]
+    secondaryPreferred["fa:fa-database SecondaryPreferred"]
+    nearest["fa:fa-database Nearest"]
+  end
+
+  style readPreference stroke:#333,stroke-width:2px
+  style primary fill:#ccf,stroke:#f66,stroke-width:2px
+  style secondary fill:#add8e6,stroke:#333,stroke-width:2px
+  style primaryPreferred fill:#9cf,stroke:#333,stroke-width:2px
+  style secondaryPreferred fill:#9cf,stroke:#333,stroke-width:2px
+  style nearest fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
+
+
+- **Primary**: Reads from the primary.
+- **Secondary**: Reads from the secondary.
+- **PrimaryPreferred**: Reads from the primary if available, otherwise from the secondary.
+- **SecondaryPreferred**: Reads from the secondary if available, otherwise from the primary.
+- **Nearest**: Reads from the nearest member of the replica set.
+
+```javascript
+
+db.collection('users').find().readPref('secondary');
+```
+
+
+### Write Concern
+
+Write concern in MongoDB determines the level of acknowledgment for write operations.
+
+```mermaid
+graph LR
+  subgraph writeConcern["fa:fa-sync Write Concern"]
+    w0["fa:fa-times w: 0"]
+    w1["fa:fa-check w: 1"]
+    wMajority["fa:fa-check w: majority"]
+  end
+
+  style writeConcern stroke:#333,stroke-width:2px
+  style w0 fill:#ccf,stroke:#f66,stroke-width:2px
+  style w1 fill:#add8e6,stroke:#333,stroke-width:2px
+  style wMajority fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+
+
+- **w: 0**: No acknowledgment.
+- **w: 1**: Acknowledgment from the primary.
+- **w: majority**: Acknowledgment from the majority of the replica set.
+
+```javascript
+
+db.collection('users').insertOne({ name: 'Alice' }, { writeConcern: { w: 'major
+
+```
+
+### Automatic Failover
+
+MongoDB uses a heartbeat mechanism to detect the availability of replica set members. If the primary becomes unavailable, a new primary is elected.
+
+- `Primary` is elected based on the number of votes from the replica set members.
+- `Secondary` can be promoted to primary if the primary is unavailable.
+- `Arbiter` is used to break the tie in elections.
+
+
+
+```mermaid
+graph
+  subgraph failover["fa:fa-sync Failover"]
+    primary["fa:fa-database Primary"]
+    secondary1["fa:fa-database Secondary"]
+    secondary2["fa:fa-database Secondary"]
+    arbiter["fa:fa-balance-scale Arbiter"]
+  end
+
+  primary --> secondary1
+  primary --> secondary2
+  primary --> arbiter
+
+  style failover stroke:#333,stroke-width:2px
+  style primary fill:#ccf,stroke:#f66,stroke-width:2px
+  style secondary1 fill:#add8e6,stroke:#333,stroke-width:2px
+  style secondary2 fill:#add8e6,stroke:#333,stroke-width:2px
+  style arbiter fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### Manual Failover
+
+You can initiate a manual failover in MongoDB by forcing a replica set member to become the primary.
+
+```javascript
+rs.stepDown();
+```
+
+
+## Sharding
+
+Sharding is a method for distributing data across multiple machines. It allows you to scale horizontally by adding more machines to your system.
+
+A Collection is divided into chunks, and each chunk is stored on a different shard.
+
+Each Shard is a subset of the data in a sharded cluster.
+
+
+```mermaid
+graph
+  subgraph sharding["fa:fa-database Sharding"]
+    collection["fa:fa-folder-open Collection"]
+    chunk1["fa:fa-cube Chunk 1"]
+    chunk2["fa:fa-cube Chunk 2"]
+    chunk3["fa:fa-cube Chunk 3"]
+  end
+
+  collection --> chunk1
+  collection --> chunk2
+  collection --> chunk3
+
+  style sharding stroke:#333,stroke-width:2px
+  style collection fill:#ccf,stroke:#f66,stroke-width:2px
+  style chunk1 fill:#add8e6,stroke:#333,stroke-width:2px
+  style chunk2 fill:#9cf,stroke:#333,stroke-width:2px
+  style chunk3 fill:#faa,stroke:#333,stroke-width:2px
+```
+
+
+### Components of Sharding
+
+- **Shard**: A subset of the data in a sharded cluster.
+- **Config Server**: Stores metadata and configuration settings for the cluster.
+- **Query Router**: Routes queries to the appropriate shard.
+
+```mermaid
+graph
+  subgraph sharding["fa:fa-database Sharding"]
+    shard1["fa:fa-database Shard 1"]
+    shard2["fa:fa-database Shard 2"]
+    shard3["fa:fa-database Shard 3"]
+    configServer["fa:fa-cogs Config Server"]
+    queryRouter["fa:fa-route Query Router"]
+  end
+
+  shard1 --> configServer
+  shard2 --> configServer
+  shard3 --> configServer
+  queryRouter --> shard1
+  queryRouter --> shard2
+  queryRouter --> shard3
+
+  style sharding stroke:#333,stroke-width:2px
+  style shard1 fill:#ccf,stroke:#f66,stroke-width:2px
+  style shard2 fill:#add8e6,stroke:#333,stroke-width:2px
+  style shard3 fill:#9cf,stroke:#333,stroke-width:2px
+  style configServer fill:#ccf,stroke:#f66,stroke-width:2px
+  style queryRouter fill:#add8e6,stroke:#333,stroke-width:2px
+
+```
+
+### Sharding Key
+
+The sharding key is the field used to distribute data across the shards. It should be chosen carefully to ensure a balanced distribution of data.
+
+```javascript
+db.collection.createIndex({ _id: 'hashed' });
+```
+
+
+When selecting a shard key, consider the following factors:
+
+- **Cardinality**: The number of unique values in the shard key.
+- **Write Scaling**: The ability to distribute write operations across shards.
+- **Query Isolation**: The ability to target specific shards for read operations.
+
+### Shard Key Strategies
+
+- **Hashed Sharding**: Distributes data evenly across the shards using a hash function.
+- **Range Sharding**: Distributes data based on a range of values in the shard key.
+- **Compound Sharding**: Distributes data based on multiple fields in the shard key.
+
+```javascript
+db.collection.createIndex({ _id: 'hashed' });
+db.collection.createIndex({ date: 1 });
+db.collection.createIndex({ country: 1, city: 1 });
+```
+
+`

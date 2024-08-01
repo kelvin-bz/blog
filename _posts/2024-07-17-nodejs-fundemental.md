@@ -3,50 +3,39 @@ title: "MERN - Node.js Fundamentals"
 categories: [tech]
 date: 2024-07-17 00:00:00
 tags: [nodejs, js]
-image: "/assets/images/nodejs.jpg"
+image: "/assets/images/nodejs.png"
 ---
 
 
 ## Fundamentals
 
+Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js is ideal for building scalable network applications, as it can handle a large number of connections simultaneously.
+
+
+In Node.js, I/O (Input/Output) refers to the operations that involve reading and writing data to various sources such as files, networks, databases, and other streams. I/O operations are fundamental in any application that interacts with external resources. Node.js is designed to handle these operations efficiently using a non-blocking, asynchronous I/O model.
+
+```js
+const fs = require('fs');
+
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+// The program can continue executing other tasks here
+console.log('This will print before the file content');
+
+```
 
 ```mermaid
 graph LR
 subgraph Fundamentals["⚡ Fundamentals"]
     runtime["🏃 Runtime"]
+    nonblocking["🚫 Non-Blocking I/O"]
     eventdriven["⚡ Event-Driven"]
     eventloop["🔁 Event Loop"]
 end
 ```
-
-
-
-- **Runtime** :The environment where your Node.js code execute
-
-
-- **Event Driven** :Code reacts to events (clicks, network requests, etc.).
-  ```javascript
-  const EventEmitter = require('events');
-  const eventEmitter = new EventEmitter();
-  
-  eventEmitter.on('start', () => {
-    console.log('Event-driven programming');
-  });
-  
-  eventEmitter.emit('start');
-  ```
-
-- **Event Loop** : Continuously checks for and processes events.
-
-  ```javascript
-  console.log("Start");
-  
-  setTimeout(() => {
-    console.log("Event Loop");
-  }, 0);
-  
-  console.log("End");
-  ```
 
 ## Event Driven
 
@@ -322,6 +311,12 @@ end
   ```
 
 ## Q&A
+
+### If other languages also support non-blocking I/O, why is it a standout feature in Node.js?
+
+Non-blocking I/O is a core feature in Node.js, integrated from the ground up, ensuring that almost all I/O operations are asynchronous by default. Unlike other languages where non-blocking I/O is an optional feature, in Node.js, it's the default behavior. This leads to simplified development and improved performance for I/O-bound applications. The rich ecosystem of libraries and built-in support for non-blocking I/O further distinguishes Node.js in this regard. For CPU-bound tasks Node.js is not the best choice.
+
+
 
 ### How does Node.js handle asynchronous operations?
 
