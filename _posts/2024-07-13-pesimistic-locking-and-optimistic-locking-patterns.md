@@ -2,7 +2,7 @@
 title: "Pesimistic Locking And Optimistic Locking Patterns"
 categories: [tech]
 date: 2024-07-13 00:00:00
-tags: [design patterns]
+tags: [system design]
 image: "/assets/images/pesimistic-locking.jpeg"
 ---
 
