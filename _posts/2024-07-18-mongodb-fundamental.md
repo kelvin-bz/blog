@@ -244,6 +244,49 @@ db.collection('articles').find({ $text: { $search: 'database' } });
 
 MongoDB supports a variety of array operations for working with arrays in documents.
 
+```mermaid
+
+graph 
+
+  subgraph  
+    each["fa:fa-list $each"]
+    in["fa:fa-rectangle-list $in"]
+    gt["fa:fa-angle-double-right $gt"]
+    ne["fa:fa-angle-double-left $ne"]
+  end
+
+
+  subgraph     
+    pull["fa:fa-trash-alt $pull"]
+    pop["fa:fa-trash-alt $pop"]
+    pullAll["fa:fa-trash-alt $pullAll"]
+  end
+
+    subgraph arrayOperations["fa:fa-list Array Operations"]
+    elementMatch["fa:fa-equals $elementMatch"]
+    push["fa:fa-plus $push"]
+    set["fa:fa-hammer $set"]
+    addToSet["fa:fa-plus-square $addToSet"]
+  end
+
+
+
+  style elementMatch fill:#add8e6, stroke:#333,stroke-width:2px
+  style arrayOperations stroke:#333,stroke-width:2px
+  style push fill:#ccf,stroke:#f66,stroke-width:2px
+  style addToSet fill:#add8e6,stroke:#333,stroke-width:2px
+  style each fill:#9cf,stroke:#333,stroke-width:2px
+  style pull fill:#9cf,stroke:#333,stroke-width:2px
+  style pop fill:#faa,stroke:#333,stroke-width:2px
+  style pullAll fill:#ccf,stroke:#f66,stroke-width:2px
+  style in fill:#add8e6,stroke:#333,stroke-width:2px
+  style gt fill:#9cf,stroke:#333,stroke-width:2px
+  style ne fill:#faa,stroke:#333,stroke-width:2px
+
+
+```
+
+
 ### Adding Elements to an Array
 
 
@@ -352,15 +395,6 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$slice
 
 ```javascript
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $slice: -3 } } });
-```
-
-
-### Add Position - `$push` and `$position`
-
-The `$push` operator in MongoDB is used to add elements to an array. The `$position` modifier allows you to specify the position where the elements should be added.
-
-```javascript
-db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $position: 0 } } });
 ```
 
 

@@ -30,8 +30,40 @@ This issue can arise due to various reasons, such as:
 2. **Network Errors**: Unstable internet connections may prevent customers from receiving confirmation of a successful transaction, prompting them to initiate another payment.
 
 
+```mermaid
+sequenceDiagram
+    participant Customer
+    participant Ecommerce
+    participant PaymentGateway
+    participant Bank
+
+    Customer->>+Ecommerce: Initiate Payment
+    Ecommerce->>+PaymentGateway: Process Payment
+    PaymentGateway->>+Bank: Authorize Payment
+    Bank->>PaymentGateway: Authorization Successful (First Success)
+    PaymentGateway->>Ecommerce: Payment Successful
+    Ecommerce->>Customer: Payment Failed, Retry (Ecommerce Error)
+
+    Note over PaymentGateway, Bank: First Success (but Ecommerce reported failure)
+    Note over Ecommerce: Error (Incorrectly reporting failure)
+
+    Customer->>+Ecommerce: Retry Payment
+    Ecommerce->>+PaymentGateway: Process Payment
+    PaymentGateway->>+Bank: Authorize Payment
+    Bank->>PaymentGateway: Authorization Successful (Second Success)
+    PaymentGateway->>Ecommerce: Payment Successful
+    Ecommerce->>Customer: Payment Successful
+
+    Note over PaymentGateway, Bank: Second Success (Payment authorized)
+
+    Note right of Customer: Double Charged
+```
+
+In the scenario above, the payment gateway successfully processes the payment, but the e-commerce system incorrectly reports a failure to the customer. As a result, the customer retries the payment, leading to a double charge.
+
 
 ## Solution
+
 To address the issue of double payment errors, a robust solution involves implementing an idempotent API by using unique identifiers known as idempotency keys. These keys ensure that each request is processed only once, even if the same request is sent multiple times.
 
 
