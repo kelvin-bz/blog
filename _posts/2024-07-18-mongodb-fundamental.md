@@ -840,4 +840,201 @@ db.collection.createIndex({ date: 1 });
 db.collection.createIndex({ country: 1, city: 1 });
 ```
 
-`
+## Mongoose
+
+Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It provides a schema-based solution to model your application data.
+
+```mermaid
+
+graph 
+  subgraph mongoose["fa:fa-database Mongoose"]
+    connect["fa:fa-plug Connect"]
+    schema["fa:fa-file Schema"]
+    model["fa:fa-cube Model"]
+    insert["fa:fa-plus-circle Insert"]
+    find["fa:fa-eye Find"]
+    update["fa:fa-edit Update"]
+    delete["fa:fa-trash Delete"]
+  end
+
+  connect --> schema
+  schema --> model
+  model --> insert
+  model --> find
+  model --> update
+  model --> delete
+
+  style mongoose stroke:#333,stroke-width:2px
+  style connect fill:#ccf,stroke:#f66,stroke-width:2px
+  style schema fill:#add8e6,stroke:#333,stroke-width:2px
+  style model fill:#9cf,stroke:#333,stroke-width:2px
+  style insert fill:#ccf,stroke:#f66,stroke-width:2px
+  style find fill:#add8e6,stroke:#333,stroke-width:2px
+  style update fill:#9cf,stroke:#333,stroke-width:2px
+  style delete fill:#faa,stroke:#333,stroke-width:2px
+```
+
+
+### Connecting to MongoDB
+
+To connect to MongoDB using Mongoose, you use the `connect()` method.
+
+```javascript
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
+```
+
+
+### Defining a Schema
+
+A Mongoose schema defines the structure of the documents in a collection.
+
+```javascript
+const userSchema = new mongoose.Schema({
+  name: String,
+  age: Number
+});
+```
+
+### Creating a Model
+
+A Mongoose model is a class that represents a collection in MongoDB.
+
+```javascript
+const User = mongoose.model('User', userSchema);
+```
+
+### Inserting Documents
+
+To insert a document into a collection, you create an instance of the model and call the `save()` method.
+
+```javascript
+const user = new User({ name: 'Alice', age: 25 });
+
+user.save();
+```
+
+### Querying Documents
+
+To query documents from a collection, you use the `find()` method.
+
+```javascript
+User.find({ name: 'Alice' });
+```
+
+With Projection:
+
+```javascript
+User.find({ name: 'Alice' }, { name: 1, age: 1 });
+```
+
+### Updating Documents
+
+To update documents in a collection, you use the `updateOne()` method.
+
+```javascript
+User.updateOne({ name: 'Alice' }, { age: 26 });
+```
+
+### Deleting Documents
+
+To delete documents from a collection, you use the `deleteOne()` method.
+
+```javascript
+User.deleteOne({ name: 'Alice' });
+```
+
+
+### Middleware
+
+Mongoose middleware are functions that are executed before or after certain operations.
+
+```javascript
+userSchema.pre('save', function(next) {
+  console.log('Saving user...');
+  next();
+});
+```
+
+### Virtuals
+
+Mongoose virtuals are document properties that you can get and set but that do not get persisted to MongoDB.
+
+```javascript
+
+userSchema.virtual('fullName').get(function() {
+  return this.name + ' ' + this.age;
+});
+```
+
+### Plugins
+
+Mongoose plugins are reusable pieces of schema middleware that can be added to any schema.
+
+```javascript
+const timestampPlugin = require('./plugins/timestamp');
+
+userSchema.plugin(timestampPlugin);
+```
+
+### Transactions
+
+Mongoose transactions allow you to perform multiple operations on multiple documents in a single transaction.
+
+```javascript
+
+const session = await mongoose.startSession();
+session.startTransaction();
+
+try {
+  await User.create({ name: 'Alice' }, { session });
+  await User.create({ name: 'Bob' }, { session });
+
+  await session.commitTransaction();
+} catch (error) {
+  await session.abortTransaction();
+} finally {
+  session.endSession();
+}
+```
+
+### Aggregation
+
+Mongoose provides a fluent API for building aggregation pipelines.
+
+```javascript
+const result = await User.aggregate([
+  { $match: { name: 'Alice' } },
+  { $group: { _id: '$name', total: { $sum: '$age' } }
+]);
+```
+
+### Indexes
+
+Mongoose allows you to define indexes on your schemas.
+
+```javascript
+userSchema.index({ name: 1 });
+```
+
+### Population
+
+Mongoose population allows you to reference documents in other collections.
+
+```javascript
+const userSchema = new mongoose.Schema({
+  name: String,
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+});
+```
+
+### Validation
+
+Mongoose provides built-in validation for schema fields.
+
+```javascript
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true }
+});
+```
