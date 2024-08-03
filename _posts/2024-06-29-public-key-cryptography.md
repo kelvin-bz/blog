@@ -1,6 +1,6 @@
 ---
 title: Public key cryptography
-categories: [tech]
+categories: [cryptography]
 date: 2024-06-30 00:00:00
 tags: [security, cryptography]
 image: "/assets/images/asymmetric_encryption.jpg"

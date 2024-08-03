@@ -1,8 +1,8 @@
 ---
 title: "MERN - Node.js Fundamentals"
-categories: [tech]
+categories: [mern, nodejs]
 date: 2024-07-17 00:00:00
-tags: [nodejs, js]
+tags: [nodejs, nodejs]
 image: "/assets/images/nodejs.png"
 ---
 

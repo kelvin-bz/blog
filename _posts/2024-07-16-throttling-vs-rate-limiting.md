@@ -1,6 +1,6 @@
 ---
 title: "Throttling vs Rate Limiting"
-categories: [tech]
+categories: [system design]
 date: 2024-07-16 00:00:00
 tags: [system design]
 image: "/assets/images/rate-limiting.png"

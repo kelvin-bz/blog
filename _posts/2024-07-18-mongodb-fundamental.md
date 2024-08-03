@@ -1,6 +1,6 @@
 ---
 title: "MERN - MongoDB Fundamental"
-categories: [tech]
+categories: [mern, mongodb]
 date: 2024-07-18 00:00:00
 tags: [mern, mongodb]
 image: "/assets/images/mongodb.png"
@@ -270,7 +270,6 @@ graph
   end
 
 
-
   style elementMatch fill:#add8e6, stroke:#333,stroke-width:2px
   style arrayOperations stroke:#333,stroke-width:2px
   style push fill:#ccf,stroke:#f66,stroke-width:2px
@@ -282,7 +281,6 @@ graph
   style in fill:#add8e6,stroke:#333,stroke-width:2px
   style gt fill:#9cf,stroke:#333,stroke-width:2px
   style ne fill:#faa,stroke:#333,stroke-width:2px
-
 
 ```
 

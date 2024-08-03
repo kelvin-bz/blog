@@ -1,6 +1,6 @@
 ---
 title: "Blockchain Basics P6 - Deploying a Lottery Smart Contract with Truffle and ReactJS"
-categories: [tech]
+categories: [blockchain, solidity]
 date: 2024-07-11 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/lottery-smart-contract/thumbnail.png"

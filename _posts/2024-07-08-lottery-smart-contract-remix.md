@@ -1,6 +1,6 @@
 ---
 title: "Blockchain Basics P3 - Lottery Contract: A Beginner’s Guide with Remix and Solidity"
-categories: [tech]
+categories: [blockchain, solidity]
 date: 2024-07-08 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/smart-contracts/lottery_smart_contract.jpg"

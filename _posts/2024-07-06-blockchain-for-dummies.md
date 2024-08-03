@@ -1,6 +1,6 @@
 ---
 title: "Blockchain Basics P1 - Blockchain for dummies" 
-categories: [tech]
+categories: [blockchain]
 date: 2024-07-06 00:00:00
 image: "/assets/images/blockchain-for-dummies.png"
 tags: [blockchain]

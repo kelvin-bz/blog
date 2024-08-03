@@ -1,6 +1,6 @@
 ---
 title: "Microservices, Modular Monoliths, or Distributed Monoliths"
-categories: [tech]
+categories: [system design]
 date: 2024-07-13 00:00:00
 tags: [system design]
 image: "/assets/images/microservices.jpeg"

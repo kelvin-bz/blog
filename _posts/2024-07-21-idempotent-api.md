@@ -1,6 +1,6 @@
 ---
 title: "Idempotent API - Preventing Double Payment "
-categories: [tech]
+categories: [system design]
 date: 2024-07-21 00:00:00
 tags: [system design]
 image: "/assets/images/payment.png"
@@ -159,6 +159,20 @@ Each payment request is assigned a unique identifier, known as an idempotency ke
 
 
 Implementing an idempotent API is a reliable way to prevent double payment errors in e-commerce systems. By assigning unique idempotency keys to each request and storing them in an in-memory database, you can ensure that transactions are processed only once, even if the same request is sent multiple times. This approach enhances the reliability and consistency of payment processing, leading to a better customer experience and fewer payment-related issues.
+
+## Keywords To Remember
+
+```mermaid
+graph LR
+  doubleCharged["fa:fa-credit-card fa:fa-credit-card Double Charged"]
+  uniqueIdentifier["fa:fa-hashtag Unique Identifier"]
+  inMemoryDatabase["fa:fa-registered In-memory Database"]
+
+  classDef default stroke:#333,stroke-width:2px;
+
+
+
+```
 
 ## References
 - [systemdesign.one - Neo Kim](https://newsletter.systemdesign.one/p/idempotent-api)

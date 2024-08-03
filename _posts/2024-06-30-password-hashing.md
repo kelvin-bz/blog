@@ -1,8 +1,8 @@
 ---
 title: Hashing Passwords
-categories: [tech]
+categories: [cryptography]
 date: 2024-06-30 00:00:00
-tags: [security]
+tags: [security, cryptography]
 image: "/assets/images/hashing-password.jpg"
 ---
 

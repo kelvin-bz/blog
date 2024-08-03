@@ -1,6 +1,6 @@
 ---
 title: Blockchain Basics P5 - Truffle Pet-Shop Interface
-categories: [tech]
+categories: [blockchain, solidity]
 date: 2024-07-10 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/truffle-pet-shop-interface/truffle-pet-shop-interface.png"

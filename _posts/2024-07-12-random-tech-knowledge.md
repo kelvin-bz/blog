@@ -1,8 +1,8 @@
 ---
 title: "RANDOM TECH KNOWLEDGE"
-categories: [tech]
+categories: [random]
 date: 2024-07-12 00:00:00
-tags: [tech]
+tags: [random]
 image: "/assets/images/random.png"
 ---
 

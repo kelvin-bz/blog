@@ -1,6 +1,6 @@
 ---
 title: Blockchain Basics P4 - Truffle Pet-Shop Smart Contract 
-categories: [tech]
+categories: [blockchain, solidity]
 date: 2024-07-09 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/pet-shop-smart-contract.jpg"

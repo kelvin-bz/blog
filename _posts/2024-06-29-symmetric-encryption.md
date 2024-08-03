@@ -1,8 +1,8 @@
 ---
 title: Symmetric encryption
-categories: [tech]
+categories: [cryptography]
 date: 2024-06-29 00:00:00
-tags: [security]
+tags: [security, cryptography]
 image: "/assets/images/encryption.jpg"
 ---
 

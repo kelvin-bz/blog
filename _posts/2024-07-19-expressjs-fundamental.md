@@ -1,6 +1,6 @@
 ---
 title: "MERN - Express.js Fundamentals"
-categories: [tech]
+categories:  [mern, expressjs]
 date: 2024-07-19 00:00:00
 tags: [expressjs, js, nodejs, mern]
 image: "/assets/images/express_js.png"
