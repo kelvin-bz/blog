@@ -143,6 +143,52 @@ graph
     archiveData --> archiveBucket1
     archiveData --> archiveBucket2
 ```
+## Mongoose Schema
+
+If you are using MongoDB with Mongoose, you can define a schema for the bucket pattern as follows:
+
+```javascript
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const measurementSchema = new Schema({
+  timestamp: {
+    type: Date,
+    required: true,
+  },
+  heart_rate: {
+    type: Number,
+    required: true,
+  },
+});
+
+const bucketSchema = new Schema({
+  employee_id: {
+    type: Number,
+    required: true,
+    index: true, // Indexing employee_id for efficient queries
+  },
+  date: {
+    type: Date,
+    required: true,
+    index: true, // Indexing date for efficient queries
+  },
+  measurements: [measurementSchema], // Array of measurement sub-documents
+  transaction_count: {
+    type: Number,
+    default: 0,
+  },
+  sum_heart_rate: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const Bucket = mongoose.model('Bucket', bucketSchema);
+
+module.exports = Bucket;
+```
+
 
 ## Summary
 
