@@ -76,7 +76,7 @@ db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26 } });
 db.collection('users').updateMany({ city: 'New York' }, { $set: { city: 'San Francisco' } });
 ```
 
-#### Update Operators
+**Update Operators**
 Operators in MongoDB are used to perform specific operations on fields in documents.
 
 ```mermaid
@@ -102,6 +102,9 @@ graph LR
 ```javascript
 // $set operator to update fields
 db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26, city: 'New York' } });
+
+// $set operator to update nested fields
+db.collection('users').updateOne({ name: 'Alice' }, { $set: { 'address.city': 'New York' } });
 
 // $inc operator to increment a field
 db.collection('users').updateOne({ name: 'Alice' }, { $inc: { age: 1 } });
@@ -1036,3 +1039,9 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true }
 });
 ```
+
+## Patterns
+
+- <a href="/posts/bucket-pattern">Bucket Pattern</a> 
+- <a href="/posts/attribute-pattern">Attribute Pattern</a>
+- <a href="/posts/outlier-pattern">Outlier Pattern</a>
