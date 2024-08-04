@@ -1,5 +1,5 @@
 ---
-title: "Attribute Pattern - Efficiently Querying Similar Fields"
+title: "Outlier Pattern - Handling Viral Posts in Social Media Platforms"
 categories: [system design, database design]
 date: 2024-07-25 00:00:00
 tags: [system design, mongodb, database design]
