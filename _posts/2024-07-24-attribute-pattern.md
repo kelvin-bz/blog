@@ -32,7 +32,7 @@ graph LR
 Let's consider a collection of products. Each document likely has fields such as product ID, name, base price, and various attributes such as color and storage options. If we want to search by attribute, the challenge is determining which attribute to use since products often have different variants.
 
 
-```json
+```js
 {
   "product_id": 12345,
   "name": "Smartphone",
@@ -48,7 +48,7 @@ Let's consider a collection of products. Each document likely has fields such as
 
 Searching for a specific attribute would require multiple indexes:
 
-```json
+```js
 { "color_variant_red": 1 }
 { "color_variant_blue": 1 }
 { "color_variant_green": 1 }
@@ -61,7 +61,7 @@ Searching for a specific attribute would require multiple indexes:
 
 By using the Attribute Pattern, we move the subset of attributes into an array of key-value pairs:
 
-```json
+```js
 {
   "product_id": 12345,
   "name": "Smartphone",
@@ -79,14 +79,14 @@ By using the Attribute Pattern, we move the subset of attributes into an array o
 
 Now, indexing becomes more manageable:
 
-```json
+```js
 { "variants.type": 1, "variants.value": 1 }
 ```
 
 ## Handling Rare/Unpredictable Fields
 In cases where products have rare or unique attributes, such as a limited edition variant, the Attribute Pattern provides a flexible solution:
 
-```json
+```js
 {
   "product_id": 12345,
   "name": "Smartphone",
@@ -97,7 +97,7 @@ In cases where products have rare or unique attributes, such as a limited editio
 
 
 **Improved Data Structure**:
-```json
+```js
 {
   "product_id": 12345,
   "name": "Smartphone",
@@ -163,12 +163,62 @@ const Product = mongoose.model('Product', productSchema);
 module.exports = Product;
 ```
 
+## More Use Cases
+
+
+1. **User Profiles with Custom Fields**:
+   Social networks or professional platforms often allow users to add custom fields to their profiles. The Attribute Pattern can handle these efficiently:
+
+   ```js
+   {
+     "user_id": "12345",
+     "name": "John Doe",
+     "email": "john@example.com",
+     "attributes": [
+       { "key": "skillset", "value": "JavaScript" },
+       { "key": "languages", "value": "English" },
+       { "key": "certifications", "value": "AWS Certified Developer" }
+     ]
+   }
+   ```
+
+2. **Content Management Systems (CMS)**:
+   CMS platforms often need to handle different types of content with varying metadata:
+
+   ```js
+   {
+     "content_id": "67890",
+     "title": "10 Tips for Productive Remote Work",
+     "content_type": "article",
+     "metadata": [
+       { "key": "author", "value": "Jane Smith" },
+       { "key": "category", "value": "Productivity" },
+       { "key": "reading_time", "value": "5 minutes" }
+     ]
+   }
+   ```
+
+3. **IoT Device Management**:
+   IoT devices can have various sensors and capabilities that can be represented using the Attribute Pattern:
+
+   ```js
+   {
+     "device_id": "sensor-001",
+     "type": "environmental_sensor",
+     "location": "warehouse-a",
+     "sensors": [
+       { "type": "temperature", "unit": "celsius", "value": 22.5 },
+       { "type": "humidity", "unit": "percent", "value": 45 },
+       { "type": "air_quality", "unit": "aqi", "value": 50 }
+     ]
+   }
+   ```
+
 
 
 ## Summary
 
 The Attribute Pattern groups similar fields into key-value pairs, reducing the need for multiple indexes and simplifying queries. This approach improves performance and scalability, making it ideal for applications dealing with diverse and unpredictable data structures.
-
 
 ## References   
 

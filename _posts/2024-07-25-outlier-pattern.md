@@ -6,24 +6,20 @@ tags: [system design, mongodb, database design]
 image: "/assets/images/cute-cat.png"
 ---
 
-
 ## Outlier Pattern
 
 Imagine you're building a social media platform where users can create posts, and others can like, comment, or share those posts. In most cases, the number of interactions per post is manageable. However, viral posts can accumulate massive amounts of likes, comments, and shares, potentially exceeding the document size limit or impacting query performance.
-
 
 ```mermaid
 graph TD
     subgraph originalData["📁 Original Data Structure"]
         post["🐈 Post: Cute Cat Video"]
-        likes1["👍 Likes: user00, user01, ..., user9999"]
+        likes1["👍 Likes: user00, user01, ..., user999"]
     end
     post --> likes1
-   
 ```
 
 ## Applying the Outlier Pattern
-
 
 **Original Data Structure:**
 
@@ -34,7 +30,10 @@ Most posts have a reasonable number of interactions stored directly within the p
   "_id": ObjectId("507f1f77bcf86cd799439011"),
   "content": "Check out my new blog post!",
   "likes": ["user00", "user01", "user02"], 
-  "comments": ["user03", "user04"], 
+  "comments": [
+    { "user": "user03", "text": "Great post!" },
+    { "user": "user04", "text": "Thanks for sharing!" }
+  ], 
   "shares": ["user05"]
 }
 ```
@@ -47,8 +46,8 @@ When a post goes viral and accumulates a large number of interactions, you creat
 graph TD
     subgraph originalData["📁 Original Data Structure"]
         post["fa:fa-file Post: Cute Cat Video"]
-        likes1["fa:fa-thumbs-up Likes: user00, user01, ..., user9999"]
-        hasExtras["⚠️ Has Overflow Likes: true"]
+        likes1["fa:fa-thumbs-up Likes: user00, user01, ..., user999"]
+        hasExtras["⚠️ Has Overflow: true"]
         style post fill:#f9,stroke:#333,stroke-width:4px
         style likes1 fill:#bbf,stroke:#333,stroke-width:2px
         style hasExtras fill:#faa,stroke:#333,stroke-width:2px
@@ -58,55 +57,53 @@ graph TD
 
     subgraph overflowData["📁 Overflow Data"]
         postID["fa:fa-id-card Post ID: 507f191e810c19729de860ea"]
-        likes2["fa:fa-thumbs-up Overflow Likes: user10000, user10001, ..."]
+        likes2["fa:fa-thumbs-up Overflow Likes: user1000, user1001, ..."]
         style postID fill:#f9,stroke:#333,stroke-width:4px
         style likes2 fill:#bbf,stroke:#333,stroke-width:2px
     end
     postID --> |links to|likes2
-
 ```
 
 ```js
+// Main post document
 {
   "_id": ObjectId("507f191e810c19729de860ea"),
   "content": "This cute cat video is going viral!",
-  "likes": ["user00", "user01", ..., "user9999"],
-  "has_overflow_likes": true
+  "likes": ["user00", "user01", ..., "user999"],
+  "has_overflow": true
 }
-```
 
-**Overflow Document for Likes:**
-
-```js
+// Overflow document
 {
   "_id": ObjectId("507f191e810c19729de860eb"), 
   "post_id": ObjectId("507f191e810c19729de860ea"), 
-  "overflow_likes": ["user10000", "user10001", ...] 
+  "likes": ["user1000", "user1001", ...],
+  "comments": [
+    { "user": "user1002", "text": "Adorable!" },
+    { "user": "user1003", "text": "Made my day!" }
+  ]
 }
 ```
 
 ```mermaid
 classDiagram 
-    Post <|-- Overflow
+    Post "1" --> "0..1" Overflow
     class Post{
         ObjectId _id
         String content
         String[] likes
-        String[] comments
+        Object[] comments
         String[] shares
-        Boolean has_overflow_likes
-        Boolean has_overflow_comments
-        Boolean has_overflow_shares
+        Boolean has_overflow
     }
     class Overflow{
         ObjectId _id
         ObjectId post_id
-        String[] overflow_likes
-        String[] overflow_comments
-        String[] overflow_shares
+        String[] likes
+        Object[] comments
+        String[] shares
     }
 ```
-
 
 ## Benefits of the Outlier Pattern
 
@@ -116,37 +113,41 @@ classDiagram
 
 ## Mongoose Schema
 
-Here's a Mongoose schema for implementing the Outlier Pattern:
+Here's an improved Mongoose schema for implementing the Outlier Pattern:
 
 ```javascript
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// Schema for overflow documents
+const commentSchema = new Schema({
+  user: { type: String, required: true },
+  text: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const overflowSchema = new Schema({
   post_id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: 'Post'
   },
-  overflow_likes: [String]
-  // Similarly, you can add fields for overflow_comments, overflow_shares, etc.
+  likes: [String],
+  comments: [commentSchema],
+  shares: [String]
 });
 
-// Schema for regular post documents
 const postSchema = new Schema({
   content: {
     type: String,
     required: true
   },
   likes: [String],
-  comments: [String],
+  comments: [commentSchema],
   shares: [String],
-  has_overflow_likes: {
+  has_overflow: {
     type: Boolean,
     default: false
   }
-  // Similarly, you can add fields for has_overflow_comments, has_overflow_shares, etc.
 });
 
 const Post = mongoose.model('Post', postSchema);
@@ -157,39 +158,34 @@ module.exports = { Post, Overflow };
 
 ## Retrieving All Likes
 
-To retrieve all likes for a post where the `has_overflow_likes` flag is true:
+To retrieve all likes for a post, including any overflow likes:
 
 ```javascript
-
 async function getAllLikes(postId) {
-  // Find the post with the given ID
   const post = await Post.findById(postId);
   if (!post) {
     throw new Error('Post not found');
   }
 
-  // Get all likes from the main post document
   let allLikes = [...post.likes];
 
-  // If the post has overflow likes, get them from the overflow document
-  if (post.has_overflow_likes) {
+  if (post.has_overflow) {
     const overflow = await Overflow.findOne({ post_id: postId });
-    if (overflow) {
-      allLikes = allLikes.concat(overflow.overflow_likes);
+    if (overflow && overflow.likes) {
+      allLikes = allLikes.concat(overflow.likes);
     }
   }
 
   return allLikes;
 }
-
 ```
 
+## Adding a New Like
 
-To add a new like to a post:
+Here's an improved version of the function to add a new like to a post:
 
 ```javascript
-
-const LIKES_THRESHOLD = 10000;
+const LIKES_THRESHOLD = 1000;
 
 async function addLike(postId, userId) {
   const session = await mongoose.startSession();
@@ -201,59 +197,71 @@ async function addLike(postId, userId) {
       throw new Error('Post not found');
     }
 
-    if (post.has_overflow_likes) {
-      await addToOverflowLikes(postId, userId, session);
+    if (post.likes.includes(userId) || (post.has_overflow && await userLikedInOverflow(postId, userId, session))) {
+      throw new Error('User has already liked this post');
+    }
+
+    if (post.has_overflow) {
+      await addToOverflow(postId, 'likes', userId, session);
     } else if (post.likes.length >= LIKES_THRESHOLD) {
-      await createOverflowDocument(post, userId, session);
+      await createOverflowDocument(post, 'likes', userId, session);
     } else {
-      await addToPostLikes(post, userId, session);
+      post.likes.push(userId);
+      await post.save({ session });
     }
 
     await session.commitTransaction();
-    session.endSession();
-
-    return await Post.findById(postId);
+    return post;
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
-    console.error('Error adding like:', error.message);
     throw error;
+  } finally {
+    session.endSession();
   }
 }
 
-async function addToOverflowLikes(postId, userId, session) {
+async function userLikedInOverflow(postId, userId, session) {
+  const overflow = await Overflow.findOne({ post_id: postId }).session(session);
+  return overflow && overflow.likes.includes(userId);
+}
+
+async function addToOverflow(postId, field, value, session) {
   await Overflow.updateOne(
     { post_id: postId },
-    { $addToSet: { overflow_likes: userId } },
+    { $addToSet: { [field]: value } },
     { session }
   );
 }
 
-async function createOverflowDocument(post, userId, session) {
-  post.has_overflow_likes = true;
+async function createOverflowDocument(post, field, value, session) {
+  post.has_overflow = true;
   await Overflow.create([{
     post_id: post._id,
-    overflow_likes: [userId]
+    [field]: [value]
   }], { session });
   await post.save({ session });
 }
-
-async function addToPostLikes(post, userId, session) {
-  post.likes.addToSet(userId);
-  await post.save({ session });
-}
-
 ```
 
-## Summary
+## More Use Cases
 
-The Outlier Pattern groups similar fields into key-value pairs, reducing the need for multiple indexes and simplifying queries. This approach improves performance and scalability, making it ideal for applications dealing with diverse and unpredictable data structures.
+* **Comments:** Implement a similar approach for comments, creating overflow documents when the number of comments exceeds a certain threshold.
+* **IOT sensor data:** In IoT systems, most sensors might report data within expected ranges. However, during anomalies or critical events, certain sensors might generate an unusually high volume of data points. The Outlier Pattern can help manage these spikes without affecting the overall system performance.
+* **Transaction History:** In financial systems, most users might have a limited number of transactions. However, high-frequency traders or large corporations might generate a massive number of transactions. By separating these outliers into overflow documents, you can maintain optimal performance for the majority of users.
+
 
 ## Considerations
 
-* **Application Logic:** Your application code needs to handle the logic for checking for overflow documents and retrieving the additional data when needed.
-* **Data Consistency:** Ensure data consistency between the main post document and its overflow documents.
-* **Code Maintenance:** Additional code maintenance may be required over time due to handling outliers within the application code.
+* **Application Logic:** Your application must handle checking for overflow documents and retrieving additional data when needed.
+* **Data Consistency:** Ensure consistency between the main post document and its overflow documents, especially during concurrent operations.
+* **Query Complexity:** Retrieving complete data may require multiple queries, potentially impacting read performance.
+* **Indexing Strategy:** Carefully consider indexing on both main and overflow collections to optimize query performance.
+* **Handling Extreme Outliers** : We can create multiple levels of overflow documents, shard the overflow collection.
+
+## Summary
+
+The Outlier Pattern efficiently handles viral posts or other data outliers by storing excess data in separate overflow documents. This approach ensures optimal performance for the majority of data while accommodating extreme outliers. By carefully managing the transition between main and overflow documents, you can maintain data consistency and query performance across the system.
+
 
 ## References
 

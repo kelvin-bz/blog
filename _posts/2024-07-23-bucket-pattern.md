@@ -189,16 +189,24 @@ const Bucket = mongoose.model('Bucket', bucketSchema);
 module.exports = Bucket;
 ```
 
+## More Use Cases
 
-## Summary
+- **Financial Transactions**: Storing daily transaction data in buckets for each account.
+- **Sensor Readings**: Grouping sensor readings by hour or day for analysis.
+- **Website Traffic**: Aggregating website traffic data by day or week for reporting.
+- **Stock Prices**: Storing stock price data in buckets for each trading day.
+- **Weather Data**: Grouping weather data by day or week for historical analysis.
 
-The Bucket Pattern groups time series data into larger documents, reducing the number of documents and simplifying queries. This approach provides significant benefits in terms of performance, scalability, and efficient data storage, especially for applications dealing with large volumes of time series data.
 
 ## Considerations
 
 - **Bucket Size**: Determine the optimal bucket size based on the frequency of data collection and the desired query performance. For example, buckets could be hourly, daily, or weekly.
 - **Data Types**: While the example uses heart rate data, it would be helpful to mention that the bucket pattern can be applied to various types of time series data (e.g., financial transactions, sensor readings).
 - **Time Series Databases**: Consider using time series databases for optimized storage and querying of time series data.
+
+## Summary
+
+The Bucket Pattern groups time series data into larger documents, reducing the number of documents and simplifying queries. This approach provides significant benefits in terms of performance, scalability, and efficient data storage, especially for applications dealing with large volumes of time series data.
 
 ## References   
 
