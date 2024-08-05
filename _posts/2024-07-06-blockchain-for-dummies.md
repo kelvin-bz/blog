@@ -422,7 +422,67 @@ graph LR
 
 **Algorithmic Stablecoins**: These stablecoins use algorithms and smart contracts to manage the supply and stabilize the value without needing reserves. They rely on mechanisms to adjust the coin supply based on demand.
 
+### Tether
 
+Tether (USDT) is a fiat-backed stablecoin pegged to the US Dollar. It is issued by Tether Limited and operates on various blockchains. Tether is widely used in the crypto space for trading, remittances, and as a stable store of value.
+
+```mermaid
+graph 
+    classDef primary fill:#FFFFDE,stroke:#333,stroke-width:2px;      %% Light Yellow
+    classDef secondary fill:#DEFFEF,stroke:#333,stroke-width:2px;   %% Light Teal
+    classDef tertiary fill:#DEDEFF,stroke:#333,stroke-width:2px;    %% Light Lavender
+    classDef quaternary fill:#FFDEEF,stroke:#333,stroke-width:2px;  %% Light Pink
+
+    subgraph Tether["fa:fa-dollar-sign Tether (USDT)"]
+    style Tether fill:#fff, stroke-width:0px;    
+    
+    subgraph Stability["fa:fa-balance-scale Stability and Trust"]
+        Pegged["fa:fa-lock Pegged to the US Dollar"]:::secondary
+        Accepted["fa:fa-check-circle Widespread Acceptance"]:::secondary
+    end
+
+    subgraph Liquidity["fa:fa-water Liquidity and Volume"]
+        HighLiquidity["fa:fa-tint High Liquidity"]:::tertiary
+        Volume["fa:fa-chart-bar Trading Volume"]:::tertiary
+    end
+
+    subgraph Transparency["fa:fa-eye Transparency and Regulation"]
+        AuditedReserves["fa:fa-file-alt Audited Reserves"]:::quaternary
+        Compliance["fa:fa-shield-alt Compliance"]:::quaternary
+    end
+
+    subgraph Accessibility["fa:fa-users Accessibility and Utility"]
+        EaseOfUse["fa:fa-user Ease of Use"]:::tertiary
+        VersatileUtility["fa:fa-exchange-alt Versatile Utility"]:::tertiary
+    end
+
+    subgraph Integration["fa:fa-network-wired Cross-Platform Integration"]
+        MultiChain["fa:fa-link Multi-Chain Support"]:::secondary
+        DeFi["fa:fa-coins Integration with DeFi"]:::secondary
+    end
+
+    Stability
+    Liquidity
+    Transparency
+    Accessibility
+    Integration
+
+    Stability --> Pegged
+    Stability --> Accepted
+
+    Liquidity --> HighLiquidity
+    Liquidity --> Volume
+
+    Transparency --> AuditedReserves
+    Transparency --> Compliance
+
+    Accessibility --> EaseOfUse
+    Accessibility --> VersatileUtility
+
+    Integration --> MultiChain
+    Integration --> DeFi
+    end 
+```
 
 ## Restaking
 
@@ -1050,3 +1110,62 @@ graph LR
 - **Shard Chains** (Parallel Processing): These are smaller chains that run in parallel, each processing a portion of the network's transactions and state. This parallel processing significantly increases the overall transaction throughput of the blockchain.
 
 - **Shard Blocks**: Blocks on individual shard chains contain transactions and data relevant to that specific shard.
+
+## Spot Trading
+
+Spot trading is the buying and selling of assets for immediate delivery and payment. It involves the exchange of assets at the current market price, with transactions settled within a short period. Spot trading is commonly used in traditional financial markets and cryptocurrency exchanges.
+
+```mermaid
+graph TD
+    userHasBTC["📈 User has 1 BTC"]
+    buyBTC["📈 Buys 1 BTC at $10,000"]
+    sellBTC["📈 Sells 1 BTC at $11,000"]
+    profit["💵 Profit: $1,000"]
+    loss["🔻 Loss: $1,000"]
+
+    userHasBTC --> |"buys BTC"|buyBTC
+    buyBTC --> |"BTC at $11,000"|sellBTC
+    sellBTC --> |"profit"|profit
+    sellBTC --> |"loss"|loss
+```
+
+
+## Future Trading
+
+Future trading is a financial contract where parties agree to buy or sell an asset at a future date for a predetermined price. It allows investors to speculate on the price movement of an asset without owning it. Future trading is commonly used in commodities, currencies, and cryptocurrencies.
+
+```mermaid
+graph TD
+    userHasBTC["📈 User has 1 BTC"]
+    openLongFutures["📄 Opens long futures position with 10x leverage"]
+    priceOutcome["📅 After 1 month"]
+    profit["💵 Profit: $10,000 if BTC at $11,000"]
+    loss["🔻 Loss: $10,000 if BTC at $9,000"]
+
+    userHasBTC --> |"opens position"|openLongFutures
+    openLongFutures --> |"1 month duration"|priceOutcome
+    priceOutcome --> |"BTC at $11,000"|profit
+    priceOutcome --> |"BTC at $9,000"|loss
+```
+
+
+## Short Selling
+
+Short selling is a trading strategy where an investor borrows an asset and sells it at the current price, with the expectation that the price will fall. The investor then buys back the asset at a lower price, returns it to the lender, and profits from the price difference.
+
+```mermaid
+graph TD
+    userHasBTC["📈 User has 1 BTC"]
+    openShortPosition["📄 Opens short position with 10x leverage"]
+    priceOutcome["📅 After shorting BTC"]
+    profit["💵 Profit: $10,000 if BTC at $9,000"]
+    loss["🔻 Loss: $10,000 if BTC at $11,000"]
+
+    userHasBTC --> |"opens short"|openShortPosition
+    openShortPosition --> |"price change"|priceOutcome
+    priceOutcome --> |"BTC at $9,000"|profit
+    priceOutcome --> |"BTC at $11,000"|loss
+```
+
+
+
