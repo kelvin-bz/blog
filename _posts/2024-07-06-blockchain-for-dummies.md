@@ -1029,19 +1029,18 @@ graph
 **TPS**: measures a blockchain's transaction processing speed, influenced by block size, time, consensus, and complexity.
 High TPS offers scalability and fast transactions, but can risk security and decentralization.
 
-## Layer 2
+## Layer 0, 1, 2
 
 ```mermaid
-graph LR
-    subgraph ChildChain["fa:fa-link Child Chain"]
-        style ChildChain fill:#95E1D3,stroke:#00868B
-        ChildBlock1["fa:fa-cube Block 1"]
-        ChildBlock2["fa:fa-cube Block 2"]
-        ChildBlock3["fa:fa-cube Block 3"]
-        ChildBlock1 --> ChildBlock2 --> ChildBlock3
+graph 
+    subgraph Layer0["fa:fa-network-wired Layer 0"]
+        style Layer0 fill:#F0E68C,stroke:#BDB76B
+        Layer0Network1["fa:fa-cube Network 1"]
+        Layer0Network2["fa:fa-cube Network 2"]
+        Layer0Network1 --> Layer0Network2
     end
 
-    subgraph ParentChain["fa:fa-sitemap Parent Chain"]
+    subgraph ParentChain["fa:fa-sitemap Parent Chain (L1)"]
         style ParentChain fill:#DCDCDC,stroke:#696969
         ParentBlock1["fa:fa-cube Block 1"]
         ParentBlock2["fa:fa-cube Block 2"]
@@ -1049,13 +1048,23 @@ graph LR
         ParentBlock1 --> ParentBlock2 --> ParentBlock3
     end
 
+    subgraph ChildChain["fa:fa-link Child Chain (L2)"]
+        style ChildChain fill:#95E1D3,stroke:#00868B
+        ChildBlock1["fa:fa-cube Block 1"]
+        ChildBlock2["fa:fa-cube Block 2"]
+        ChildBlock3["fa:fa-cube Block 3"]
+        ChildBlock1 --> ChildBlock2 --> ChildBlock3
+    end
+
+    Layer0Network1 --> |"Infrastructure Support"| ParentChain
+    Layer0Network2 --> |"Infrastructure Support"| ParentChain
     ChildBlock3 --> |"Transaction Data"| Checkpoint["fa:fa-flag-checkered Checkpoint"]
     Checkpoint --> |"State Root"| ParentBlock2
 
 ```
-- **Child Chain (L2)**:  The child chain (also called a Layer 2 or L2) is where most of the transaction processing happens. It's designed to be faster and cheaper than the main blockchain.
-
-- **Parent Chain (L1)**: This is the main blockchain (Layer 1 or L1), which is typically slower but more secure. 
+- **Layer 0 (L0)**: The foundation layer of blockchain ecosystems, providing the underlying infrastructure and protocols that enable interoperability between different blockchain networks. L0 solutions aim to solve scalability and communication issues across multiple chains. Examples include Polkadot, Cosmos, and Avalanche.
+- **Layer 1 (L1) - Parent Chain**: The base blockchain protocol, such as Bitcoin or Ethereum. This is the main blockchain that provides the fundamental security and consensus mechanisms. L1 chains are typically slower but offer the highest level of security and decentralization. They handle the final settlement of transactions and maintain the network's core functionality.
+- **Layer 2 (L2) - Child Chain**: Scaling solutions built on top of Layer 1 to improve transaction speed and reduce costs. L2 solutions process most transactions off the main chain and periodically settle them on the L1 network. Examples include Lightning Network for Bitcoin and Optimistic Rollups for Ethereum. L2 solutions offer faster and cheaper transactions while leveraging the security of the underlying L1 network.
 
 
 ## Sharding
@@ -1110,6 +1119,42 @@ graph LR
 - **Shard Chains** (Parallel Processing): These are smaller chains that run in parallel, each processing a portion of the network's transactions and state. This parallel processing significantly increases the overall transaction throughput of the blockchain.
 
 - **Shard Blocks**: Blocks on individual shard chains contain transactions and data relevant to that specific shard.
+
+## Blockchain Trilelema
+
+```mermaid
+graph LR
+    subgraph BlockchainTrilemma["Blockchain Trilemma"]
+        Scalability["fa:fa-expand Scalability"]
+        Security["fa:fa-lock Security"]
+        Decentralization["fa:fa-network-wired Decentralization"]
+    
+    end
+
+  
+    subgraph Explanation["Explanation"]
+        ScalabilityDef["Ability to handle\nmany transactions"]
+        SecurityDef["Protection against\nattacks and failures"]
+        DecentralizationDef["Distribution of\ncontrol and power"]
+    end
+
+    Scalability --- ScalabilityDef
+    Security --- SecurityDef
+    Decentralization --- DecentralizationDef
+
+    classDef primary fill:#FFFFDE,stroke:#333,stroke-width:2px;
+    classDef secondary fill:#DEFFEF,stroke:#333,stroke-width:2px;
+    classDef tertiary fill:#DEDEFF,stroke:#333,stroke-width:2px;
+
+    class BlockchainTrilemma primary;
+    class Explanation secondary;
+    class Scalability,Security,Decentralization tertiary;
+
+```
+
+
+The **blockchain trilemma** is a concept coined by **Vitalik Buterin** that proposes a set of three main issues — decentralization, security and scalability — that developers encounter when building blockchains, forcing them to ultimately sacrifice one "aspect" for as a trade-off to accommodate the other two. 
+
 
 ## Spot Trading
 
