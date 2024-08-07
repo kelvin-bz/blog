@@ -1,7 +1,7 @@
 ---
 title: "Computed Pattern - Efficiently Managing Data Computations"
 categories: [system design, database design]
-date: 2024-08-04 00:00:00
+date: 2024-07-26 00:00:00
 tags: [system design, mongodb, database design, performance optimization]
 image: "/assets/images/data-computation.png"
 ---
@@ -283,6 +283,17 @@ For IoT applications, precomputing device health and performance metrics can aid
 ## Summary
 
 The Computed Pattern efficiently handles repeated data computations by precomputing values and storing the results. This approach optimizes performance and scalability, making it ideal for applications with high read-to-write ratios and the need for quick access to aggregated data.
+
+## Keywords To Remember
+
+```mermaid
+graph LR
+    preCalculation["fa:fa-calculator Pre-Calculation"] --> computedPattern["🖥️  Computed Pattern"]
+    timeSeriesData["fa:fa-clock Time Series Data"] --> bucketPattern["fa:fa-bucket Bucket Pattern"]
+    overflow["fa:fa-exclamation-circle Overflow"] --> outlierPattern["fa:fa-exclamation-triangle Outlier Pattern"]
+    keyValue["fa:fa-key Key-Value"] --> attributePattern["fa:fa-tags Attribute Pattern"]
+
+```
 
 ## References
 
