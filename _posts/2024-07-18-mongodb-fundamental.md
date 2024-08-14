@@ -598,7 +598,125 @@ db.collection('orders').aggregate([
 ]);
 ```
 
+## Transactions
 
+Transactions in MongoDB allow you to perform multiple operations as a single, all-or-nothing unit of work. They ensure data integrity and consistency across multiple documents and collections.
+
+```mermaid
+graph LR
+  start["fa:fa-play Start"]
+  subgraph transaction["fa:fa-exchange-alt Transaction"]
+    op1["fa:fa-cog Operation 1"]
+    op2["fa:fa-cog Operation 2"]
+    op3["fa:fa-cog Operation 3"]
+  end
+
+  start --> transaction
+  transaction --> commit["fa:fa-check Commit"]
+  transaction --> abort["fa:fa-times Abort"]
+
+  style transaction stroke:#333,stroke-width:2px
+  style start fill:#ccf,stroke:#f66,stroke-width:2px
+  style op1 fill:#add8e6,stroke:#333,stroke-width:2px
+  style op2 fill:#add8e6,stroke:#333,stroke-width:2px
+  style op3 fill:#add8e6,stroke:#333,stroke-width:2px
+  style commit fill:#9cf,stroke:#333,stroke-width:2px
+  style abort fill:#fcc,stroke:#333,stroke-width:2px
+```
+
+### Transaction Properties (ACID)
+
+```mermaid
+graph LR
+    subgraph acidProperties["🧪 ACID Properties"]
+        atomicity["💥 Atomicity"]
+        consistency["🔄 Consistency"]
+        isolation["🔒 Isolation"]
+        durability["💾 Durability"]
+    end
+
+    atomicity --> |"All or Nothing"| atomicityDesc["Operations complete successfully or have no effect"]
+    consistency --> |"Before and After"| consistencyDesc["Database remains in a consistent state"]
+    isolation --> |"Concurrent Transactions"| isolationDesc["Do not interfere with each other"]
+    durability --> |"Committed Changes"| durabilityDesc["Persist despite system failures"]
+
+    style acidProperties fill:#f0f0ff,stroke:#333,stroke-width:2px
+    style atomicity fill:#e6f2ff,stroke:#333,stroke-width:2px
+    style consistency fill:#e6ffe6,stroke:#333,stroke-width:2px
+    style isolation fill:#fff0f0,stroke:#333,stroke-width:2px
+    style durability fill:#fff0ff,stroke:#333,stroke-width:2px
+    style atomicityDesc fill:#f0f8ff,stroke:#333,stroke-width:1px
+    style consistencyDesc fill:#f0fff0,stroke:#333,stroke-width:1px
+    style isolationDesc fill:#fff5f5,stroke:#333,stroke-width:1px
+    style durabilityDesc fill:#fdf0ff,stroke:#333,stroke-width:1px
+```   
+
+### Using Transactions
+
+To use transactions in MongoDB, you typically follow these steps:
+
+
+1. Start a session
+2. Start a transaction
+3. Perform operations
+4. Commit or abort the transaction
+
+
+
+```javascript
+// Define a client
+
+const { MongoClient } = require('mongodb');
+const client = new MongoClient('mongodb://localhost:27017');
+//...
+
+// Start a session
+
+const session = client.startSession();
+
+try {
+  session.startTransaction();
+
+  // Perform multiple operations
+  await collection1.updateOne({ _id: 1 }, { $set: { status: 'processing' } }, { session });
+  await collection2.insertOne({ orderId: 1, items: ['item1', 'item2'] }, { session });
+
+  // Commit the transaction
+  await session.commitTransaction();
+} catch (error) {
+  // If an error occurred, abort the transaction
+  await session.abortTransaction();
+  console.error('Transaction aborted:', error);
+} finally {
+  // End the session
+  session.endSession();
+}
+```
+
+### Considerations for Transactions
+
+- **Performance**: Transactions may impact performance, especially for write-heavy workloads.
+- **Timeout**: Transactions have a default timeout of 60 seconds.
+- **Replica Sets**: Transactions require a replica set configuration.
+- **Sharded Clusters**: Transactions on sharded clusters have additional considerations and limitations.
+
+```mermaid
+graph TD
+  subgraph transactionConsiderations["fa:fa-exclamation-triangle Transaction Considerations"]
+    performance["fa:fa-tachometer-alt Performance Impact"]
+    timeout["fa:fa-clock Timeout"]
+    replicaSet["fa:fa-server Replica Set Required"]
+    sharding["fa:fa-cubes Sharding Limitations"]
+  end
+
+  style transactionConsiderations stroke:#333,stroke-width:2px
+  style performance fill:#fcc,stroke:#333,stroke-width:2px
+  style timeout fill:#ffc,stroke:#333,stroke-width:2px
+  style replicaSet fill:#cfc,stroke:#333,stroke-width:2px
+  style sharding fill:#ccf,stroke:#333,stroke-width:2px
+```
+
+By using transactions, you can ensure data consistency and integrity across multiple operations in MongoDB, especially when dealing with complex data models or critical business logic.
 
 
 ## Replica Sets
@@ -1045,3 +1163,11 @@ const userSchema = new mongoose.Schema({
 - <a href="/posts/bucket-pattern">Bucket Pattern</a> 
 - <a href="/posts/attribute-pattern">Attribute Pattern</a>
 - <a href="/posts/outlier-pattern">Outlier Pattern</a>
+- <a href="/posts/subset-pattern/">Subset Pattern</a>
+
+| Pattern | Description | Use Case | Advantages | Disadvantages |
+|---------|-------------|----------|------------|---------------|
+| Bucket Pattern | Groups related documents into fixed-size "buckets" or arrays | Time-series data, IoT sensor readings | - Reduces number of documents<br>- Improves query performance for range scans | - Complex to update individual items<br>- May lead to document growth |
+| Attribute Pattern | Stores a set of fields with similar access patterns as an embedded document | Products with varying attributes | - Flexible schema<br>- Efficient querying of common attributes | - More complex queries for specific attributes<br>- Potential for unused fields |
+| Outlier Pattern | Stores common data in one collection and rare, oversized data in another | Social media posts with varying engagement levels | - Optimizes for common case performance<br>- Prevents document size issues | - Requires two queries for outliers<br>- More complex application logic |
+| Subset Pattern | Stores a subset of fields from a document in a separate collection | User profiles with frequently accessed fields | - Improves read performance for common queries<br>- Reduces working set size | - Data duplication<br>- Requires keeping subsets in sync |
