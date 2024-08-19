@@ -1120,15 +1120,14 @@ graph LR
 
 - **Shard Blocks**: Blocks on individual shard chains contain transactions and data relevant to that specific shard.
 
-## Blockchain Trilelema
+## Blockchain Trilelema (DSS)
 
 ```mermaid
 graph LR
     subgraph BlockchainTrilemma["Blockchain Trilemma"]
+        Decentralization["fa:fa-network-wired Decentralization"]
         Scalability["fa:fa-expand Scalability"]
         Security["fa:fa-lock Security"]
-        Decentralization["fa:fa-network-wired Decentralization"]
-    
     end
 
   
