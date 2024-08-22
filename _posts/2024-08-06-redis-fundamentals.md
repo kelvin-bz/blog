@@ -766,19 +766,22 @@ async function runExample() {
 runExample();
 ```
 
-#### Key Features
 
 1. **Efficient Score Updates**: `ZINCRBY` increments scores atomically.
 2. **Fast Retrieval of Top Players**: `ZREVRANGE` quickly fetches top scores.
 3. **Player Ranking**: `ZREVRANK` provides player rankings efficiently.
 4. **Automatic Sorting**: Redis keeps the set sorted, eliminating manual sorting.
 
-#### Use Cases
+### Sample Application
 
-- Gaming leaderboards
-- Real-time analytics dashboards
-- Top contributor lists
-- Trending items (e.g., most-viewed articles)
+
+![Leaderboard](https://github.com/kelvin-bz/redis-leaderboard/blob/main/img/leaderboard.png?raw=true)
+
+
+A sample application demonstrating the use of Redis for managing a leaderboard can be found at [https://github.com/kelvin-bz/redis-leaderboard](https://github.com/kelvin-bz/redis-leaderboard).
+
+
+
 
 
 ## Q&A
