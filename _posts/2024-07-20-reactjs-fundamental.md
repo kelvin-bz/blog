@@ -1,5 +1,5 @@
 ---
-title: "MERN - Express.js Fundamentals"
+title: "MERN - ReactJS Fundamentals"
 categories: [mern, reactjs]
 date: 2024-07-19 00:00:00
 tags: [mern, reactjs]
