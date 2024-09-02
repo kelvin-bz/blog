@@ -609,6 +609,80 @@ readStream2.pipe(writeStream2);
 * **Memory efficiency:** Since streams work with smaller chunks of data, they consume significantly less memory compared to loading the entire file into a buffer.
 * **Network operations:** Streams are commonly used for network operations, as data is typically transmitted over the network in chunks.
 
+### fs module
+
+The `fs` module in Node.js provides file system-related functionality, allowing you to interact with the file system on your machine. It includes methods for reading, writing, updating, and deleting files, as well as working with directories.
+
+```javascript
+const fs = require('fs');
+
+// Reading a file
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(data);
+  }
+});
+
+// Writing to a file
+
+fs.writeFile('example.txt', 'Hello, Node.js', (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('File written successfully');
+  }
+});
+
+// Deleting a file
+fs.unlink('example.txt', (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('File deleted successfully');
+  }
+});
+
+// Checking if a file exists
+fs.access('example.txt', fs.constants.F_OK, (err) => {
+  if (err) {
+    console.error('File does not exist');
+  } else {
+    console.log('File exists');
+  }
+});
+
+```
+
+`fsPromises` provides a promise-based API for file system operations, allowing you to use `async/await` syntax for handling file operations.
+
+```javascript
+const fs = require('fs').promises;
+
+async function readFile() {
+  try {
+    const data = await fs.readFile('example.txt', 'utf8');
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function writeFile() {
+  try {
+    await fs.writeFile('example.txt', 'Hello, Node.js');
+    console.log('File written successfully');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+```
+
+
+
 
 
 ## Error Handling
