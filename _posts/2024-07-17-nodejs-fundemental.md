@@ -293,16 +293,6 @@ async function loadModule() {
 ## Globals
 
 
-```mermaid
-graph LR
-subgraph Globals["🌐 Globals"]
-    process["⚙️ process"]
-    dirname["📁 __dirname"]
-    filename["📄 __filename"]
-end
-```
-
-
 ### process
 
 Process is a global object that provides information about the current Node.js process. It can be used to access environment variables, command-line arguments, the current working directory, and more.
@@ -518,6 +508,56 @@ graph TD
     end
 ```
 
+### console
+
+The `console` object in Node.js provides a simple debugging and logging utility. It allows you to print messages to the console, including log messages, warnings, errors, and more.
+
+```mermaid
+graph TD
+    subgraph javascriptLayer["💻 JavaScript Layer"]
+        style javascriptLayer fill:#e6f7ff,stroke:#4db8ff
+        consoleLogCall["📢 console.log() call"]
+    end
+
+    subgraph nodejsRuntime["⚙️ Node.js Runtime"]
+        style nodejsRuntime fill:#fff0f5,stroke:#ff69b4
+        consoleObject["🖥️ Console Object"]
+        processObject["🔄 Process Object"]
+        stdoutStream["📤 stdout Stream"]
+        streamBuffer["💾 Stream Buffer"]
+    end
+
+    subgraph operatingSystem["🖥️ Operating System"]
+        style operatingSystem fill:#f0fff0,stroke:#90ee90
+        osIO["🔌 OS I/O Operations"]
+    end
+
+    subgraph output["📺 Output"]
+        style output fill:#fff5e6,stroke:#ffa500
+        terminalOutput["💻 Terminal Output"]
+        fileOutput["📄 File Output"]
+        processCapture["🔍 Process Capture"]
+    end
+
+    consoleLogCall -->|"Invokes"| consoleObject
+    consoleObject -->|"Calls"| processObject
+    processObject -->|"Writes to"| stdoutStream
+    stdoutStream -->|"Buffers in"| streamBuffer
+    streamBuffer -->|"Flushes to"| osIO
+    osIO -->|"Displays in"| terminalOutput
+    osIO -->|"Writes to"| fileOutput
+    osIO -->|"Captured by"| processCapture
+```
+
+`console.log`  is a global function that writes to the standard output stream (stdout). It is commonly used to print messages to the terminal or command line. `console.error` is similar to console.log but writes to the standard error stream (stderr).
+
+The Console object is a wrapper for a simpler object called `process.stdout`.
+
+- **Stream Writing**: when you call console.log(), it ultimately calls the write() method on process.stdout.
+
+- **Buffering**: The stdout stream is typically buffered, meaning that the output might not be written immediately, but stored temporarily in memory.
+
+- **Output Display**: Depending on how Node.js is being run, the output might be displayed in a terminal, redirected to a file, or captured by another process.
 
 
 ## Working with Data
@@ -892,7 +932,9 @@ subgraph Globals["🌐 Globals"]
 end
 ```
 
+### Is it true that 1 nodejs application is 1 process and 1 thread
 
+So while a basic Node.js application does run in a single process with one main JavaScript execution thread, it's not strictly limited to one thread overall, and you have options to utilize multiple processes or additional threads if needed.
 
 
 ## Keywords To Remember

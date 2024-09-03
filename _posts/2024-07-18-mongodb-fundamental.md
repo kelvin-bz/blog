@@ -1171,3 +1171,91 @@ const userSchema = new mongoose.Schema({
 | Attribute Pattern | Stores a set of fields with similar access patterns as an embedded document | Products with varying attributes | - Flexible schema<br>- Efficient querying of common attributes | - More complex queries for specific attributes<br>- Potential for unused fields |
 | Outlier Pattern | Stores common data in one collection and rare, oversized data in another | Social media posts with varying engagement levels | - Optimizes for common case performance<br>- Prevents document size issues | - Requires two queries for outliers<br>- More complex application logic |
 | Subset Pattern | Stores a subset of fields from a document in a separate collection | User profiles with frequently accessed fields | - Improves read performance for common queries<br>- Reduces working set size | - Data duplication<br>- Requires keeping subsets in sync |
+
+
+## Q&A
+
+### What is .exec() in Mongoose?
+
+The `exec()` function in Mongoose is used to execute a query and return a promise. It allows you to chain query methods and then execute the query at the end.
+
+```javascript
+User.find({ name: 'Alice' }).exec();
+```
+
+You can run the query without `exec()`, by callback or using async/await.
+
+```javascript
+User.find({ name: 'Alice' }, (error, users) => {
+  console.log(users);
+});
+```
+
+```javascript
+const users = await User.find({ name: 'Alice' });
+```
+
+### What is the difference between `findOne()` and `find()` in Mongoose?
+
+- `find()`: Returns an array of all documents that match the query criteria.
+- `findOne()`: Returns the first document that matches the query criteria.
+
+### What is the difference between Model.create() and new Model().save() in Mongoose?
+
+- `Model.create()`: Creates a new document and saves it to the database in a single step.
+
+```javascript
+User.create({ name: 'Alice' });
+```
+
+- `new Model().save()`: reates a new instance of the model but doesn't save it to the database immediately. You can modify the instance, perform validations, or run any other operations before calling .save() to persist the changes.
+
+```javascript
+const doc = new Model({ name: 'John', age: 30 });
+doc.age = 31; // Modify the document
+await doc.save(); // Save the document after modification
+```
+
+
+### What is the purpose of the lean() method in Mongoose queries, and when should it be used?
+
+The `lean()` method in Mongoose queries returns plain JavaScript objects instead of Mongoose documents which come with a lot of additional features, such as getters, setters, and methods that are useful for working with the document . It should be used when you don't need the full Mongoose document features and want to improve query performance.
+
+```javascript
+User.find({ name: 'Alice' }).lean();
+```
+
+
+### How to implement soft deletes in Mongoose?
+
+Soft deletes in Mongoose involve marking documents as deleted instead of physically removing them from the database. You can achieve this by adding a `deleted` field to your schema and setting it to true when a document is deleted.
+
+```javascript
+const userSchema = new mongoose.Schema({
+  name: String,
+  deleted: { type: Boolean, default: false }
+});
+```
+
+Use pre middleware to exclude deleted documents from query results.
+
+```javascript
+userSchema.pre(/^find/, function(next) {
+  this.where({ deleted: false });
+  next();
+});
+```
+
+Add a method to "soft delete" a document.
+
+```javascript
+userSchema.methods.softDelete = function() {
+  this.deleted = true;
+  return this.save();
+};
+``` 
+
+
+
+
+
