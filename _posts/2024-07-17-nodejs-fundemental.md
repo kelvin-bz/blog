@@ -89,8 +89,10 @@ subgraph Asynchronous["⏱ Asynchronous"]
     asyncawait["⏳ Async/Await"]
 end
 ```
-- **Callback:** A function passed as an argument to be executed later (after an async operation completes).
-```javascript
+- **Callback:** A function passed as an argument to be executed later (after an async operation completes)
+  
+
+```js
 function fetchData(callback) {
   setTimeout(() => {
     callback('Data received');
@@ -101,6 +103,7 @@ fetchData((data) => {
   console.log(data);
 });
 ```
+
 
 - **Promise**: A cleaner way to handle asynchronous results and errors. Prevents callback hell.
 
