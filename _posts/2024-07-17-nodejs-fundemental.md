@@ -182,52 +182,12 @@ getData();
   
 ##  What are the key differences between CommonJS and ES Modules ?
 
+The key differences between CommonJS and ES Modules are:
 
-CommonJS uses `module.exports` for exporting and `require()` for importing, while ES Modules use `export` and `import` keywords. CommonJS loads modules **synchronously** and is the traditional Node.js system, whereas ES Modules load asynchronously and are newer, offering more static analysis. ES Modules provide more flexibility with named exports and imports, while CommonJS typically exports an object.
-
-**CommonJS** 
-
-- **Export**: Way to make variables, functions, objects available to other files
-  ```javascript
-  // math.js
-  function add(a, b) {
-    return a + b;
-  }
-  
-  module.exports = {
-    add: add,
-    PI: 3.14159
-  };
-  ```
-
-- **Import (require)**: Way to use exported code from other files
-  ```javascript
-  // main.js
-  const math = require('./math');
-  console.log(math.add(2, 3));  // Output: 5
-  console.log(math.PI);  // Output: 3.14159
-  ```
-
-**ES Modules** 
-- **Export**: Using `export` keyword
-```javascript
-// utils.js
-export function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export const VERSION = '1.0.0';
-```
-
-- **Import**: Using `import` keyword
-```javascript
-// app.js
-import { capitalize, VERSION } from './utils.js';
-
-console.log(capitalize('hello'));  // Output: Hello
-console.log(VERSION);  // Output: 1.0.0
-```
-
+1. Syntax: CommonJS uses `require()` and `module.exports`, while ES Modules use `import` and `export` statements.
+2. Loading: CommonJS modules load synchronously at runtime, whereas ES Modules load asynchronously and support static analysis.
+3. Structure: ES Modules offer named exports and a default export, providing more flexibility than CommonJS's single object export.
+4. Browser compatibility: ES Modules are natively supported in modern browsers, making them ideal for frontend development without bundling.
 
 ## How does the `console.log()` function work ?
 
