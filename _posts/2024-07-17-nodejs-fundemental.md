@@ -7,10 +7,9 @@ image: "/assets/images/nodejs.png"
 ---
 
 
-## Fundamentals
+## What is NodeJs ?
 
 Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js is ideal for building scalable network applications, as it can handle a large number of connections simultaneously.
-
 
 In Node.js, I/O (Input/Output) refers to the operations that involve reading and writing data to various sources such as files, networks, databases, and other streams. I/O operations are fundamental in any application that interacts with external resources. Node.js is designed to handle these operations efficiently using a non-blocking, asynchronous I/O model.
 
@@ -37,7 +36,9 @@ subgraph Fundamentals["⚡ Fundamentals"]
 end
 ```
 
-## Event Driven
+## What is Event Driven ?
+
+Event-driven Node.js refers to the programming paradigm where the flow of the application is determined by events like user actions or system messages. Node.js uses an event loop to handle asynchronous operations efficiently, allowing non-blocking I/O operations. This approach enables building scalable, real-time applications that can handle multiple concurrent connections with optimal performance.
 
 ```mermaid
 graph TD
@@ -77,8 +78,41 @@ graph TD
 
 - **Web APIs**: Perform asynchronous operations (timers, network requests, etc.). When complete, they add their callbacks to the Callback Queue.
 
+## What are I/O operations in computing, and why are they significant ? 
 
-## Asynchronous
+
+I/O (Input/Output) operations refer to the communication between a computer program and the outside world, typically involving reading from or writing to a device or file. In Node.js, I/O operations are crucial as they deal with tasks like reading/writing files, network communications, and database interactions. Node.js uses a non-blocking, event-driven architecture for I/O operations, allowing it to handle many concurrent connections efficiently. This design makes Node.js particularly well-suited for building scalable network applications and web servers that can manage numerous simultaneous I/O operations
+
+```mermaid
+graph TD
+    subgraph nodeJs["📦 Node.js"]
+        style nodeJs fill:#e6fff2,stroke:#66cc99
+        application["💻 Application"]
+        eventLoop["🔄 Event Loop"]
+    end
+
+    subgraph ioOperations["🔌 I/O Operations"]
+        style ioOperations fill:#fff0f5,stroke:#ff69b4
+        fileSystem["📁 File System"]
+        network["🌐 Network"]
+        database["🗄️ Database"]
+    end
+
+    application -->|"Requests"| ioOperations
+    ioOperations -->|"Responds"| eventLoop
+    eventLoop -->|"Handles"| application
+```
+
+## If other languages also support non-blocking I/O, why is it a standout feature in Node.js?
+
+Non-blocking I/O is a core feature in Node.js, integrated from the ground up, ensuring that almost all I/O operations are asynchronous by default. Unlike other languages where non-blocking I/O is an optional feature, in Node.js, it's the default behavior. This leads to simplified development and improved performance for I/O-bound applications. The rich ecosystem of libraries and built-in support for non-blocking I/O further distinguishes Node.js in this regard. For CPU-bound tasks Node.js is not the best choice.
+
+
+## Is it true that 1 nodejs application is 1 process and 1 thread
+
+While a basic Node.js application does run in a single process with one main JavaScript execution thread, it's not strictly limited to one thread overall, and you have options to utilize multiple processes or additional threads if needed.
+
+## What are the main approaches to implementing asynchronicity in Node.js
 
 
 ```mermaid
@@ -146,65 +180,12 @@ getData();
 ```
 
   
-
-## Core Modules
-
-
-```mermaid
-graph LR
-subgraph CoreModules["📦 Core Modules"]
-    fs["📄 fs (File System)"]
-    http["🌐 http"]
-    path["🛣️ path"]
-    os["🖥️ os"]
-    events["🗓️ events"]
-end
-```
+##  What are the key differences between CommonJS and ES Modules ?
 
 
+CommonJS uses `module.exports` for exporting and `require()` for importing, while ES Modules use `export` and `import` keywords. CommonJS loads modules **synchronously** and is the traditional Node.js system, whereas ES Modules load asynchronously and are newer, offering more static analysis. ES Modules provide more flexibility with named exports and imports, while CommonJS typically exports an object.
 
-- **fs (File System)** : Interact with the file system.
-  ```javascript
-  const fs = require('fs');
-  fs.writeFileSync('example.txt', 'Hello, Node.js');
-  ```
-
-- **http** : Create web servers.
-  ```javascript
-  const http = require('http');
-  const server = http.createServer((req, res) => {
-    res.end('Hello, World!');
-  });
-  
-  server.listen(3000);
-  ```
-
-- **path** : Work with file and directory paths.
-  ```javascript
-  const path = require('path');
-  console.log(path.join(__dirname, 'example.txt'));
-  ```
-
-- **os** : Get operating system information.
-  ```javascript
-  const os = require('os');
-  console.log(os.platform());
-  ```
-
-- **events**: Create and manage custom events.
-  ```javascript
-  const EventEmitter = require('events');
-  const eventEmitter = new EventEmitter();
-  eventEmitter.on('greet', () => console.log('Hello, Event!'));
-  eventEmitter.emit('greet');
-  ```
-
-## Modules
-
-
-Modules in Node.js allow you to organize and reuse code. There are two main module systems:
-
-### CommonJS 
+**CommonJS** 
 
 - **Export**: Way to make variables, functions, objects available to other files
   ```javascript
@@ -227,8 +208,7 @@ Modules in Node.js allow you to organize and reuse code. There are two main modu
   console.log(math.PI);  // Output: 3.14159
   ```
 
-### ES Modules 
-
+**ES Modules** 
 - **Export**: Using `export` keyword
 ```javascript
 // utils.js
@@ -248,272 +228,12 @@ console.log(capitalize('hello'));  // Output: Hello
 console.log(VERSION);  // Output: 1.0.0
 ```
 
-### Additional Module Features
 
-**Default Exports/Imports**:
-```javascript
-// Default export
-export default function sayHello() {
-  console.log('Hello!');
-}
+## How does the `console.log()` function work ?
 
-// Default import
-import sayHello from './greetings.js';
-```
-
-**Dynamic Imports**: Load modules on demand
-```javascript
-async function loadModule() {
-  const module = await import('./dynamicModule.js');
-  module.someFunction();
-}
-```
+When `console.log()` is called, it invokes the Console object in the Node.js runtime, which then calls the `process` object. The Process object writes to the `stdout` stream, which is buffered and eventually flushed to the operating system's I/O operations. Finally, the OS handles the actual output, displaying it in the terminal, writing to a file, or allowing it to be captured by another process.
 
 
-
-**Built-in Modules**: Core modules that come with Node.js
-   ```javascript
-   const fs = require('fs');
-   const http = require('http');
-   ```
-
-**Third-party Modules**: Installed via npm
-   ```javascript
-   const express = require('express');
-   const app = express();
-   ```
-
-**Creating and Publishing Modules**:
-   - Use `npm init` to create a `package.json`
-   - Write your module code
-   - Publish to npm registry with `npm publish`
-
-
-
-
-
-
-## Globals
-
-
-### process
-
-Process is a global object that provides information about the current Node.js process. It can be used to access environment variables, command-line arguments, the current working directory, and more.
-
-```javascript
-
-const logProcessInfo = () => {
-  console.log('--- Process Information ---');
-  console.log(`PID: ${process.pid}`);
-  console.log(`Platform: ${process.platform}`);
-  console.log(`Node.js Version: ${process.version}`);
-  console.log(`Current Directory: ${process.cwd()}`);
-  console.log(`Memory Usage:`, process.memoryUsage());
-  console.log(`Command Line Args:`, process.argv);
-  console.log(`Environment Variables:`, process.env);
-  console.log('--- End Process Information ---');
-};
-
-process.on('SIGUSR2', () => {
-  console.log('Received SIGUSR2. Logging process info...');
-  logProcessInfo();
-});
-
-console.log('Process demo started. Send SIGUSR2 signal to log process info.');
-console.log(`You can do this by running: kill -SIGUSR2 ${process.pid}`);
-
-// Keep the process running
-setInterval(() => {}, 1000);
-```
-
-#### process.exit
-
-
-The `process.exit()` method in Node.js is used to terminate the process synchronously with a specified exit status code. A status code of `0` (or `EXIT_SUCCESS`) indicates successful completion, while a non-zero value (typically `1` or `EXIT_FAILURE`) indicates failure.
-
-
-- **Exit Code (optional):** 
-  - Specifies the exit code. If omitted, the process exits with `0` or the last set `process.exitCode`.
-  
-- **Behavior:**
-  - **Forces Quick Exit:** Terminates the process immediately, without waiting for the event loop to clear.
-  - **Resources Not Closed Properly:** Open handles like file streams or database connections might not be closed.
-
-- **Considerations:**
-  - **Use Sparingly:** Prefer a graceful exit by allowing the event loop to clear after closing all resources.
-  - **Explicitly Close Resources:** Close resources (e.g., database connections) before calling `process.exit()` to ensure a clean exit.
-
-- **Alternatives:**
-  - **Natural Exit:** Allow the process to exit naturally by resolving all ongoing operations.
-  - **Error Handling:** Use error handling mechanisms (e.g., throwing an error or rejecting a promise) instead of abruptly exiting.
-
-
-```javascript
-/* eslint-disable */
-const app = require('./app');
-const config = require('./config/config');
-const logger = require('./config/logger');
-const db = require('./config/db');
-const { subscribeToChannels } = require("./services/client/redisSubscriber");
-
-let server;
-
-const exitHandler = (exitCode = 0) => {
-    if (server) {
-        server.close(() => {
-            logger.info('Server closed');
-            db.closeConnection(() => {
-                logger.info('Database connection closed');
-                process.exit(exitCode);
-            });
-        });
-    } else {
-        process.exit(exitCode);
-    }
-};
-
-const unexpectedErrorHandler = (error) => {
-    logger.error('Unexpected error', error);
-    exitHandler(1);
-};
-
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-
-process.on('SIGTERM', () => {
-    logger.info('SIGTERM received');
-    exitHandler();
-});
-
-process.on('SIGINT', () => {
-    logger.info('SIGINT received');
-    exitHandler();
-});
-
-const startServer = async () => {
-    try {
-        await db.initDb();
-        logger.info('Database initialized');
-        server = app.listen(config.port, () => {
-            logger.info(`Server listening on port ${config.port}`);
-        });
-        await subscribeToChannels();
-        logger.info('Subscribed to Redis channels');
-        logger.info('Application startup complete');
-    } catch (error) {
-        logger.error('Error during application startup', error);
-        exitHandler(1);
-    }
-};
-
-startServer();
-```
-
-```mermaid
-graph TD
-    start["🚀 Start Application"]
-    initDb["💾 Initialize Database"]
-    startServer["🖥️ Start Server"]
-    subscribe["📡 Subscribe to Redis Channels"]
-    running["✅ Application Running"]
-    error["❌ Error Occurred"]
-    unexpectedError["⚠️ Unexpected Error"]
-    sigterm["📣 SIGTERM Received"]
-    sigint["🖱️ SIGINT Received"]
-    closeServer["🔒 Close Server"]
-    closeDb["💽 Close Database Connection"]
-    exit["🚪 Exit Process"]
-
-    start --> initDb
-    initDb --> startServer
-    startServer --> subscribe
-    subscribe --> running
-
-    running --> |"Uncaught Exception"| unexpectedError
-    running --> |"Unhandled Rejection"| unexpectedError
-    unexpectedError --> closeServer
-    
-    running --> sigterm
-    running --> sigint
-    sigterm --> closeServer
-    sigint --> closeServer
-    
-    closeServer --> closeDb
-    closeDb --> exit
-    
-    initDb --> |"Error"| error
-    startServer --> |"Error"| error
-    subscribe --> |"Error"| error
-    error --> closeServer
-
-    style start fill:#e6f7ff,stroke:#69c0ff
-    style running fill:#f6ffed,stroke:#95de64
-    style unexpectedError fill:#fff2e8,stroke:#ffbb96
-    style sigterm fill:#fff7e6,stroke:#ffd591
-    style sigint fill:#fffbe6,stroke:#fff566
-    style exit fill:#fff1f0,stroke:#ffa39e
-
-```    
-
-
-### __dirname  && __filename
-
- `__dirname`
-- Represents the directory name of the current module
-- Always returns an absolute path
-
-`__filename`
-- Represents the file name of the current module, including the full path
-- Also returns an absolute path
-
-
-Consider a typical Node.js application structure:
-
-```bash
-├── app
-│   └── api
-│       └── user
-│           └── user.js
-├── index.js
-└── package.json
-```
-
-In `app.js`, you might use `__dirname` to construct paths to other files:
-
-```javascript
-const path = require('path');
-
-function printDirAndFileName() {
-    const dirName = __dirname;
-    const fileName = __filename;
-
-    console.log('Directory Name:', dirName); // path/to/app/api/user
-    console.log('File Name:', fileName); // path/to/app/api/user/user.js
-
-}
-
-module.exports = printDirAndFileName;
-
-
-```
-
-```mermaid
-graph TD
-    subgraph fileHandling["📁 File Handling in Node.js"]
-        dirName["fa:fa-folder __dirname"]
-        fileName["fa:fa-file-code __filename"]
-        joinPath["🔗 Join Path"]
-        resultPath["📂 Full Path to File"]
-
-        dirName --> |"Provides Directory Path"| joinPath
-        fileName --> |"Provides File Path"| joinPath
-        joinPath --> |"Combines Paths"| resultPath
-    end
-```
-
-### console
-
-The `console` object in Node.js provides a simple debugging and logging utility. It allows you to print messages to the console, including log messages, warnings, errors, and more.
 
 ```mermaid
 graph TD
@@ -552,348 +272,45 @@ graph TD
     osIO -->|"Captured by"| processCapture
 ```
 
-`console.log`  is a global function that writes to the standard output stream (stdout). It is commonly used to print messages to the terminal or command line. `console.error` is similar to console.log but writes to the standard error stream (stderr).
 
-The Console object is a wrapper for a simpler object called `process.stdout`.
+## How does Winston enhance logging capabilities ? 
 
-- **Stream Writing**: when you call console.log(), it ultimately calls the write() method on process.stdout.
-
-- **Buffering**: The stdout stream is typically buffered, meaning that the output might not be written immediately, but stored temporarily in memory.
-
-- **Output Display**: Depending on how Node.js is being run, the output might be displayed in a terminal, redirected to a file, or captured by another process.
-
-
-## Working with Data
-
-### Buffer and Stream
-
-```mermaid
-graph LR
-subgraph Data["🗃️ Data Handling in Node.js"]
-    buffer["📦 Buffer"]
-    stream["🌊 Stream"]
-end
-
-buffer --> smallFile["📄 Small Files"]
-buffer --> fullAccess["🔍 Full File Access"]
-buffer --> simplicity["🧩 Simplicity"]
-stream --> largeFile["📚 Large Files"]
-stream --> networkData["🌐 Network Data"]
-stream --> realTime["⏳ Real-Time Processing"]
-
-style buffer fill:#f9f,stroke:#333,stroke-width:2px
-style stream fill:#ccf,stroke:#f66,stroke-width:2px
-style smallFile fill:#ff9,stroke:#333,stroke-width:2px
-style largeFile fill:#9cf,stroke:#333,stroke-width:2px
-style networkData fill:#f66,stroke:#333,stroke-width:2px
-style realTime fill:#ccc,stroke:#333,stroke-width:2px
-style fullAccess fill:#e6b8af,stroke:#333,stroke-width:2px
-style simplicity fill:#d8bfd8,stroke:#333,stroke-width:2px
-
-```
-
-
-**Buffer**: Represents raw binary data (e.g., images, audio).
-
-* **Suitable for small files:** If you're working with small files that easily fit in memory, using buffers can be simpler and more convenient.
-* **Full file access:** When you read a file into a buffer, you have immediate access to the entire file contents, making it easy to perform operations on the whole data set.
-* **Simplicity:** Working with buffers is often more straightforward for simple use cases where you don't need the advanced features of streams.
+Winston enhances Node.js logging by offering multiple transports, allowing simultaneous logging to console, files, and databases. It provides customizable logging levels and formatting, enabling better categorization and presentation of log messages.
 
 ```javascript
-// Creating a buffer
-const buf1 = Buffer.alloc(10);  // Creates a buffer of 10 bytes filled with zeros
-const buf2 = Buffer.from([1, 2, 3]);  // Creates a buffer from an array of integers
-const buf3 = Buffer.from('Hello World', 'utf8');  // Creates a buffer from a string
+const winston = require('winston');
 
-// Manipulating buffers
-buf1.write('Hello');
-console.log(buf1.toString());  // Outputs: Hello
-
-// Slicing buffers
-const buf4 = buf3.slice(0, 5);
-console.log(buf4.toString());  // Outputs: Hello
-```
-
-
-**Stream** : Efficiently read or write large amounts of data in chunks.
-  - **Readable Stream**: Used for reading data.
-  - **Writable Stream**: Used for writing data.
-  - **Duplex Stream**: Used for both reading and writing.
-  - **Transform Stream**: Used for modifying data as it's being read or written.
-
-
-```javascript
-const fs = require('fs');
-
-// Reading from a file using streams
-const readStream = fs.createReadStream('input.txt');
-readStream.on('data', (chunk) => {
-console.log('Received chunk:', chunk.toString());
-});
-readStream.on('end', () => {
-console.log('Finished reading');
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
 });
 
-// Writing to a file using streams
-const writeStream = fs.createWriteStream('output.txt');
-writeStream.write('Hello, ');
-writeStream.write('World!');
-writeStream.end();
-
-// Piping streams
-const readStream2 = fs.createReadStream('input.txt');
-const writeStream2 = fs.createWriteStream('output2.txt');
-readStream2.pipe(writeStream2);
-```
-
-
-* **Ideal for large files:** Streams are designed to handle large amounts of data efficiently. They read the file in chunks, so you don't have to load the entire file into memory at once. This is crucial when dealing with files that might be too big to fit comfortably in memory.
-* **Processing data on-the-fly:** Streams allow you to process the file data as it's being read. This is useful if you need to transform, filter, or modify the data without waiting for the entire file to be loaded.
-* **Memory efficiency:** Since streams work with smaller chunks of data, they consume significantly less memory compared to loading the entire file into a buffer.
-* **Network operations:** Streams are commonly used for network operations, as data is typically transmitted over the network in chunks.
-
-### fs module
-
-The `fs` module in Node.js provides file system-related functionality, allowing you to interact with the file system on your machine. It includes methods for reading, writing, updating, and deleting files, as well as working with directories.
-
-```javascript
-const fs = require('fs');
-
-// Reading a file
-fs.readFile('example.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(data);
-  }
-});
-
-// Writing to a file
-
-fs.writeFile('example.txt', 'Hello, Node.js', (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('File written successfully');
-  }
-});
-
-// Deleting a file
-fs.unlink('example.txt', (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('File deleted successfully');
-  }
-});
-
-// Checking if a file exists
-fs.access('example.txt', fs.constants.F_OK, (err) => {
-  if (err) {
-    console.error('File does not exist');
-  } else {
-    console.log('File exists');
-  }
-});
-
-```
-
-`fsPromises` provides a promise-based API for file system operations, allowing you to use `async/await` syntax for handling file operations.
-
-```javascript
-const fs = require('fs').promises;
-
-async function readFile() {
-  try {
-    const data = await fs.readFile('example.txt', 'utf8');
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+  }));
 }
 
-async function writeFile() {
-  try {
-    await fs.writeFile('example.txt', 'Hello, Node.js');
-    console.log('File written successfully');
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-
-```
-
-
-
-
-
-## Error Handling
-
-
-```mermaid
-graph LR
-subgraph Error["⚠️ Error Handling"]
-    catch["🚫 catch"]
-    errorfirst["🚨 Error-First"]
-end
-```
-
-
-
-- **Catch** : Handle errors using try-catch blocks.
-  ```javascript
-  try {
-    throw new Error('Something went wrong');
-  } catch (error) {
-    console.log(error.message);
-  }
-  ```
-
-- **Error-First** : Convention where callbacks take an error as the first argument.
-  ```javascript
-  const fs = require('fs');
-  fs.readFile('nonexistentfile.txt', (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(data);
-    }
-  });
-  ```
-
-## Q&A
-
-### If other languages also support non-blocking I/O, why is it a standout feature in Node.js?
-
-Non-blocking I/O is a core feature in Node.js, integrated from the ground up, ensuring that almost all I/O operations are asynchronous by default. Unlike other languages where non-blocking I/O is an optional feature, in Node.js, it's the default behavior. This leads to simplified development and improved performance for I/O-bound applications. The rich ecosystem of libraries and built-in support for non-blocking I/O further distinguishes Node.js in this regard. For CPU-bound tasks Node.js is not the best choice.
-
-
-
-### How does Node.js handle asynchronous operations?
-
-Node.js uses an event-driven, non-blocking I/O model to handle asynchronous operations. When an asynchronous operation is initiated, Node.js registers a callback function to be executed when the operation completes. This allows Node.js to continue executing other code while waiting for the operation to finish.
-
-```javascript
-setTimeout(() => {
-  console.log('Async operation');
-}, 1000);
-
-console.log('Continuing execution');
-```
-
-```mermaid
-graph TD
-    subgraph eventLoop["🔄 Event Loop"]
-    end
-
-    callStack["📚 Call Stack"]
-    
-    subgraph callbackQueue["fa:fa-lines-leaning Callback Queue"]
-        callback1([📞 Callback 1])
-        callback2([📞 Callback 2])
-    end
-
-    subgraph webAPIs["🌐 APIs"]
-        setTimeout["⏳ setTimeout()"]
-        fetch["🌐 fetch()"]
-        readFile["📂 fs.readFile()"]
-    end
-
-    eventLoop --> callStack
-    eventLoop --> callbackQueue
-    webAPIs --> callbackQueue
-    
-    style eventLoop fill:#f9f,stroke:#333,stroke-width:2px
-    style callStack fill:#ccf,stroke:#f66,stroke-width:2px
-    style callbackQueue fill:#ff9,stroke:#333,stroke-width:2px
-    style webAPIs fill:#9cf,stroke:#333,stroke-width:2px
-```
-
-### How does Node.js handle errors?
-
-Node.js uses a combination of error-first callbacks and try-catch blocks to handle errors. Error-first callbacks are a convention where the first argument of a callback function is reserved for an error object. If an error occurs during an asynchronous operation, the error object is passed to the callback function. Developers can then check for the presence of an error and handle it accordingly.
-
-```javascript
-const fs = require('fs');
-fs.readFile('nonexistentfile.txt', (err, data) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(data);
-  }
+// Usage
+logger.log({
+  level: 'info',
+  message: 'Hello distributed log files!'
 });
+
+logger.info('Hello again distributed logs');
 ```
 
-```javascript
-
-try {
-  throw new Error('Something went wrong');
-} catch (error) {
-  console.log(error.message);
-}
-```
-
-```mermaid
-
-graph LR
-subgraph Error["⚠️ Error Handling"]
-    catch["🚫 catch"]
-    errorfirst["🚨 Error-First"]
-end
-```
-
-### How does Node.js handle modules?
-
-Node.js uses the CommonJS module system to handle modules. Modules in Node.js are reusable pieces of code that can be imported and exported between files. The `require` function is used to import modules, and the `module.exports` object is used to export values from a module. This allows developers to organize their code into separate files and share functionality across different parts of an application.
-
-```javascript
-// module.js
-const message = 'Hello, Export!';
-module.exports = message;
-
-// main.js
-const message = require('./module');
-console.log(message);
-```
-
-```mermaid
-graph LR
-subgraph Modules["📥 Modules"]
-    import["🔽 import"]
-    export["🔼 export"]
-end
-```
-
-### How does Node.js handle data?
-
-Node.js provides two main mechanisms for handling data: buffers and streams. Buffers are used to represent raw binary data, such as images or audio files. They are suitable for working with small files that easily fit in memory and provide full access to the entire file contents. Streams, on the other hand, are used to efficiently read or write large amounts of data in chunks. They are ideal for handling large files, processing data on-the-fly, and consuming less memory compared to buffers.
-
-```javascript
-const buffer = Buffer.from('Hello');
-console.log(buffer.toString());
-```
-
-```javascript
-const fs = require('fs');
-const read
-Stream = fs.createReadStream('example.txt');
-readStream.on('data', chunk => {
-  console.log(chunk.toString());
-});
-```
-
-```mermaid
-graph LR
-subgraph Data["🗃️ Data Handling in Node.js"]
-    buffer["📦 Buffer"]
-    stream["🌊 Stream"]
-end
 
 
-```
 
-### How to build a web server in Node.js? 
+
+
+
+## How to build a web server in Node.js? 
 
 Node.js provides a built-in `http` module that allows you to create web servers. You can use the `http.createServer` method to create a server that listens for incoming requests and sends responses. You can define request handlers to process incoming requests and generate responses. Here's an example of how to build a simple web server in Node.js:
 
@@ -918,7 +335,7 @@ subgraph CoreModules["📦 Core Modules"]
 end
 ```
 
-### How to know the current directory and file in Node.js?
+## How to know the current directory and file in Node.js?
 
 Node.js provides two global variables, `__dirname` and `__filename`, that allow you to access the current directory and file path, respectively. `__dirname` returns the absolute path of the current directory, while `__filename` returns the absolute path of the current file. You can use these variables to reference files or directories relative to the current location.
 
@@ -927,63 +344,171 @@ console.log(__dirname);
 console.log(__filename);
 ```
 
-```mermaid
-graph LR
-subgraph Globals["🌐 Globals"]
-    dirname["📁 __dirname"]
-    filename["📄 __filename"]
-end
-```
 
-### Is it true that 1 nodejs application is 1 process and 1 thread
+## How can you implement graceful shutdown in a Node.js application?
 
-So while a basic Node.js application does run in a single process with one main JavaScript execution thread, it's not strictly limited to one thread overall, and you have options to utilize multiple processes or additional threads if needed.
+Graceful shutdown in a Node.js application can be implemented by listening for process termination signals like SIGINT or SIGTERM. When these signals are received, the application should stop accepting new requests, finish processing ongoing operations, close database connections, and release other resources. Finally, the process can exit cleanly, ensuring that all data is saved and resources are properly released before shutdown.
 
+```javascript
+const server = require('http').createServer();
+const db = require('./db'); // Assume this is your database connection
 
-## Keywords To Remember
-
-
-```mermaid
-graph LR
-
-subgraph Fundamentals["⚡ Fundamentals"]
-    runtime["🏃 Runtime"]
-    eventdriven["⚡ Event-Driven"]
-    eventloop["🔁 Event Loop"]
+function gracefulShutdown() {
+  console.log('Starting graceful shutdown');
+  
+  server.close(() => {
+    console.log('HTTP server closed');
     
-end
+    db.close(() => {
+      console.log('Database connection closed');
+      process.exit(0);
+    });
+  });
 
-subgraph Asynchronous["⏱ Asynchronous"]
-    callback["📞 Callback"]
-    promise["🤝 Promise"]
-end
+  // Force shutdown after 30 seconds
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 30000);
+}
 
-subgraph CoreModules["📦 Core Modules"]
-    fs["📄 fs (File System)"]
-    http["🌐 http"]
-    path["🛣️ path"]
-    os["🖥️ os"]
-    events["🗓️ events"]
-end
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
-subgraph Modules["📥 Modules"]
-    import["🔽 import"]
-    export["🔼 export"]
-end
+// Your server logic here
+server.listen(3000);
 
-subgraph Globals["🌐 Globals"]
-    process["⚙️ process"]
-    dirname["📁 __dirname"]
-    filename["📄 __filename"]
-end
-
-subgraph Data["📄 Data"]
-    buffer["📦 Buffer"]
-    stream["🌊 Stream"]
-end
-
-subgraph Error["⚠️ Error Handling"]
-    catch["🚫 catch"]
-    errorfirst["🚨 Error-First"]
-end
 ```
+
+
+## How are buffers implemented and why use them instead of strings? 
+
+Buffers are contiguous memory blocks for raw binary data, typically fixed-size and mutable. Buffers allow for faster I/O operations, especially when dealing with large amounts of data or binary information. Strings often use more memory due to character encoding (e.g., UTF-8, UTF-16).
+
+```js
+import fs from 'fs/promises';
+import crypto from 'crypto';
+
+async function advancedBufferExamples() {
+  try {
+    // 1. Reading file into buffer
+    const fileBuffer: Buffer = await fs.readFile('example.txt');
+    console.log('File content:', fileBuffer.toString());
+    // Output: File content: Hello, this is an example file.
+
+    // 2. Creating buffer from string
+    const str = 'Hello, Buffer!';
+    const strBuffer: Buffer = Buffer.from(str, 'utf-8');
+    console.log('String as buffer:', strBuffer);
+    // Output: String as buffer: <Buffer 48 65 6c 6c 6f 2c 20 42 75 66 66 65 72 21>
+    console.log('Buffer back to string:', strBuffer.toString());
+    // Output: Buffer back to string: Hello, Buffer!
+
+    // 3. Working with binary data
+    const binaryBuffer = Buffer.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]);
+    console.log('Binary buffer as string:', binaryBuffer.toString());
+    // Output: Binary buffer as string: Hello
+
+    // 4. Buffer concatenation
+    const buffer1 = Buffer.from('Hello ');
+    const buffer2 = Buffer.from('World');
+    const combinedBuffer = Buffer.concat([buffer1, buffer2]);
+    console.log('Combined buffer:', combinedBuffer.toString());
+    // Output: Combined buffer: Hello World
+
+    // 5. Buffer slicing
+    const slicedBuffer = combinedBuffer.slice(0, 5);
+    console.log('Sliced buffer:', slicedBuffer.toString());
+    // Output: Sliced buffer: Hello
+
+    // 6. Buffer comparison
+    console.log('Buffers equal:', Buffer.compare(buffer1, buffer2) === 0);
+    // Output: Buffers equal: false
+
+    // 7. Writing integer to buffer
+    const intBuffer = Buffer.alloc(4);
+    intBuffer.writeInt32BE(123456789);
+    console.log('Int32 buffer:', intBuffer);
+    // Output: Int32 buffer: <Buffer 07 5b cd 15>
+
+    // 8. Reading integer from buffer
+    const readInt = intBuffer.readInt32BE(0);
+    console.log('Read int32:', readInt);
+    // Output: Read int32: 123456789
+
+    // 9. Base64 encoding/decoding
+    const base64Str = strBuffer.toString('base64');
+    console.log('Base64 encoded:', base64Str);
+    // Output: Base64 encoded: SGVsbG8sIEJ1ZmZlciE=
+    const decodedBuffer = Buffer.from(base64Str, 'base64');
+    console.log('Decoded buffer:', decodedBuffer.toString());
+    // Output: Decoded buffer: Hello, Buffer!
+
+    // 10. Using buffer with crypto
+    const hash = crypto.createHash('sha256');
+    hash.update(strBuffer);
+    console.log('SHA256 hash:', hash.digest('hex'));
+    // Output: SHA256 hash: 3d3748055cb22d3bbd36f50cb9b84b74807feb52d8b45c57a7a09c4a7ba9d0a4
+
+  } catch (error) {
+    console.error('Error in buffer operations:', error);
+  }
+}
+
+advancedBufferExamples();
+```
+
+
+## How can you read from and write to files ?
+
+Node.js provides file I/O operations through the built-in `fs` module. To read a file, you can use `fs.readFile()` for asynchronous reading or `fs.readFileSync()` for synchronous reading. For writing, use `fs.writeFile()` (asynchronous) or `fs.writeFileSync()` (synchronous). These methods allow you to interact with the file system, handling text and binary data. For larger files or streams of data, Node.js also offers more efficient streaming operations using `fs.createReadStream()` and `fs.createWriteStream()`.
+
+```js
+const fs = require('fs');
+
+// Asynchronous read
+fs.readFile('input.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.error('Error reading file:', err);
+    return;
+  }
+  console.log('Asynchronous read:', data);
+});
+
+// Synchronous read
+try {
+  const data = fs.readFileSync('input.txt', 'utf8');
+  console.log('Synchronous read:', data);
+} catch (err) {
+  console.error('Error reading file:', err);
+}
+
+// Asynchronous write
+fs.writeFile('output.txt', 'Hello, Node.js!', (err) => {
+  if (err) {
+    console.error('Error writing file:', err);
+    return;
+  }
+  console.log('File written successfully');
+});
+
+// Synchronous write
+try {
+  fs.writeFileSync('output-sync.txt', 'Hello, Node.js! (Sync)');
+  console.log('File written successfully (Sync)');
+} catch (err) {
+  console.error('Error writing file:', err);
+}
+
+// Reading and writing streams for larger files
+const readStream = fs.createReadStream('large-input.txt');
+const writeStream = fs.createWriteStream('large-output.txt');
+
+readStream.pipe(writeStream);
+
+readStream.on('end', () => {
+  console.log('Finished copying large file');
+});
+```
+
+
