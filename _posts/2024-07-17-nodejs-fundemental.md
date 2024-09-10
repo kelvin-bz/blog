@@ -189,6 +189,16 @@ The key differences between CommonJS and ES Modules are:
 3. Structure: ES Modules offer named exports and a default export, providing more flexibility than CommonJS's single object export.
 4. Browser compatibility: ES Modules are natively supported in modern browsers, making them ideal for frontend development without bundling.
 
+
+
+## What is `process.stdin` in Node.js?
+
+`process.stdin` is a readable stream in Node.js that represents the standard input.
+It allows you to read input from the command line or other input sources.
+process.stdin is an instance of a Readable Stream, providing methods to handle input.
+It's commonly used for creating interactive console applications or processing piped data.
+You can listen for 'data' events or use methods like .read() to access incoming data.
+
 ## How does the `console.log()` function work ?
 
 When `console.log()` is called, it invokes the Console object in the Node.js runtime, which then calls the `process` object. The Process object writes to the `stdout` stream, which is buffered and eventually flushed to the operating system's I/O operations. Finally, the OS handles the actual output, displaying it in the terminal, writing to a file, or allowing it to be captured by another process.
@@ -471,4 +481,42 @@ readStream.on('end', () => {
 });
 ```
 
+## How can you monitor a file for changes ?
 
+You can monitor a file for changes in Node.js using the `fs.watch()` method, which watches for changes to a file or directory. You can specify the type of changes to watch for (e.g., 'change', 'rename') and handle events accordingly. 
+
+
+```js
+const fs = require('fs');
+
+function watchFile(filePath) {
+  let fileSize = fs.statSync(filePath).size;
+
+  fs.watch(filePath, (eventType) => {
+    if (eventType === 'change') {
+      const newSize = fs.statSync(filePath).size;
+
+      if (newSize > fileSize) {
+        const stream = fs.createReadStream(filePath, { 
+          start: fileSize,
+          encoding: 'utf8'
+        });
+
+        stream.on('data', (chunk) => {
+          console.log('New content:', chunk);
+        });
+
+        stream.on('end', () => {
+          fileSize = newSize;
+          console.log('Finished reading new content');
+        });
+      }
+    }
+  });
+
+  console.log(`Watching for changes on ${filePath}`);
+}
+
+// Usage
+watchFile('./path/to/your/file.txt');
+```
