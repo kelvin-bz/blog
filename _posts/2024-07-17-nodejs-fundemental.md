@@ -6,8 +6,8 @@ tags: [nodejs, nodejs]
 image: "/assets/images/nodejs.png"
 ---
 
-
-## What is NodeJs ?
+## Basic
+### What is NodeJs ?
 
 Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js is ideal for building scalable network applications, as it can handle a large number of connections simultaneously.
 
@@ -36,7 +36,7 @@ subgraph Fundamentals["⚡ Fundamentals"]
 end
 ```
 
-## What is Event Driven ?
+### What is Event Driven ?
 
 Event-driven Node.js refers to the programming paradigm where the flow of the application is determined by events like user actions or system messages. Node.js uses an event loop to handle asynchronous operations efficiently, allowing non-blocking I/O operations. This approach enables building scalable, real-time applications that can handle multiple concurrent connections with optimal performance.
 
@@ -78,7 +78,7 @@ graph TD
 
 - **Web APIs**: Perform asynchronous operations (timers, network requests, etc.). When complete, they add their callbacks to the Callback Queue.
 
-## What are I/O operations in computing, and why are they significant ? 
+### What are I/O operations in computing, and why are they significant ? 
 
 
 I/O (Input/Output) operations refer to the communication between a computer program and the outside world, typically involving reading from or writing to a device or file. In Node.js, I/O operations are crucial as they deal with tasks like reading/writing files, network communications, and database interactions. Node.js uses a non-blocking, event-driven architecture for I/O operations, allowing it to handle many concurrent connections efficiently. This design makes Node.js particularly well-suited for building scalable network applications and web servers that can manage numerous simultaneous I/O operations
@@ -103,16 +103,16 @@ graph TD
     eventLoop -->|"Handles"| application
 ```
 
-## If other languages also support non-blocking I/O, why is it a standout feature in Node.js?
+### If other languages also support non-blocking I/O, why is it a standout feature in Node.js?
 
 Non-blocking I/O is a core feature in Node.js, integrated from the ground up, ensuring that almost all I/O operations are asynchronous by default. Unlike other languages where non-blocking I/O is an optional feature, in Node.js, it's the default behavior. This leads to simplified development and improved performance for I/O-bound applications. The rich ecosystem of libraries and built-in support for non-blocking I/O further distinguishes Node.js in this regard. For CPU-bound tasks Node.js is not the best choice.
 
 
-## Is it true that 1 nodejs application is 1 process and 1 thread
+### Is it true that 1 nodejs application is 1 process and 1 thread
 
 While a basic Node.js application does run in a single process with one main JavaScript execution thread, it's not strictly limited to one thread overall, and you have options to utilize multiple processes or additional threads if needed.
 
-## What are the main approaches to implementing asynchronicity in Node.js
+### What are the main approaches to implementing asynchronicity in Node.js
 
 
 ```mermaid
@@ -180,7 +180,7 @@ getData();
 ```
 
   
-##  What are the key differences between CommonJS and ES Modules ?
+### What are the key differences between CommonJS and ES Modules ?
 
 The key differences between CommonJS and ES Modules are:
 
@@ -190,16 +190,7 @@ The key differences between CommonJS and ES Modules are:
 4. Browser compatibility: ES Modules are natively supported in modern browsers, making them ideal for frontend development without bundling.
 
 
-
-## What is `process.stdin` in Node.js?
-
-`process.stdin` is a readable stream in Node.js that represents the standard input.
-It allows you to read input from the command line or other input sources.
-process.stdin is an instance of a Readable Stream, providing methods to handle input.
-It's commonly used for creating interactive console applications or processing piped data.
-You can listen for 'data' events or use methods like .read() to access incoming data.
-
-## How does the `console.log()` function work ?
+### How does the `console.log()` function work ?
 
 When `console.log()` is called, it invokes the Console object in the Node.js runtime, which then calls the `process` object. The Process object writes to the `stdout` stream, which is buffered and eventually flushed to the operating system's I/O operations. Finally, the OS handles the actual output, displaying it in the terminal, writing to a file, or allowing it to be captured by another process.
 
@@ -243,7 +234,7 @@ graph TD
 ```
 
 
-## How does Winston enhance logging capabilities ? 
+### How does Winston enhance logging capabilities ? 
 
 Winston enhances Node.js logging by offering multiple transports, allowing simultaneous logging to console, files, and databases. It provides customizable logging levels and formatting, enabling better categorization and presentation of log messages.
 
@@ -280,7 +271,7 @@ logger.info('Hello again distributed logs');
 
 
 
-## How to build a web server in Node.js? 
+### How to build a web server in Node.js? 
 
 Node.js provides a built-in `http` module that allows you to create web servers. You can use the `http.createServer` method to create a server that listens for incoming requests and sends responses. You can define request handlers to process incoming requests and generate responses. Here's an example of how to build a simple web server in Node.js:
 
@@ -305,17 +296,7 @@ subgraph CoreModules["📦 Core Modules"]
 end
 ```
 
-## How to know the current directory and file in Node.js?
-
-Node.js provides two global variables, `__dirname` and `__filename`, that allow you to access the current directory and file path, respectively. `__dirname` returns the absolute path of the current directory, while `__filename` returns the absolute path of the current file. You can use these variables to reference files or directories relative to the current location.
-
-```javascript
-console.log(__dirname);
-console.log(__filename);
-```
-
-
-## How can you implement graceful shutdown in a Node.js application?
+### How can you implement graceful shutdown in a Node.js application?
 
 Graceful shutdown in a Node.js application can be implemented by listening for process termination signals like SIGINT or SIGTERM. When these signals are received, the application should stop accepting new requests, finish processing ongoing operations, close database connections, and release other resources. Finally, the process can exit cleanly, ensuring that all data is saved and resources are properly released before shutdown.
 
@@ -351,7 +332,7 @@ server.listen(3000);
 ```
 
 
-## How are buffers implemented and why use them instead of strings? 
+### How are buffers implemented and why use them instead of strings? 
 
 Buffers are contiguous memory blocks for raw binary data, typically fixed-size and mutable. Buffers allow for faster I/O operations, especially when dealing with large amounts of data or binary information. Strings often use more memory due to character encoding (e.g., UTF-8, UTF-16).
 
@@ -429,7 +410,214 @@ advancedBufferExamples();
 ```
 
 
-## How can you read from and write to files ?
+## Building terminal aplication
+
+### How can you implement command-line arguments parsing ?
+
+you can use the built-in `process.argv` array or a third-party library like `yargs`
+
+
+Use `process.argv`
+
+```js
+const args = process.argv.slice(2);  
+  
+// Parse the arguments  
+const parsedArgs = {};  
+for (let i = 0; i < args.length; i += 2) {  
+    const key = args[i].replace(/^--/, '');  
+    const value = args[i + 1];  
+    parsedArgs[key] = value;  
+}  
+  
+console.log('Parsed arguments:', parsedArgs);
+```
+
+Using `yargs`
+
+```js
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+
+const argv = yargs(hideBin(process.argv))
+  .option('name', {
+    alias: 'n',
+    type: 'string',
+    description: 'Your name'
+  })
+  .option('age', {
+    alias: 'a',
+    type: 'number',
+    description: 'Your age'
+  })
+  .argv;
+
+console.log('Hello,', argv.name);
+console.log('You are', argv.age, 'years old');
+```
+
+
+run this script
+
+```js
+node index.js --name John --age 30
+```
+
+
+### What is `process.stdin` ?
+
+`process.stdin` is a readable stream in Node.js that represents the standard input.
+It allows you to read input from the command line or other input sources.
+process.stdin is an instance of a Readable Stream, providing methods to handle input.
+It's commonly used for creating interactive console applications or processing piped data.
+You can listen for 'data' events or use methods like .read() to access incoming data.
+
+`process.stdin` is particularly useful for creating interactive command-line interfaces (CLIs).
+
+```js
+const readline = require('readline');
+
+// Create an interface for reading from stdin and writing to stdout
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+console.log('Welcome to the Simple Calculator!');
+console.log('Enter an expression (e.g., 2 + 3) or type "exit" to quit.');
+
+// Function to evaluate a simple mathematical expression
+function evaluateExpression(expr) {
+  try {
+    return eval(expr);
+  } catch (error) {
+    return 'Invalid expression';
+  }
+}
+
+// Use readline to continuously prompt for input
+function promptUser() {
+  rl.question('> ', (input) => {
+    if (input.toLowerCase() === 'exit') {
+      console.log('Goodbye!');
+      rl.close();
+      return;
+    }
+
+    const result = evaluateExpression(input);
+    console.log(`Result: ${result}`);
+    promptUser(); // Prompt again for the next input
+  });
+}
+
+// Start the prompt loop
+promptUser();
+
+// Handle the close event
+rl.on('close', () => {
+  process.exit(0);
+});
+```
+
+```mermaid
+graph 
+    start["🚀 Start"]
+    prompt["❓ Prompt User"]
+    process["⚙️ Process Input"]
+    evaluate["🧮 Evaluate"]
+    display["📊 Display Result"]
+    checkExit["🚪 Exit?"]
+    end1["👋 End"]
+
+    start --> prompt
+    prompt --> process
+    process --> evaluate
+    evaluate --> display
+    display --> checkExit
+    checkExit -->|"No"| prompt
+    checkExit -->|"Yes"| end1
+
+    classDef lightBlue fill:#e6f7ff,stroke:#1890ff;
+    classDef lightGreen fill:#f6ffed,stroke:#52c41a;
+    classDef lightRed fill:#fff1f0,stroke:#ff4d4f;
+
+    class start,end1 lightGreen;
+    class prompt,process,evaluate,display lightBlue;
+    class checkExit lightRed;
+```
+
+
+### How can you create progress bars to show long-running tasks in a terminal application?
+
+Example to show progress bard when download the Bitcoin whitepaper with `cli-progress`
+
+
+```js
+const axios = require('axios');
+const fs = require('fs');
+const cliProgress = require('cli-progress');
+
+async function downloadFile(fileUrl, outputPath) {
+  const writer = fs.createWriteStream(outputPath);
+  
+  const response = await axios({
+    method: 'get',
+    url: fileUrl,
+    responseType: 'stream'
+  });
+
+  const totalLength = response.headers['content-length'];
+
+  const progressBar = new cliProgress.SingleBar({
+    format: 'Downloading [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} bytes',
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    hideCursor: true
+  });
+
+  progressBar.start(totalLength, 0);
+
+  response.data.on('data', (chunk) => {
+    writer.write(chunk);
+    progressBar.increment(chunk.length);
+  });
+
+  response.data.on('end', () => {
+    writer.end();
+    progressBar.stop();
+    console.log('Download completed');
+  });
+
+  writer.on('finish', () => {
+    console.log('File saved as:', outputPath);
+  });
+
+  writer.on('error', (err) => {
+    console.error('Error writing file:', err);
+  });
+}
+
+// Bitcoin whitepaper URL
+const fileUrl = 'https://bitcoin.org/bitcoin.pdf';
+const outputPath = './bitcoin_whitepaper.pdf';
+
+console.log('Starting download of Bitcoin whitepaper...');
+downloadFile(fileUrl, outputPath).catch(console.error);
+```
+
+When you run this script, you'll see a progress bar
+
+```js
+Starting download of Bitcoin whitepaper...
+Downloading [████████████████████████████████████████] 100% | ETA: 0s | 184292/184292 bytes
+Download completed
+File saved as: ./bitcoin_whitepaper.pdf
+
+```
+
+## Working with files
+
+### How can you read from and write to files ?
 
 Node.js provides file I/O operations through the built-in `fs` module. To read a file, you can use `fs.readFile()` for asynchronous reading or `fs.readFileSync()` for synchronous reading. For writing, use `fs.writeFile()` (asynchronous) or `fs.writeFileSync()` (synchronous). These methods allow you to interact with the file system, handling text and binary data. For larger files or streams of data, Node.js also offers more efficient streaming operations using `fs.createReadStream()` and `fs.createWriteStream()`.
 
@@ -481,7 +669,7 @@ readStream.on('end', () => {
 });
 ```
 
-## How can you monitor a file for changes ?
+### How can you monitor a file for changes ?
 
 You can monitor a file for changes in Node.js using the `fs.watch()` method, which watches for changes to a file or directory. You can specify the type of changes to watch for (e.g., 'change', 'rename') and handle events accordingly. 
 
@@ -520,3 +708,46 @@ function watchFile(filePath) {
 // Usage
 watchFile('./path/to/your/file.txt');
 ```
+
+### How to determine the current directory and file location ?
+
+Node.js provides two global variables, `__dirname` and `__filename`, that allow you to access the current directory and file path, respectively. `__dirname` returns the absolute path of the current directory, while `__filename` returns the absolute path of the current file. You can use these variables to reference files or directories relative to the current location.
+
+Let's assume we have the following project structure:
+
+```js
+my-node-project/
+│
+├── src/
+│   ├── index.js
+│   └── utils/
+│       └── config-reader.js
+│
+└── config/
+    └── app-config.json
+```
+
+
+We're working in the `config-reader.js` file and want to access the `app-config.json`. Use `path.join()` to construct the path to our config file
+
+```javascript
+// File: src/utils/config-reader.js
+
+const path = require('path');
+const fs = require('fs');
+
+console.log('Current directory:', __dirname);
+// Output: Current directory: /path/to/my-node-project/src/utils
+
+console.log('Current file:', __filename);
+// Output: Current file: /path/to/my-node-project/src/utils/config-reader.js
+
+// Construct the path to the config file
+const configFilePath = path.join(__dirname, '..', '..', 'config', 'app-config.json');
+
+console.log('Path to config file:', configFilePath);
+// Output: Path to config file: /path/to/my-node-project/config/app-config.json
+
+```
+
+
