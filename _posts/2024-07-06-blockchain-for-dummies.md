@@ -412,19 +412,21 @@ graph LR
 
 **Fiat-Backed Stablecoins**: These stablecoins are backed 1:1 by fiat currencies like the US Dollar or Euro. The value of each coin is directly tied to the value of the fiat currency.
 
-
-
 **Commodity-Backed Stablecoins**: These stablecoins are backed by physical assets such as precious metals. The value is tied to the commodity, providing stability based on the physical asset's value.
-
 
 **Crypto-Backed Stablecoins:** These stablecoins are backed by other cryptocurrencies. They are usually over-collateralized to account for the volatility of the underlying crypto assets.
 
-
 **Algorithmic Stablecoins**: These stablecoins use algorithms and smart contracts to manage the supply and stabilize the value without needing reserves. They rely on mechanisms to adjust the coin supply based on demand.
 
-### Tether
+### Tether Limited
 
-Tether (USDT) is a fiat-backed stablecoin pegged to the US Dollar. It is issued by Tether Limited and operates on various blockchains. Tether is widely used in the crypto space for trading, remittances, and as a stable store of value.
+Tether Limited is the company behind USDT, one of the most widely used stablecoins in the cryptocurrency market. USDT is designed to maintain a one-to-one peg with the U.S. dollar, providing stability and making it easier for users to trade digital assets without exposure to price volatility. By bridging traditional finance with the crypto world, Tether has significantly enhanced liquidity and accessibility in the digital asset space. Its stablecoin facilitates fast, low-cost transactions across exchanges and platforms globally. Tether's innovation has played a key role in the growing adoption and mainstream acceptance of cryptocurrencies.
+
+Tether Limited offers several stablecoin products besides USDT, including EUR₮ (Euro Tether), CNH₮ (Offshore Chinese Yuan Tether), XAU₮ (Tether Gold), GBP₮ (British Pound Sterling Tether), and MXN₮ (Mexican Peso Tether).
+
+### USDT
+
+USDT, commonly known as Tether, is a stablecoin cryptocurrency designed to maintain a one-to-one peg with the U.S. dollar. It offers the stability of traditional currency while harnessing the advantages of blockchain technology, enabling users to transact quickly and efficiently. USDT is widely used across various cryptocurrency exchanges, facilitating seamless trading without the volatility typically associated with digital assets.
 
 ```mermaid
 graph 
@@ -483,6 +485,15 @@ graph
     Integration --> DeFi
     end 
 ```
+
+
+### USDC
+
+USDC, or USD Coin, is a stablecoin cryptocurrency designed to maintain a one-to-one peg with the U.S. dollar. Issued by Circle in collaboration with Coinbase, USDC combines the stability of fiat currency with the efficiency of blockchain technology for fast and secure transactions. It is widely supported across numerous cryptocurrency exchanges and platforms, enabling seamless trading without the volatility typically associated with digital assets. Known for its transparency, USDC's reserves are regularly audited to ensure full backing.
+
+### DAI
+
+DAI is a decentralized stablecoin running on the Ethereum blockchain, designed to maintain a one-to-one peg with the U.S. dollar. Unlike centralized stablecoins, DAI is generated through over-collateralized loans using cryptocurrencies as collateral via the MakerDAO protocol. This allows for a stable digital currency that is not reliant on any central authority, combining the benefits of price stability and decentralization. DAI is widely used in the decentralized finance (DeFi) ecosystem, facilitating various financial activities such as lending, borrowing, and trading without the volatility typically associated with cryptocurrencies.
 
 ## Restaking
 
