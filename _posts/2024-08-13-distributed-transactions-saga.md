@@ -249,6 +249,162 @@ createOrder('product123', 5, 'user456')
 ```
 
 
+## Multiple Flows
+
+It's common to encounter scenarios where multiple business processes involve overlapping sets of services. 
+
+- Flow 1: Service1 → Service2 → Service3
+- Flow 2: Service2 → Service3 → Service4
+- Flow 3: Service4 → Service5 → Service6
+
+An Orchestrator-based Saga pattern is most suitable. Here's why:
+
+- **Centralized Control**: An orchestrator can manage the execution of multiple, overlapping flows more effectively than a choreographed approach.
+- **Simplified** Error Handling: Centralized error detection and compensation management become crucial when dealing with intertwined processes.
+- **Visibility**: It's easier to monitor and debug the overall system state with a central orchestrator.
+- **Flexibility**: New flows can be added or existing ones modified without changing the individual services.
+
+
+```mermaid
+classDiagram
+    class executeFlow1 {
+        +execute(param1, param2)
+    }
+    class executeFlow2 {
+        +execute(param1)
+    }
+    class executeFlow3 {
+        +execute(param1)
+    }
+    class Service1 {
+        +execute(param1, param2)
+        +compensate(param1, param2)
+    }
+    class Service2 {
+        +execute(data)
+        +compensate(data)
+    }
+    class Service3 {
+        +execute(data)
+        +compensate(data)
+    }
+    class Service4 {
+        +execute(data)
+        +compensate(data)
+    }
+    class Service5 {
+        +execute(data)
+        +compensate(data)
+    }
+    class Service6 {
+        +execute(data)
+        +compensate(data)
+    }
+    executeFlow1 --> Service1
+    executeFlow1 --> Service2
+    executeFlow1 --> Service3
+    executeFlow2 --> Service2
+    executeFlow2 --> Service3
+    executeFlow2 --> Service4
+    executeFlow3 --> Service4
+    executeFlow3 --> Service5
+    executeFlow3 --> Service6
+```    
+
+
+```js
+// Orchestrator Service
+// Flow 1: service 1, service 2, service 3
+async function executeFlow1(param1, param2) {
+  // Step 1: Service 1
+  const result1 = await service1.execute(param1, param2);
+  if (!result1.success) {
+    return { success: false, message: 'Service 1 failed', error: result1.error };
+  }
+
+  // Step 2: Service 2
+  const result2 = await service2.execute(result1.data);
+  if (!result2.success) {
+    await service1.compensate(param1, param2);
+    return { success: false, message: 'Service 2 failed', error: result2.error };
+  }
+
+  // Step 3: Service 3
+  const result3 = await service3.execute(result2.data);
+  if (!result3.success) {
+    await service2.compensate(result1.data);
+    await service1.compensate(param1, param2);
+    return { success: false, message: 'Service 3 failed', error: result3.error };
+  }
+
+  return { success: true, message: 'Flow 1 completed successfully', data: result3.data };
+}
+
+// Flow 2: service 2, service 3, service 4
+async function executeFlow2(param1) {
+  // Step 1: Service 2
+  const result2 = await service2.execute(param1);
+  if (!result2.success) {
+    return { success: false, message: 'Service 2 failed', error: result2.error };
+  }
+
+  // Step 2: Service 3
+  const result3 = await service3.execute(result2.data);
+  if (!result3.success) {
+    await service2.compensate(param1);
+    return { success: false, message: 'Service 3 failed', error: result3.error };
+  }
+
+  // Step 3: Service 4
+  const result4 = await service4.execute(result3.data);
+  if (!result4.success) {
+    await service3.compensate(result2.data);
+    await service2.compensate(param1);
+    return { success: false, message: 'Service 4 failed', error: result4.error };
+  }
+
+  return { success: true, message: 'Flow 2 completed successfully', data: result4.data };
+}
+
+// Flow 3: service 4, service 5, service 6
+async function executeFlow3(param1) {
+  // Step 1: Service 4
+  const result4 = await service4.execute(param1);
+  if (!result4.success) {
+    return { success: false, message: 'Service 4 failed', error: result4.error };
+  }
+
+  // Step 2: Service 5
+  const result5 = await service5.execute(result4.data);
+  if (!result5.success) {
+    await service4.compensate(param1);
+    return { success: false, message: 'Service 5 failed', error: result5.error };
+  }
+
+  // Step 3: Service 6
+  const result6 = await service6.execute(result5.data);
+  if (!result6.success) {
+    await service5.compensate(result4.data);
+    await service4.compensate(param1);
+    return { success: false, message: 'Service 6 failed', error: result6.error };
+  }
+
+  return { success: true, message: 'Flow 3 completed successfully', data: result6.data };
+}
+
+// Usage example
+async function runFlow1() {
+  try {
+    const result = await executeFlow1('param1', 'param2');
+    console.log(result);
+  } catch (error) {
+    console.error('Flow 1 failed:', error);
+  }
+}
+
+```
+
+
 
 ## Additional Considerations
 
