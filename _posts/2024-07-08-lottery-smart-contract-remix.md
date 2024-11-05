@@ -4,6 +4,7 @@ categories: [blockchain, solidity]
 date: 2024-07-08 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/smart-contracts/lottery_smart_contract.jpg"
+published: false
 ---
 
 In this guide, we will explore the creation of a simple lottery smart contract using Solidity and Remix. We will cover the key concepts of smart contracts, such as state variables, functions, modifiers, and testing. By the end of this guide, we will have a basic understanding of how to create, deploy, and test a smart contract on the Ethereum blockchain.
