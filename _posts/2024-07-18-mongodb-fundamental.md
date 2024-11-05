@@ -132,6 +132,115 @@ db.collection('users').deleteOne({ name: 'Alice' });
 db.collection('users').deleteMany({ city: 'New York' });
 ```
 
+### Sample Todo Model
+
+
+```javascript
+// src/config/database.js
+const { MongoClient } = require('mongodb');
+
+const dbConfig = {
+  url: process.env.MONGODB_URI || 'mongodb://localhost:27017',
+  dbName: 'todoapp'
+};
+
+let db = null;
+
+const connectDB = async () => {
+  try {
+    const client = await MongoClient.connect(dbConfig.url, {
+      useUnifiedTopology: true
+    });
+    db = client.db(dbConfig.dbName);
+    console.log('Connected to MongoDB successfully');
+    return db;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+};
+
+const getDB = () => {
+  if (!db) {
+    throw new Error('Database not initialized');
+  }
+  return db;
+};
+
+module.exports = { connectDB, getDB };
+
+// src/models/todo.model.js
+const { ObjectId } = require('mongodb');
+const { getDB } = require('../config/database');
+
+const COLLECTION_NAME = 'todos';
+
+const todoModel = {
+  async create(todoData) {
+    const db = getDB();
+    const todo = {
+      ...todoData,
+      status: todoData.status || 'pending',
+      createdAt: new Date()
+    };
+    const result = await db.collection(COLLECTION_NAME).insertOne(todo);
+    return { ...todo, _id: result.insertedId };
+  },
+
+  async findById(id) {
+    const db = getDB();
+    return await db.collection(COLLECTION_NAME).findOne({ 
+      _id: new ObjectId(id) 
+    });
+  },
+
+  async find(query = {}, options = {}) {
+    const db = getDB();
+    const { page = 1, limit = 10 } = options;
+    const skip = (page - 1) * limit;
+
+    const [todos, totalCount] = await Promise.all([
+      db.collection(COLLECTION_NAME)
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      db.collection(COLLECTION_NAME)
+        .countDocuments(query)
+    ]);
+
+    return {
+      todos,
+      pagination: {
+        total: totalCount,
+        page,
+        limit,
+        pages: Math.ceil(totalCount / limit)
+      }
+    };
+  },
+
+  async update(id, updateData) {
+    const db = getDB();
+    const result = await db.collection(COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    );
+    return result.value;
+  },
+
+  async delete(id) {
+    const db = getDB();
+    const result = await db.collection(COLLECTION_NAME).deleteOne({
+      _id: new ObjectId(id)
+    });
+    return result.deletedCount > 0;
+  }
+};
+
+module.exports = todoModel;
+```
 
 ## Indexing
 

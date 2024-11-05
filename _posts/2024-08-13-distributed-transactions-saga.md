@@ -4,6 +4,7 @@ categories: [microservices, design-patterns]
 date: 2024-08-13 00:00:00
 tags: [microservices, saga-pattern, distributed-transactions, design-patterns, architecturea, atomicity, consistency]
 image: "/assets/images/saga.png"
+published: false
 ---
 
 
