@@ -4,6 +4,7 @@ categories: [blockchain, solidity]
 date: 2024-07-09 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/pet-shop-smart-contract.jpg"
+published: false
 ---
 
 Truffle is the development framework for Ethereum, simplifying smart contract creation, testing, and deployment. 

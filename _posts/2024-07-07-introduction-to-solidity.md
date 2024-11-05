@@ -4,6 +4,8 @@ categories: [blockchain, solidity]
 date: 2024-07-07 00:00:01
 tags: [blockchain, solidity, smart-contracts]
 image: "/assets/images/smart-contracts/smart-contracts.png"
+published: false
+
 ---
 
 Before reading this article, you should have a basic understanding of concepts and blockchain technology at this post [blockchain-for-dummies](https://kelvin-bz.github.io/posts/blockchain-for-dummies/)

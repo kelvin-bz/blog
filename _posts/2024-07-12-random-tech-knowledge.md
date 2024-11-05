@@ -4,6 +4,7 @@ categories: [random]
 date: 2024-07-12 00:00:00
 tags: [random]
 image: "/assets/images/random.png"
+published: false
 ---
 
 ## Security Vulnerabilities

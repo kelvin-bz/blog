@@ -1,9 +1,13 @@
 ---
-title: "Idempotent API - Preventing Double Payment "
-categories: [system design]
+title: Idempotent API - Preventing Double Payment
+categories:
+  - system design
 date: 2024-07-21 00:00:00
-tags: [system design]
-image: "/assets/images/payment.png"
+tags:
+  - system
+  - design
+image: /assets/images/payment.png
+published: false
 ---
 
 ## Problem

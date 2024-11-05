@@ -4,6 +4,7 @@ categories: [blockchain, solidity]
 date: 2024-07-10 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/truffle-pet-shop-interface/truffle-pet-shop-interface.png"
+published: false
 ---
 
 In this post, we will explore the Truffle Pet Shop interface and the underlying code that powers it. The Truffle Pet Shop is a sample decentralized application (DApp) that showcases how to interact with smart contracts on the Ethereum blockchain. We will look at the key components of the interface and the JavaScript code that connects the frontend to the blockchain.

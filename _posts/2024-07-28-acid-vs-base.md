@@ -4,6 +4,7 @@ categories: [system design]
 date: 2024-07-28 00:00:00
 tags: [system design, database design, acid, base, cap theorem]
 image: "/assets/images/acid-vs-base.png"
+published: false
 ---
 
 

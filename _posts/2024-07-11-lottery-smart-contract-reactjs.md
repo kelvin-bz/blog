@@ -4,6 +4,7 @@ categories: [blockchain, solidity]
 date: 2024-07-11 00:00:00
 tags: [solidity, smart-contracts]
 image: "/assets/images/lottery-smart-contract/thumbnail.png"
+published: false
 ---
 
 ## Deploying a Lottery Smart Contract with Truffle
