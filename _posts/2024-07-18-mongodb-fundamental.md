@@ -267,7 +267,7 @@ graph LR
 - **Multikey Index**: Index on array fields.
 - **Text Index**: Supports text search queries on string content.
   
-## Single Field Index
+### Single Field Index
 
 To create an index, you use the `createIndex()` method.
 
@@ -275,7 +275,7 @@ To create an index, you use the `createIndex()` method.
 db.collection('users').createIndex({ name: 1 });
 ```
 
-## Compound Index
+### Compound Index
 
 A compound index in MongoDB is an index on multiple fields in a document.
 
@@ -306,7 +306,7 @@ db.collection('users').find({ name: 'Alice', age: 25, city: 'New York' });
 ```
 
 
-## Multikey Index
+### Multikey Index
 
 A multikey index in MongoDB is an index on an array field.
 
@@ -328,7 +328,7 @@ graph LR
 db.collection('users').createIndex({ hobbies: 1 });
 ```
 
-### Limitations of Multikey Indexes
+#### Limitations of Multikey Indexes
 
 - you cannot create a compound index if more than one field is an array.
 
@@ -337,7 +337,7 @@ db.collection('users').createIndex({ "hobbies": 1, "tags": 1 }); // Not allowed 
 ```
 
 
-## Text Index
+### Text Index
 
 A text index in MongoDB is used for text search queries on string content.
 
@@ -498,6 +498,24 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$sort`
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $sort: -1 } } });
 ```
 
+Push and Sort Array of Objects by a specific field
+
+```javascript
+db.collection('users').updateOne(
+  { name: 'Alice' },
+  {
+    $push: {
+      scores: {
+        $each: [
+          { score: 85, date: "2023-03-01" },
+          { score: 90, date: "2023-04-01" }
+        ],
+        $sort: { date: -1 }
+      }
+    }
+  }
+);
+```
 
 ### Add Limited -  `$push` and `$slice`
 
@@ -506,6 +524,8 @@ The `$push` operator in MongoDB is used to add elements to an array. The `$slice
 ```javascript
 db.collection('users').updateOne({ name: 'Alice' }, { $push: { scores: { $each: [85, 90], $slice: -3 } } });
 ```
+
+If Alice currently has a scores array like [70, 75, 80], this query will push 85 and 90, making it [70, 75, 80, 85, 90]. The $slice: -3 will then trim it to the last 3 elements, resulting in [80, 85, 90].
 
 
 ### Removing Elements from an Array
@@ -668,6 +688,38 @@ db.collection('orders').aggregate([
 ]);
 ```
 
+#### Unwind and Group
+
+```javascript
+db.collection('orders').aggregate([
+  { $unwind: '$items' },
+  {
+    $group: {
+      _id: '$items.productId',
+      totalQuantity: { $sum: '$items.quantity' },
+      totalRevenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
+      ordersCount: { $sum: 1 }
+    }
+  }
+]);
+```
+
+#### Unwind Multiple Arrays
+
+```javascript
+db.collection('restaurants').aggregate([
+  { $unwind: '$categories' },
+  { $unwind: '$reviews' },
+  {
+    $group: {
+      _id: '$categories',
+      averageRating: { $avg: '$reviews.rating' },
+      reviewCount: { $sum: 1 }
+    }
+  }
+]);
+```
+
 ### Group Documents
 
 The `$group` operator in MongoDB is used to group documents by a specified key.
@@ -678,6 +730,74 @@ db.collection('orders').aggregate([
 ]);
 ```
 
+#### Group and Count 
+
+```javascript
+db.collection('orders').aggregate([
+  { $group: { _id: '$status', count: { $sum: 1 } } }
+]);
+```
+
+#### Group and Sum
+
+```javascript
+db.collection('orders').aggregate([
+  { $group: { _id: '$status', total: { $sum: '$amount' } } }
+]);
+```
+
+#### Group and Average
+
+```javascript
+db.collection('orders').aggregate([
+  { $group: { _id: '$status', average: { $avg: '$amount' } } }
+]);
+```
+
+#### Group and Push
+
+```javascript
+db.collection('orders').aggregate([
+  { $group: { _id: '$cust_id', items: { $push: '$item' } } }
+]);
+```
+
+
+#### Group with Multiple Fields
+  
+```javascript
+db.collection('orders').aggregate([
+  {
+    $group: {
+      _id: { 
+        status: '$status',
+        category: '$category'
+      },
+      count: { $sum: 1 },
+      totalAmount: { $sum: '$amount' }
+    }
+  }
+]);
+```
+
+#### Group with Date Operations
+
+```javascript
+db.collection('orders').aggregate([
+  {
+    $group: {
+      _id: {
+        year: { $year: '$orderDate' },
+        month: { $month: '$orderDate' }
+      },
+      totalOrders: { $sum: 1 },
+      revenue: { $sum: '$amount' }
+    }
+  }
+]);
+```
+
+
 ### Project Fields
 
 The `$project` operator in MongoDB is used to include, exclude, or rename fields in the output documents.
@@ -687,6 +807,82 @@ db.collection('orders').aggregate([
   { $project: { _id: 0, cust_id: 1, amount: 1 } }
 ]);
 ```
+
+#### Project with Computed Fields
+
+```javascript
+db.collection('orders').aggregate([
+  {
+    $project: {
+      _id: 0,
+      cust_id: 1,
+      amount: 1,
+      discount: { $subtract: ['$total', '$amount'] }
+    }
+  }
+]);
+```
+
+#### Project With Array Operations
+
+```javascript
+db.collection('orders').aggregate([
+  {
+    $project: {
+      orderId: 1,
+      itemCount: { $size: '$items' },
+      firstItem: { $arrayElemAt: ['$items', 0] },
+      lastItem: { $arrayElemAt: ['$items', -1] },
+      items: {
+        $map: {
+          input: '$items',
+          as: 'item',
+          in: {
+            name: '$$item.name',
+            subtotal: {
+              $multiply: ['$$item.price', '$$item.quantity']
+            }
+          }
+        }
+      }
+    }
+  }
+]);
+```
+
+#### Project With String Operations
+
+```javascript
+db.collection('users').aggregate([
+  {
+    $project: {
+      fullName: { $concat: ['$firstName', ' ', '$lastName'] },
+      email: { $toLower: '$email' },
+      age: { $toString: '$age' }
+    }
+  }
+]);
+```
+
+### Project With Conditional Fields
+
+```javascript
+db.collection('users').aggregate([
+  {
+    $project: {
+      name: 1,
+      status: {
+        $cond: {
+          if: { $gte: ['$age', 18] },
+          then: 'Adult',
+          else: 'Minor'
+        }
+      }
+    }
+  }
+]);
+```
+
 
 ### Run Multiple Aggregations
 
