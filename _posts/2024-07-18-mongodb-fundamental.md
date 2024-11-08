@@ -1,7 +1,7 @@
 ---
 title: "MERN - MongoDB Fundamental"
 categories: [mern, mongodb]
-date: 2024-07-18 00:00:00
+date: 2024-08-15 00:00:00
 tags: [mern, mongodb]
 image: "/assets/images/mongodb.png"
 ---
@@ -974,17 +974,247 @@ db.collection('users').createIndex({ "hobbies": 1, "tags": 1 }); // Not allowed 
 
 ### Text Index
 
-A text index in MongoDB is used for text search queries on string content.
+Text indexes in MongoDB provide a way to perform text search queries on string content. Each collection can have at most one text index.
 
 ```javascript
-db.collection('articles').createIndex({ content: 'text' });
+db.products.createIndex({ 
+  name: "text", 
+  description: "text", 
+  tags: "text" 
+});
+
 ```
 
-Querying with a text index:
+```js
+// Sample Data
+db.products.insertMany([
+  {
+    name: "MacBook Pro 16-inch",
+    description: "Powerful laptop for developers",
+    tags: ["apple", "laptop", "computer"]
+  },
+  {
+    name: "iPhone 15 Pro",
+    description: "Latest smartphone with great camera",
+    tags: ["apple", "smartphone", "mobile"]
+  },
+  {
+    name: "Gaming Laptop ROG",
+    description: "High-performance gaming laptop",
+    tags: ["asus", "laptop", "gaming"]
+  }
+]);
+```
+
+
+**Exact word matches**
+```js
+db.products.find({ $text: { $search: "laptop" }}); // Will find MacBook and ROG
+```
+
+**Multiple words (OR)**
+```js
+// By default, multiple words are treated as logical OR
+// Will find documents containing "laptop" or "gaming"
+db.products.find({ $text: { $search: "laptop gaming" }});
+```
+**Multiple Words (Logical AND)**
 
 ```javascript
-db.collection('articles').find({ $text: { $search: 'database' } });
+// Using the plus sign to ensure both terms are present
+// Will find documents containing both "laptop" and "gaming"
+db.products.find({ $text: { $search: "+laptop +gaming" }});
 ```
+
+**Exact phrases**
+```js
+// Using double quotes to search for an exact phrase
+// Will find documents containing the exact phrase "gaming laptop"
+db.products.find({ $text: { $search: "\"gaming laptop\"" }});
+```
+
+**Word exclusions**
+db.products.find({ $text: { $search: "laptop -gaming" }}); // Laptops but not gaming ones
+
+**Case-insensitive matches**
+```js
+// Text search is case-insensitive by default
+// Will find all documents containing "laptop" regardless of case
+db.products.find({ $text: { $search: "LAPTOP" }});
+```
+**Diacritic-insensitive**
+```js
+// Text search ignores diacritic marks by default
+// Will match "cafe" and "café"
+db.products.find({ $text: { $search: "café" }});
+```
+
+
+**Partial Word Matches**
+```js
+// Searching for "lap" won't find "laptop"
+db.products.find({ $text: { $search: "lap" }});
+```
+
+**Wildcard Searches**
+```js
+// Wildcards are not supported in text search
+db.products.find({ $text: { $search: "lap*" }});
+```
+
+**Fuzzy Matching (Typos)**
+```js
+// Regular expressions cannot be used inside $text search
+db.products.find({ $text: { $search: "/lap.*/" }});
+```
+
+**Complex Boolean Expressions**
+```js
+// Nested boolean logic is not supported in $text search
+db.products.find({ $text: { $search: "(laptop AND gaming) OR (smartphone AND camera)" }});
+```
+
+**Case-Sensitive Searches**
+```js
+// Cannot perform case-sensitive searches using $text
+db.products.find({ $text: { $search: "MacBook", caseSensitive: true }});
+```
+
+
+### Atlas Search
+
+Atlas Search is a fully managed search service that allows you to build fast, relevant, full-text search capabilities on top of your MongoDB data. Compare to text indexes, Atlas Search provides more advanced features like faceted search, fuzzy matching, and relevance scoring.
+
+```js
+//  Basic Atlas Search Setup
+db.products.createSearchIndex({
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "name": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "description": {
+        "type": "string",
+        "analyzer": "lucene.english"
+      }
+    }
+  }
+});
+```
+
+#### Fuzzy Matching - Handles typos and misspellings
+```js
+db.products.aggregate([
+  {
+    $search: {
+      text: {
+        query: "labtop",  // Will match "laptop"
+        path: "name",
+        fuzzy: { maxEdits: 1 }
+      }
+    }
+  }
+]);
+```
+
+#### Autocomplete - Real-time suggestions
+```js
+db.products.aggregate([
+  {
+    $search: {
+      autocomplete: {
+        query: "mac",     // Will suggest "macbook", "machine", etc.
+        path: "name"
+      }
+    }
+  }
+]);
+```
+#### Custom Scoring - Boost relevance
+
+Can boost the relevance of certain documents based on specific criteria.
+
+```js
+db.products.aggregate([
+  {
+    $search: {
+      compound: {
+        must: [
+          { text: { query: "laptop", path: "name" } }
+        ],
+        should: [
+          {
+            text: {
+              query: "gaming",
+              path: "category",
+              score: { boost: { value: 2.0 } }  // Boost gaming laptops
+            }
+          }
+        ]
+      }
+    }
+  }
+]);
+```
+
+- Documents must contain "laptop" in the name field
+- Documents containing "gaming" in the description field are boosted.
+
+#### Multi-language Support
+```js
+db.products.aggregate([
+  {
+    $search: {
+      text: {
+        query: "ordinateur portable",  // French for "laptop"
+        path: "description",
+        analyzer: "lucene.french"
+      }
+    }
+  }
+]);
+```
+
+#### Faceted Search - Filter results
+
+Faceted search allows users to filter search results based on categories, price ranges, and other attributes.
+
+```js
+db.products.aggregate([
+  {
+    $searchMeta: {
+      facet: {
+        operator: { text: { query: "laptop", path: "description" } },
+        facets: {
+          categories: { type: "string", path: "category" },
+          priceRanges: {
+            type: "number",
+            path: "price",
+            boundaries: [500, 1000, 2000]
+          }
+        }
+      }
+    }
+  }
+]);
+
+**Facets:**
+- categoryFacet: Groups results by the category field.
+- priceFacet: Groups results into price ranges defined by the boundaries.
+
+
+``` 
+#### Trade-offs
+
+Besides the benefits, Atlas Search also has some trade-offs compared to traditional text indexes.
+
+- Requires M10+ clusters
+- Additional cost
+- More complex setup
+- Higher resource usage
+  
 
 
 ## Array Operations
