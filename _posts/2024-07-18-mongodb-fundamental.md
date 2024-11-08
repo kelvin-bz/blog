@@ -132,8 +132,22 @@ db.collection('users').deleteOne({ name: 'Alice' });
 db.collection('users').deleteMany({ city: 'New York' });
 ```
 
+## Model vs DAO Pattern
+
 ### Sample Todo Model
 
+**Model Pattern**
+- Encapsulates both data and behavior. This may include validation, business logic, and database operations. This can become "fat" but simpler implementation. 
+
+```mermaid
+graph TD
+    subgraph "Model Approach"
+        A1[routes/todo.routes.js] --> B1[controllers/todo.controller.js]
+        B1 --> C1[models/todo.model.js]
+        C1 --> D1[config/database.js]
+        style C1 fill:#f9f,stroke:#333
+    end
+```    
 
 ```javascript
 // src/config/database.js
@@ -170,43 +184,113 @@ const getDB = () => {
 module.exports = { connectDB, getDB };
 
 // src/models/todo.model.js
-const { ObjectId } = require('mongodb');
+onst { ObjectId } = require('mongodb');
 const { getDB } = require('../config/database');
 
 const COLLECTION_NAME = 'todos';
 
+// Validation functions
+const validateTodoData = (todoData) => {
+  const errors = [];
+
+  if (!todoData.title) {
+    errors.push('Title is required');
+  } else if (todoData.title.length < 3) {
+    errors.push('Title must be at least 3 characters long');
+  }
+
+  if (todoData.status && !['pending', 'in-progress', 'completed'].includes(todoData.status)) {
+    errors.push('Invalid status. Must be pending, in-progress, or completed');
+  }
+
+  if (todoData.dueDate && new Date(todoData.dueDate) < new Date()) {
+    errors.push('Due date cannot be in the past');
+  }
+
+  if (todoData.priority && !['low', 'medium', 'high'].includes(todoData.priority)) {
+    errors.push('Invalid priority. Must be low, medium, or high');
+  }
+
+  return errors;
+};
+
 const todoModel = {
   async create(todoData) {
+    const errors = validateTodoData(todoData);
+    if (errors.length > 0) {
+      throw new Error(`Validation failed: ${errors.join(', ')}`);
+    }
+
     const db = getDB();
     const todo = {
       ...todoData,
+      title: todoData.title.trim(),
       status: todoData.status || 'pending',
-      createdAt: new Date()
+      priority: todoData.priority || 'medium',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      completedAt: null
     };
+
     const result = await db.collection(COLLECTION_NAME).insertOne(todo);
     return { ...todo, _id: result.insertedId };
   },
 
   async findById(id) {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid todo ID');
+    }
+
     const db = getDB();
-    return await db.collection(COLLECTION_NAME).findOne({ 
+    const todo = await db.collection(COLLECTION_NAME).findOne({ 
       _id: new ObjectId(id) 
     });
+
+    if (!todo) {
+      throw new Error('Todo not found');
+    }
+
+    return todo;
   },
 
   async find(query = {}, options = {}) {
     const db = getDB();
-    const { page = 1, limit = 10 } = options;
+    const { 
+      page = 1, 
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = -1
+    } = options;
+
+    if (page < 1 || limit < 1) {
+      throw new Error('Invalid pagination parameters');
+    }
+
     const skip = (page - 1) * limit;
+    const sortOptions = { [sortBy]: sortOrder };
+
+    // Apply filters
+    const filters = { ...query };
+    if (filters.priority) {
+      if (!['low', 'medium', 'high'].includes(filters.priority)) {
+        throw new Error('Invalid priority filter');
+      }
+    }
+    if (filters.status) {
+      if (!['pending', 'in-progress', 'completed'].includes(filters.status)) {
+        throw new Error('Invalid status filter');
+      }
+    }
 
     const [todos, totalCount] = await Promise.all([
       db.collection(COLLECTION_NAME)
-        .find(query)
+        .find(filters)
+        .sort(sortOptions)
         .skip(skip)
         .limit(limit)
         .toArray(),
       db.collection(COLLECTION_NAME)
-        .countDocuments(query)
+        .countDocuments(filters)
     ]);
 
     return {
@@ -221,25 +305,576 @@ const todoModel = {
   },
 
   async update(id, updateData) {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid todo ID');
+    }
+
+    const errors = validateTodoData(updateData);
+    if (errors.length > 0) {
+      throw new Error(`Validation failed: ${errors.join(', ')}`);
+    }
+
     const db = getDB();
+    const existingTodo = await this.findById(id);
+
+    // Business logic for status changes
+    if (updateData.status === 'completed' && existingTodo.status !== 'completed') {
+      updateData.completedAt = new Date();
+    }
+    if (updateData.status && updateData.status !== 'completed') {
+      updateData.completedAt = null;
+    }
+
     const result = await db.collection(COLLECTION_NAME).findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { $set: updateData },
+      { 
+        $set: {
+          ...updateData,
+          updatedAt: new Date()
+        }
+      },
       { returnDocument: 'after' }
     );
+
+    if (!result.value) {
+      throw new Error('Todo not found');
+    }
+
     return result.value;
   },
 
   async delete(id) {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid todo ID');
+    }
+
     const db = getDB();
     const result = await db.collection(COLLECTION_NAME).deleteOne({
       _id: new ObjectId(id)
     });
-    return result.deletedCount > 0;
+
+    if (result.deletedCount === 0) {
+      throw new Error('Todo not found');
+    }
+
+    return true;
+  },
+
+  // Additional business logic methods
+  async markAsComplete(id) {
+    return await this.update(id, { 
+      status: 'completed'
+    });
+  },
+
+  async findOverdue() {
+    const db = getDB();
+    return await db.collection(COLLECTION_NAME).find({
+      dueDate: { $lt: new Date() },
+      status: { $ne: 'completed' }
+    }).toArray();
   }
 };
+```
 
-module.exports = todoModel;
+
+### Sample Todo DAO
+
+**DAO Pattern**
+
+- Data Access logic is separated from business logic. 
+- Service layer for business logic and DAO layer for data access.
+- Better for testing by mocking the data access layer. 
+- Better support dependency injection. 
+- More complex implementation and code repetition. 
+
+```mermaid
+graph TD  
+    subgraph "DAO Pattern Approach"
+        A2[routes/todo.routes.js] --> B2[controllers/todo.controller.js]
+        B2 --> C2[services/todo.service.js]
+        C2 --> D2[daos/todo.dao.js]
+        D2 --> E2[models/todo.entity.js]
+        D2 --> F2[config/database.js]
+        style C2 fill:#f9f,stroke:#333
+        style D2 fill:#f9f,stroke:#333
+        style E2 fill:#f9f,stroke:#333
+    end
+```    
+
+```javascript
+// src/config/database.js
+const { MongoClient } = require('mongodb');
+
+class Database {
+  constructor(config) {
+    this.config = {
+      url: config.url || process.env.MONGODB_URI || 'mongodb://localhost:27017',
+      dbName: config.dbName || process.env.DB_NAME || 'todoapp',
+      options: {
+        useUnifiedTopology: true,
+        ...config.options
+      }
+    };
+    this.client = null;
+    this.db = null;
+  }
+
+  async connect() {
+    try {
+      this.client = await MongoClient.connect(this.config.url, this.config.options);
+      this.db = this.client.db(this.config.dbName);
+      console.log('Connected to MongoDB successfully');
+      return this.db;
+    } catch (error) {
+      console.error('MongoDB connection error:', error);
+      throw new DatabaseError('Failed to connect to database', error);
+    }
+  }
+
+  async disconnect() {
+    try {
+      if (this.client) {
+        await this.client.close();
+        this.client = null;
+        this.db = null;
+        console.log('Disconnected from MongoDB');
+      }
+    } catch (error) {
+      console.error('MongoDB disconnection error:', error);
+      throw new DatabaseError('Failed to disconnect from database', error);
+    }
+  }
+
+  getDB() {
+    if (!this.db) {
+      throw new DatabaseError('Database not initialized. Call connect() first.');
+    }
+    return this.db;
+  }
+}
+
+// src/models/todo.entity.js
+class Todo {
+  static STATUS = {
+    PENDING: 'pending',
+    IN_PROGRESS: 'in-progress',
+    COMPLETED: 'completed'
+  };
+
+  static PRIORITY = {
+    LOW: 'low',
+    MEDIUM: 'medium',
+    HIGH: 'high'
+  };
+
+  constructor(data = {}) {
+    this._id = data._id || null;
+    this.title = data.title || '';
+    this.description = data.description || '';
+    this.status = data.status || Todo.STATUS.PENDING;
+    this.priority = data.priority || Todo.PRIORITY.MEDIUM;
+    this.dueDate = data.dueDate ? new Date(data.dueDate) : null;
+    this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
+    this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
+    this.completedAt = data.completedAt ? new Date(data.completedAt) : null;
+    this.tags = Array.isArray(data.tags) ? [...data.tags] : [];
+    this.assignedTo = data.assignedTo || null;
+  }
+
+  validate() {
+    const errors = [];
+
+    if (!this.title?.trim()) {
+      errors.push('Title is required');
+    } else if (this.title.trim().length < 3) {
+      errors.push('Title must be at least 3 characters long');
+    }
+
+    if (this.status && !Object.values(Todo.STATUS).includes(this.status)) {
+      errors.push(`Invalid status. Must be one of: ${Object.values(Todo.STATUS).join(', ')}`);
+    }
+
+    if (this.dueDate) {
+      if (!(this.dueDate instanceof Date) || isNaN(this.dueDate.getTime())) {
+        errors.push('Invalid due date format');
+      } else if (this.dueDate < new Date()) {
+        errors.push('Due date cannot be in the past');
+      }
+    }
+
+    if (this.priority && !Object.values(Todo.PRIORITY).includes(this.priority)) {
+      errors.push(`Invalid priority. Must be one of: ${Object.values(Todo.PRIORITY).join(', ')}`);
+    }
+
+    if (this.tags && !Array.isArray(this.tags)) {
+      errors.push('Tags must be an array');
+    }
+
+    return errors;
+  }
+
+  isOverdue() {
+    return this.dueDate && this.dueDate < new Date() && this.status !== Todo.STATUS.COMPLETED;
+  }
+
+  toJSON() {
+    return {
+      _id: this._id,
+      title: this.title,
+      description: this.description,
+      status: this.status,
+      priority: this.priority,
+      dueDate: this.dueDate,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      completedAt: this.completedAt,
+      tags: this.tags,
+      assignedTo: this.assignedTo
+    };
+  }
+}
+
+// src/errors/index.js
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ValidationError';
+    this.status = 400;
+  }
+}
+
+class DatabaseError extends Error {
+  constructor(message, originalError = null) {
+    super(message);
+    this.name = 'DatabaseError';
+    this.status = 500;
+    this.originalError = originalError;
+  }
+}
+
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NotFoundError';
+    this.status = 404;
+  }
+}
+
+// src/daos/base.dao.js
+class BaseDAO {
+  constructor(db, collectionName) {
+    if (!db) {
+      throw new Error('Database connection is required');
+    }
+    if (!collectionName) {
+      throw new Error('Collection name is required');
+    }
+    this.db = db;
+    this.collection = this.db.collection(collectionName);
+  }
+
+  async findOne(filter) {
+    try {
+      return await this.collection.findOne(filter);
+    } catch (error) {
+      throw new DatabaseError('Database query failed', error);
+    }
+  }
+
+  async find(filter = {}, options = {}) {
+    try {
+      return await this.collection.find(filter, options).toArray();
+    } catch (error) {
+      throw new DatabaseError('Database query failed', error);
+    }
+  }
+
+  async insertOne(data) {
+    try {
+      return await this.collection.insertOne(data);
+    } catch (error) {
+      throw new DatabaseError('Database insert failed', error);
+    }
+  }
+
+  async updateOne(filter, update, options = {}) {
+    try {
+      return await this.collection.updateOne(filter, update, options);
+    } catch (error) {
+      throw new DatabaseError('Database update failed', error);
+    }
+  }
+
+  async deleteOne(filter) {
+    try {
+      return await this.collection.deleteOne(filter);
+    } catch (error) {
+      throw new DatabaseError('Database delete failed', error);
+    }
+  }
+}
+
+// src/daos/todo.dao.js
+class TodoDAO extends BaseDAO {
+  constructor(db) {
+    super(db, 'todos');
+  }
+
+  async create(todoData) {
+    const todo = new Todo(todoData);
+    const errors = todo.validate();
+    
+    if (errors.length > 0) {
+      throw new ValidationError(errors.join(', '));
+    }
+
+    const todoToInsert = {
+      ...todo.toJSON(),
+      title: todo.title.trim(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    try {
+      const result = await this.insertOne(todoToInsert);
+      return new Todo({ ...todoToInsert, _id: result.insertedId });
+    } catch (error) {
+      throw new DatabaseError('Failed to create todo', error);
+    }
+  }
+
+  async findById(id) {
+    if (!ObjectId.isValid(id)) {
+      throw new ValidationError('Invalid todo ID');
+    }
+
+    const todo = await this.findOne({ _id: new ObjectId(id) });
+    
+    if (!todo) {
+      throw new NotFoundError('Todo not found');
+    }
+
+    return new Todo(todo);
+  }
+
+  async find(query = {}, options = {}) {
+    const { 
+      page = 1, 
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = -1,
+      status,
+      priority,
+      searchTerm,
+      fromDate,
+      toDate,
+      tags
+    } = options;
+
+    if (page < 1 || limit < 1) {
+      throw new ValidationError('Invalid pagination parameters');
+    }
+
+    const filter = this._buildFilter({
+      ...query,
+      status,
+      priority,
+      searchTerm,
+      fromDate,
+      toDate,
+      tags
+    });
+
+    const skip = (page - 1) * limit;
+    const sortOptions = { [sortBy]: sortOrder };
+
+    try {
+      const [todos, totalCount] = await Promise.all([
+        this.collection
+          .find(filter)
+          .sort(sortOptions)
+          .skip(skip)
+          .limit(limit)
+          .toArray(),
+        this.collection.countDocuments(filter)
+      ]);
+
+      return {
+        todos: todos.map(todo => new Todo(todo)),
+        pagination: {
+          total: totalCount,
+          page,
+          limit,
+          pages: Math.ceil(totalCount / limit)
+        }
+      };
+    } catch (error) {
+      throw new DatabaseError('Failed to fetch todos', error);
+    }
+  }
+
+  async update(id, updateData) {
+    const existingTodo = await this.findById(id);
+    
+    const updatedTodo = new Todo({
+      ...existingTodo,
+      ...updateData,
+      _id: existingTodo._id,
+      updatedAt: new Date()
+    });
+
+    const errors = updatedTodo.validate();
+    if (errors.length > 0) {
+      throw new ValidationError(errors.join(', '));
+    }
+
+    const result = await this.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updatedTodo.toJSON() },
+      { returnDocument: 'after' }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new NotFoundError('Todo not found');
+    }
+
+    return updatedTodo;
+  }
+
+  async delete(id) {
+    if (!ObjectId.isValid(id)) {
+      throw new ValidationError('Invalid todo ID');
+    }
+
+    const result = await this.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      throw new NotFoundError('Todo not found');
+    }
+
+    return true;
+  }
+
+  _buildFilter(options) {
+    const filter = {};
+
+    if (options.status) {
+      if (!Object.values(Todo.STATUS).includes(options.status)) {
+        throw new ValidationError('Invalid status filter');
+      }
+      filter.status = options.status;
+    }
+
+    if (options.priority) {
+      if (!Object.values(Todo.PRIORITY).includes(options.priority)) {
+        throw new ValidationError('Invalid priority filter');
+      }
+      filter.priority = options.priority;
+    }
+
+    if (options.searchTerm) {
+      filter.$or = [
+        { title: { $regex: options.searchTerm, $options: 'i' } },
+        { description: { $regex: options.searchTerm, $options: 'i' } }
+      ];
+    }
+
+    if (options.fromDate || options.toDate) {
+      filter.dueDate = {};
+      if (options.fromDate) {
+        filter.dueDate.$gte = new Date(options.fromDate);
+      }
+      if (options.toDate) {
+        filter.dueDate.$lte = new Date(options.toDate);
+      }
+    }
+
+    if (options.tags && Array.isArray(options.tags)) {
+      filter.tags = { $all: options.tags };
+    }
+
+    return filter;
+  }
+}
+
+// src/services/todo.service.js
+class TodoService {
+  constructor(todoDAO) {
+    if (!todoDAO) {
+      throw new Error('TodoDAO is required');
+    }
+    this.todoDAO = todoDAO;
+  }
+
+  async createTodo(todoData) {
+    return await this.todoDAO.create(todoData);
+  }
+
+  async getTodoById(id) {
+    return await this.todoDAO.findById(id);
+  }
+
+  async updateTodo(id, updateData) {
+    return await this.todoDAO.update(id, updateData);
+  }
+
+  async deleteTodo(id) {
+    return await this.todoDAO.delete(id);
+  }
+
+  async updateTodoStatus(id, status) {
+    const todo = await this.todoDAO.findById(id);
+    
+    const updates = { 
+      status,
+      updatedAt: new Date()
+    };
+    
+    if (status === Todo.STATUS.COMPLETED && todo.status !== Todo.STATUS.COMPLETED) {
+      updates.completedAt = new Date();
+    } else if (status !== Todo.STATUS.COMPLETED && todo.status === Todo.STATUS.COMPLETED) {
+      updates.completedAt = null;
+    }
+
+    return await this.todoDAO.update(id, updates);
+  }
+
+  async findTodos(options = {}) {
+    return await this.todoDAO.find({}, options);
+  }
+
+  async findOverdueTodos() {
+    const now = new Date();
+    return await this.todoDAO.find({
+      dueDate: { $lt: now },
+      status: { $ne: Todo.STATUS.COMPLETED }
+    });
+  }
+
+  async findTodosByPriority(priority) {
+    return await this.todoDAO.find({ priority });
+  }
+
+  async assignTodo(id, userId) {
+    return await this.todoDAO.update(id, {
+      assignedTo: userId,
+      updatedAt: new Date()
+    });
+  }
+
+  async addTags(id, tags) {
+    const todo = await this.todoDAO.findById(id);
+    const uniqueTags = [...new Set([...todo.tags, ...tags])];
+    return await this.todoDAO.update(id, { tags: uniqueTags });
+  }
+
+  async removeTags(id, tags) {
+    const todo = await this.todoDAO.findById(id);
+    const updatedTags = todo.tags.filter(tag => !tags.includes(tag));
+    return await this.todoDAO.update(id, { tags: updatedTags });
+  }
+}
 ```
 
 ## Indexing
