@@ -331,6 +331,54 @@ app.get('/download-csv', (req, res) => {
   fileStream.pipe(res);
 });
 ```
+
+
+## Logging
+
+Log errors to the console or a file for debugging and monitoring. Datadog, Sentry, or other services can be used for more advanced error logging.
+  next(err); 
+}
+```
+Modern applications need standardized logging to monitor and debug issues effectively. Winston and Morgan are popular logging libraries for Node.js applications. Key requirements for logging include:
+- Structured Format: Log messages should be in a structured format (e.g., JSON) for easy parsing and analysis.
+- Log Levels: Different log levels (e.g., info, warn, error) help categorize log messages based on severity.'
+- Timestamps: Include timestamps in log messages to track when events occurred.
+- Context: Additional metadata.
+- Monitoring: Centralized logging solutions (e.g., Datadog, Sentry) for monitoring and alerting.
+
+
+```js
+// src/config/logger.js
+const winston = require('winston');
+const path = require('path');
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.json()
+  ),
+  transports: [
+    // Console transport
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      )
+    }),
+    // Error file transport
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/error.log'),
+      level: 'error'
+    }),
+    // Combined file transport
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/combined.log')
+    })
+
+module.exports = logger;
+```
+
+Log Outputs
 ## Error Handling
 
 
