@@ -1,7 +1,7 @@
 ---
 title: "MERN - Express.js Fundamentals"
 categories:  [mern, expressjs]
-date: 2024-07-19 00:00:00
+date: 2024-09-19 00:00:00
 tags: [expressjs, js, nodejs, mern]
 image: "/assets/images/express_js.png"
 ---
@@ -336,6 +336,11 @@ app.get('/download-csv', (req, res) => {
 ## Logging
 
 Log errors to the console or a file for debugging and monitoring. Datadog, Sentry, or other services can be used for more advanced error logging.
+
+```js
+function logErrors(err, req, res, next) {
+  console.error(err.stack); // Log to console in development
+  // You can replace this with logging to a file or external service
   next(err); 
 }
 ```
@@ -355,6 +360,7 @@ const path = require('path');
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
+    winston.format.timestamp(),
     winston.format.json()
   ),
   transports: [
@@ -374,15 +380,76 @@ const logger = winston.createLogger({
     new winston.transports.File({
       filename: path.join(__dirname, '../../logs/combined.log')
     })
+  ]
+});
 
 module.exports = logger;
 ```
 
 Log Outputs
+
+
+```js
+
+// Example usage in your application:
+try {
+  // Some operation that might fail
+  throw new Error('Database connection failed');
+} catch (error) {
+  // Error level (most serious issues)
+  logger.error('Database connection error', {
+    error: error.message,
+    stack: error.stack,
+    database: 'postgres'
+  });
+  /* Output:
+  {
+    "level": "error",
+    "message": "Database connection error",
+    "timestamp": "2024-11-08T10:30:45.123Z",
+    "error": "Database connection failed",
+    "stack": "Error: Database connection failed\n    at ...",
+    "database": "postgres"
+  }
+  */
+
+  // Warning level (potential issues)
+  logger.warn('High API latency detected', {
+    latency: 1500,
+    endpoint: '/api/users'
+  });
+  /* Output:
+  {
+    "level": "warn",
+    "message": "High API latency detected",
+    "timestamp": "2024-11-08T10:30:45.123Z",
+    "latency": 1500,
+    "endpoint": "/api/users"
+  }
+  */
+
+  // Info level (normal operations)
+  logger.info('API request received', {
+    method: 'GET',
+    path: '/api/users'
+  });
+  /* Output:
+  {
+    "level": "info",
+    "message": "API request received",
+    "timestamp": "2024-11-08T10:30:45.123Z",
+    "method": "GET",
+    "path": "/api/users"
+  }
+  */
+}
+```
+
+
 ## Error Handling
 
 
-**Error Handling in Express.js**
+### Logging Errors
 
 
 ```mermaid
@@ -414,82 +481,230 @@ graph TD
 ```
 
 
-Error handling ensures your Express application gracefully manages errors that arise during request processing.
 
-```mermaid
-graph LR
-    subgraph ErrorHandling["🚨 Error Handling in Express.js"]
-        SynchronousErrors["fa:fa-bolt Synchronous Errors"]
-        AsynchronousErrors["fa:fa-cloud Asynchronous Errors"]
-        CallbackErrors["📞 Callback Errors"]
-        PromiseErrors["🤝 Promise Errors (Express 5+)"]
-        ErrorHandler["fa:fa-exclamation Error Handler"]
-    end
-
-    SynchronousErrors -->|throw error| ErrorHandler
-    AsynchronousErrors --> CallbackErrors
-    AsynchronousErrors --> PromiseErrors
-    CallbackErrors --> |"next(err)"| ErrorHandler
-    PromiseErrors --> |"next(err) (automatic)"| ErrorHandler
-
-    style SynchronousErrors fill:#f9f,stroke:#333,stroke-width:2px
-    style AsynchronousErrors fill:#ccf,stroke:#333,stroke-width:2px
-    style CallbackErrors fill:#ff9,stroke:#333,stroke-width:2px
-    style PromiseErrors fill:#add8e6,stroke:#333,stroke-width:2px
-    style ErrorHandler fill:#f08080,stroke:#333,stroke-width:2px
-```
-
-* **Synchronous Errors:** Errors thrown directly within route handlers or middleware. Express catches these automatically.
-* **Asynchronous Errors:** Errors from asynchronous operations (e.g., database queries, file reading) must be passed to `next(err)`. Starting with Express 5, route handlers and middleware that return a Promise will call next(value) automatically when they reject or throw an error.
-* **Error-Handling Middleware:** Functions with four arguments (`err`, `req`, `res`, `next`) that specifically handle errors.
-**Error Handler:** A middleware function that acts as a final catch-all for errors, logging them and sending appropriate responses to the client.
+For small to medium applications, it's better to centralize logging in middleware for consistency and easier maintenance. Here's why:
 
 ```js
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler); 
-```
+// ❌ Don't scatter logs in services
+// userService.js
+const logger = require('../config/logger');
 
-### Log Errors
-
-Log errors to the console or a file for debugging and monitoring. Datadog, Sentry, or other services can be used for more advanced error logging.
-
-```js
-function logErrors(err, req, res, next) {
-  console.error(err.stack); // Log to console in development
-  // You can replace this with logging to a file or external service
-  next(err); 
-}
-```
-
-### Client Error Handler
-
-Respond to client errors (e.g., AJAX requests) with JSON error messages.
-
-```js
-function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.status(err.statusCode || 500).json({ error: err.message });
-  } else {
-    next(err); // Let the general error handler handle it
+class UserService {
+  async getUser(id) {
+    const user = await User.findById(id);
+    
+    // Logging scattered throughout services
+    if (!user.isActive) {
+      logger.error('Inactive user attempted access', {  // Don't do this
+        userId: user.id,
+        status: user.status
+      });
+    }
+    return user;
   }
 }
+
+// ✅ Better: Throw errors and let middleware handle logging
+// userService.js
+class UserService {
+  async getUser(id) {
+    const user = await User.findById(id);
+    
+    if (!user.isActive) {
+      throw new Error('Inactive user access denied'); // Just throw error
+    }
+    return user;
+  }
+}
+
+// middleware/errorMiddleware.js
+const logger = require('../config/logger');
+
+function logErrors(err, req, res, next) {
+  logger.error('Error occurred', {
+    // Error details
+    error: {
+      message: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+      code: err.code || 'UNKNOWN_ERROR'
+    },
+
+    // Request context
+    request: {
+      path: req.path,
+      method: req.method,
+      params: req.params,
+      query: req.query,
+      ip: req.ip
+    },
+
+    // User context (if available)
+    user: req.user ? {
+      id: req.user.id,
+      email: req.user.email
+    } : 'anonymous',
+
+    // Timestamp and environment
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV
+  });
+
+  next(err);
+}
+
+module.exports = logErrors;
 ```
 
+Benefits of centralized logging:
+1. Single place to modify logging logic
+2. Consistent log format
+3. Easier to maintain
+4. Cleaner service code
+5. Separation of concerns
 
-### Error Handler
+The only exception might be audit logging or business-specific logging that needs to be in the service layer.
 
-The final error handler sends an appropriate response to the client. In production, you might want to send a generic error message to the client to avoid leaking sensitive information.
+
+
+
+### Handling different types of errors
+
+To handle different types of errors, you can create custom error classes that extend the built-in Error class. This approach allows you to categorize errors based on their type and provide a consistent error structure.
+
+```mermaid
+graph TD
+    subgraph errorClasses["🚨 Error Classes"]
+        appError["AppError"]
+        databaseError["DatabaseError"]
+        validationError["ValidationError"]
+        notFoundError["NotFoundError"]
+        authError["AuthError"]
+    end
+
+    subgraph errorMiddleware["🚨 Error Middleware"]
+        logErrors["logErrors 📝"]
+        errorHandler["errorHandler 🚫"]
+    end
+
+    appError --> databaseError
+    appError --> validationError
+    appError --> notFoundError
+    appError --> authError
+    logErrors --> errorHandler
+
+    style appError fill:#f9f,stroke:#333,stroke-width:2px
+    style databaseError fill:#ccf,stroke:#f66,stroke-width:2px
+    style validationError fill:#ff9,stroke:#333,stroke-width:2px
+    style notFoundError fill:#9cf,stroke:#333,stroke-width:2px
+    style authError fill:#9cf,stroke:#333,stroke-width:2px
+    style logErrors fill:#ccf,stroke:#f66,stroke-width:2px
+    style errorHandler fill:#ff9,stroke:#333,stroke-width:2px
+```
 
 ```js
+// src/utils/AppError.js
+class AppError extends Error {
+  constructor(message, statusCode, code) {
+    super(message);
+    this.statusCode = statusCode;
+    this.code = code;
+  }
+}
+
+class DatabaseError extends AppError {
+  constructor(message = 'Database error occurred') {
+    super(message, 500, 'DATABASE_ERROR');
+  }
+}
+
+class ValidationError extends AppError {
+  constructor(message = 'Validation failed') {
+    super(message, 400, 'VALIDATION_ERROR');
+  }
+}
+
+class NotFoundError extends AppError {
+  constructor(message = 'Resource not found') {
+    super(message, 404, 'NOT_FOUND');
+  }
+}
+
+class AuthError extends AppError {
+  constructor(message = 'Authentication failed') {
+    super(message, 401, 'AUTH_ERROR');
+  }
+}
+
+module.exports = {
+  AppError,
+  DatabaseError,
+  ValidationError,
+  NotFoundError,
+  AuthError
+};
+
+// Usage in your service
+// userService.js
+const { DatabaseError, NotFoundError } = require('../utils/AppError');
+
+class UserService {
+  async getUser(id) {
+    try {
+      const user = await User.findById(id);
+      
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+      
+      return user;
+    } catch (error) {
+      if (error.name === 'MongoError') {
+        throw new DatabaseError('Database query failed');
+      }
+      throw error;
+    }
+  }
+}
+
+// Then in your error middleware
+// middleware/errorMiddleware.js
+const logger = require('../config/logger');
+
+function logErrors(err, req, res, next) {
+  logger.error('Error occurred', {
+    error: {
+      message: err.message,
+      code: err.code,
+      statusCode: err.statusCode,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    },
+    request: {
+      path: req.path,
+      method: req.method
+    },
+    user: req.user?.id || 'anonymous'
+  });
+
+  next(err);
+}
+
 function errorHandler(err, req, res, next) {
-  res.status(500).json({ 
-    message: process.env.NODE_ENV === 'production' 
-        ? 'Internal Server Error' 
-        : err.message 
+  const statusCode = err.statusCode || 500;
+  
+  res.status(statusCode).json({
+    status: 'error',
+    code: err.code || 'UNKNOWN_ERROR',
+    message: err.message
   });
 }
 ```
+
+This approach:
+- Keeps error types organized
+- Provides consistent error structure
+- Makes error handling predictable
+- Easy to add new error types
+- Simple to use in services
 
 ## Q&A
 
@@ -864,18 +1079,58 @@ graph TD
 
 - **`cors`**: Middleware to enable Cross-Origin Resource Sharing (CORS) in Express.
 
+By default, browsers restrict cross-origin HTTP requests for security reasons, meaning a request from a different origin (like a frontend running on http://localhost:3000 trying to access an API on http://localhost:5000) would be blocked.
+
+With app.use(cors()), you’re allowing the server to accept requests from different origins, making it suitable for a frontend application hosted on a different domain than your API.
+
+
 ```javascript
 const express = require('express');
 const cors = require('cors');
 const app = express();
 
-app.use(cors( { origin: 'http://example.com' } ));
+// Configuration object based on environment
+const corsOptions = {
+  origin: function (origin, callback) {
+    // List of allowed origins based on environment
+    const allowedOrigins = {
+      production: ['https://mywebside.com'],
+      development: ['https://dev.myside.com'],
+      local: ['http://localhost:3000']
+    };
 
-app.get('/users', (req, res) => {
-    res.send('Users');
+    // Get current environment from NODE_ENV (defaults to 'development')
+    const environment = process.env.NODE_ENV || 'development';
+    const whitelist = allowedOrigins[environment];
+
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow credentials (cookies, authorization headers, etc)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Example route
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World!' });
 });
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+});
 ```
 
 ```mermaid

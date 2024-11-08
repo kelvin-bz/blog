@@ -1,7 +1,7 @@
 ---
 title: "MERN - MongoDB Fundamental"
 categories: [mern, mongodb]
-date: 2024-08-15 00:00:00
+date: 2024-09-20 00:00:00
 tags: [mern, mongodb]
 image: "/assets/images/mongodb.png"
 ---
