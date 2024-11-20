@@ -59,10 +59,35 @@ db.collection('users').insertOne({ name: 'Alice', age: 25 });
 
 ### Read
 
-To read documents from a collection, you use the `find()` method.
+To read documents from a collection, you use the `find()` method. The find() method retrives multiple documents and returns a cursor which can be iterated to access the documents. 
 
 ```javascript
-db.collection('users').find({ name: 'Alice' });
+const cursor = db.collection('users').find({ age: { $gte: 18 } });
+```
+In Node.js, you can convert the cursor to an array using the `toArray()` method.
+
+```javascript
+const docs = await cursor.toArray();
+console.log(docs)
+```
+
+**Result:**
+```json
+[
+  { "_id": 1, "name": "Alice", "age": 25 },
+  { "_id": 2, "name": "Bob", "age": 30 }
+]
+```
+
+To retrieve a single document, you can use the `findOne()` method.
+
+```javascript
+db.collection('users').findOne({ name: 'Alice' });
+```
+
+**Result:**
+```json
+{ "_id": 1, "name": "Alice", "age": 25 }
 ```
 
 
@@ -76,7 +101,38 @@ db.collection('users').updateOne({ name: 'Alice' }, { $set: { age: 26 } });
 db.collection('users').updateMany({ city: 'New York' }, { $set: { city: 'San Francisco' } });
 ```
 
-**Update Operators**
+**Result Object**
+
+```json
+{
+  "acknowledged": true,
+  "matchedCount": 5,
+  "modifiedCount": 5,
+  "upsertedId": null,
+  "upsertedCount": 0
+}
+```
+
+Base on the result object you can return proper response. 
+
+```javascript
+const result = await db.collection('users').updateOne(
+  { _id: userId },
+  { $set: { age: 30 } }
+);
+
+if (result.matchedCount === 0) {
+  return { success: false, message: 'No matching document found' };
+}
+
+if (result.modifiedCount === 0) {
+  return { success: true, message: 'Document already up-to-date' };
+}
+
+return { success: true, message: 'Document updated successfully' };
+```
+
+#### Update Operators
 Operators in MongoDB are used to perform specific operations on fields in documents.
 
 ```mermaid
@@ -127,10 +183,32 @@ db.collection('users').updateOne({ name: 'Alice' }, { $rename: { city: 'location
 To delete documents from a collection, you use the `deleteOne()` or `deleteMany()` methods.
 
 ```javascript
-db.collection('users').deleteOne({ name: 'Alice' });
+db.collection('users').deleteOne({ name: 'Alice' }); // delete first matching document
 
 db.collection('users').deleteMany({ city: 'New York' });
 ```
+
+**Result Object**
+
+```json
+{
+  "acknowledged": true,
+  "deletedCount": 1
+}
+```
+
+Based on the result object you can return proper response. 
+
+```javascript
+const result = await db.collection('users').deleteOne({ _id: userId });
+
+if (result.deletedCount === 0) {
+  return { success: false, message: 'No matching document found' };
+}
+
+return { success: true, message: 'Document deleted successfully' };
+```
+
 
 ## Model vs DAO Pattern
 
@@ -148,6 +226,33 @@ graph TD
         style C1 fill:#f9f,stroke:#333
     end
 ```    
+
+This is sample of files structure for Model Pattern
+
+```bash
+src/
+├── config/
+│   └── database.js
+│
+├── models/
+│   └── todo.model.js
+│
+├── controllers/
+│   └── todo.controller.js
+│
+├── routes/
+│   └── todo.routes.js
+│
+├── middleware/
+│   └── auth.middleware.js
+│
+└── app.js
+```
+If the model becomes too complex, you can split it into multiple files or classes. For example, you can have separate files for validation, business logic, and database operations.
+
+
+#### Data Configuration
+
 
 ```javascript
 // src/config/database.js
@@ -182,7 +287,12 @@ const getDB = () => {
 };
 
 module.exports = { connectDB, getDB };
+```
 
+#### Model 
+
+The model file contains the data structure, validation, and database operations for a todo item. This contains both data and behavior related to todos.
+```javascript
 // src/models/todo.model.js
 onst { ObjectId } = require('mongodb');
 const { getDB } = require('../config/database');
@@ -402,6 +512,33 @@ graph TD
     end
 ```    
 
+```bash
+src/
+├── config/
+│   └── database.js         # Database connection configuration
+│
+├── models/
+│   └── todo.entity.js      # Data structure/schema definition
+│
+├── daos/
+│   └── todo.dao.js         # Data Access Object - handles database operations
+│
+├── services/
+│   └── todo.service.js     # Business logic layer
+│
+├── controllers/
+│   └── todo.controller.js  # Request handling & response formatting
+│
+├── routes/
+│   └── todo.routes.js      # Route definitions
+│
+└── app.js                  # Application entry point
+```
+
+
+
+#### Database Configuration
+
 ```javascript
 // src/config/database.js
 const { MongoClient } = require('mongodb');
@@ -453,7 +590,11 @@ class Database {
     return this.db;
   }
 }
+```
 
+####  Entity
+
+```js
 // src/models/todo.entity.js
 class Todo {
   static STATUS = {
@@ -534,7 +675,10 @@ class Todo {
     };
   }
 }
+```
 
+#### Validation Errors Class
+```javascript
 // src/errors/index.js
 class ValidationError extends Error {
   constructor(message) {
@@ -560,7 +704,61 @@ class NotFoundError extends Error {
     this.status = 404;
   }
 }
+```
+#### DAO
 
+**Class-Based with Constructor Injection**
+
+This style defines a BaseDAO class that provides a clean, reusable interface with methods like findOne, insertOne, and updateOne. Each DAO (like TodoDAO) extends BaseDAO, passing in a specific collection name
+
+```mermaid
+classDiagram
+    class DatabaseError {
+        +String message
+        +Error originalError
+        +constructor(message, error)
+    }
+
+    class BaseDAO {
+        -Database db
+        -Collection collection
+        +constructor(db, collectionName)
+        +findOne(filter) Promise~Document~
+        +find(filter, options) Promise~Document[]~
+        +insertOne(data) Promise~Result~
+        +updateOne(filter, update, options) Promise~Result~
+        +deleteOne(filter) Promise~Result~
+    }
+
+    class TodoDAO {
+        +constructor(db)
+        +findByStatus(status) Promise~Document[]~
+        +findByPriority(priority) Promise~Document[]~
+    }
+
+    class UserDAO {
+        +constructor(db)
+        +findByEmail(email) Promise~Document~
+        +findByUsername(username) Promise~Document~
+    }
+
+
+    BaseDAO <|-- TodoDAO : extends
+    BaseDAO <|-- UserDAO : extends
+    BaseDAO ..> DatabaseError : throws
+ ```   
+
+
+**Pros:**
+- **Clean and reusable:** BaseDAO is a good foundation, especially if you have multiple DAOs that follow similar structures.
+- **Constructor validation**: Ensures db and collectionName are provided, helping catch issues early.
+- **Readability and maintainability**: The CRUD operations are well-encapsulated and can be reused easily across different DAOs by extending BaseDAO.
+
+**Cons:**
+- More boilerplate code
+- Every DAO must extend BaseDAO, which might limit flexibility for cases where a DAO might need additional initialization or a unique structure.
+
+```javascript
 // src/daos/base.dao.js
 class BaseDAO {
   constructor(db, collectionName) {
@@ -797,7 +995,60 @@ class TodoDAO extends BaseDAO {
     return filter;
   }
 }
+```
 
+**Static Method with Injected Connection**
+
+**Simplified Usage**: Static methods remove the need to instantiate the class, reducing memory overhead.
+
+**Testing Challenges**: Static methods are less flexible with dependency injection, making mocks and tests trickier.
+
+**Limited Reusability**: Static methods don’t support inheritance, so shared logic across DAOs is harder to centralize.
+
+
+```javascript
+import { ObjectId } from 'mongodb';
+
+let todos;
+
+export default class TodoDAO {
+  static async injectDB(conn) {
+    if (todos) return;
+    try {
+      todos = await conn.db(process.env.DB_NAME).collection('todos');
+    } catch (error) {
+      console.error(`Unable to establish collection handles in TodoDAO: ${error}`);
+    }
+  }
+
+  static async create(todoData) {
+    // Initialize and validate the Todo, build the data object, and insert into the collection
+  }
+
+  static async findById(id) {
+    // Validate ID, query by `_id`, throw `NotFoundError` if not found
+  }
+
+  static async find(query = {}, options = {}) {
+    // Construct filter, pagination, and sort options, execute the find query with pagination
+  }
+
+  static async update(id, updateData) {
+    // Fetch the todo, validate and update with `updateOne`
+  }
+
+  static async delete(id) {
+    // Validate ID, delete by `_id`, and handle `NotFoundError`
+  }
+
+  static _buildFilter(options) {
+    // Generate the filter object for queries based on status, priority, search terms, etc.
+  }
+}
+```
+#### Service
+
+```javascript
 // src/services/todo.service.js
 class TodoService {
   constructor(todoDAO) {
