@@ -53,14 +53,80 @@ graph
 
 To insert a new document into a collection, you use the `insertOne()` or `insertMany()` methods.
 
+#### insertOne
 ```javascript
 db.collection('users').insertOne({ name: 'Alice', age: 25 });
 ```
+
+**Auto-Generated _id Field**
+If you don't specify an `_id` field, MongoDB automatically generates a unique identifier for each document. To specify your own `_id` value, you can include it in the document.
+
+```javascript
+db.collection('users').insertOne({ _id: 1, name: 'Alice', age: 25 });
+```
+Make sure to handle duplicate `_id` values to avoid conflicts.
+
+#### insertMany
+
+To insert multiple documents, you can use the `insertMany()` method.
+
+```javascript
+db.collection('users').insertMany([
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 }
+]);
+```
+
+If one of the documents fails to insert, the operation will be aborted unless you specify the `ordered: false` option.
+
+For example if you have schema vadiation like this. [Go to Schema Validation](#schema-validation)  
+
+
+
+```javascript
+db.createCollection('users', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['name', 'age'],
+      properties: {
+        name: { bsonType: 'string' },
+        age: { bsonType: 'int' }
+      }
+    }
+  }
+});
+```
+
+```javascript
+db.collection('users').insertMany([
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 },
+  { name: 'Charlie' } // missing age field
+], { ordered: false });
+```
+
+Third document will be ignored and first two will be inserted.
+
+The result would be
+
+```javascript
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("..."),  // ID for Alice
+    '1': ObjectId("...")   // ID for Bob
+  }
+}
+
+```
+
 
 ### Read
 
 To read documents from a collection, you use the `find()` method. The find() method retrives multiple documents and returns a cursor which can be iterated to access the documents. 
 
+#### find
 ```javascript
 const cursor = db.collection('users').find({ age: { $gte: 18 } });
 ```
@@ -79,6 +145,7 @@ console.log(docs)
 ]
 ```
 
+#### findOne
 To retrieve a single document, you can use the `findOne()` method.
 
 ```javascript
@@ -89,6 +156,25 @@ db.collection('users').findOne({ name: 'Alice' });
 ```json
 { "_id": 1, "name": "Alice", "age": 25 }
 ```
+
+#### Projection
+
+You can specify which fields to include or exclude in the result using the projection parameter.
+
+```javascript
+db.collection('users').find({}, { projection: { name: 1, age: 1 } });
+```
+
+**Result:**
+```json
+[
+  { "_id": 1, "name": "Alice", "age": 25 },
+  { "_id": 2, "name": "Bob", "age": 30 }
+]
+```
+
+Using projection is a critical practice, especially when working with large collections. It reduces the amount of data transferred over the network and improves query performance. It also prevent unintentional exposure of sensitive data.
+
 
 
 ### Update
@@ -132,8 +218,66 @@ if (result.modifiedCount === 0) {
 return { success: true, message: 'Document updated successfully' };
 ```
 
+#### Upsert 
+
+If you want to insert a new document when no matching document is found, you can use the `upsert` option.
+
+```javascript
+db.collection('users').updateOne(
+  { name: 'Alice' },
+  { $set: { age: 26 }
+  },
+  { upsert: true }
+);
+```
+
+**Result Object**
+
+```js
+{
+  "acknowledged": true,
+  "matchedCount": 1,
+  "modifiedCount": 1,
+  "upsertedId": ObjectId("..."),
+  "upsertedCount": 1
+}
+``` 
+
+#### findOneAndUpdate
+
+This method is a combination of `findOne()` and `updateOne()` as atomic operation. Atomic operation are operations that are performed as a single unit of work. This helps to prevent race conditions and ensure data consistency.
+
+```javascript
+// Update or create a user profile
+db.users.findOneAndUpdate(
+    { email: "alice@example.com" },
+    { $set: { age: 26 } },
+    { returnDocument: 'after' }
+);
+```
+
+**Result Object**
+
+`returnDocument` can be 'before' or 'after' to return the document before or after the update.
+
+
+```javascript
+{
+    "value": {
+        "_id": ObjectId("5f7d3b1c8e1f9a1c9c8e1f9a"),
+        "email": "alice@example.com",
+        "age": 26,
+        "name": "Alice"
+    },
+    "lastErrorObject": {
+        "updatedExisting": true,
+        "n": 1
+    },
+    "ok": 1
+}
+```
 #### Update Operators
-Operators in MongoDB are used to perform specific operations on fields in documents.
+
 
 ```mermaid
 
@@ -208,6 +352,24 @@ if (result.deletedCount === 0) {
 
 return { success: true, message: 'Document deleted successfully' };
 ```
+
+**Backup your data**: Before deleting documents, make sure to back up your data to prevent accidental data loss.
+
+**Soft Delete**: Instead of permanently deleting documents, you can mark them as deleted by adding a `deletedAt` field. This allows you to retain the data for auditing or recovery purposes.
+
+```javascript
+db.collection('users').updateOne(
+  { _id: userId },
+  { $set: { deletedAt: new Date() } }
+);
+```
+
+**Precise Filter**: When deleting documents, use a precise filter to avoid unintentionally deleting more documents than intended. You can use find() to preview the documents that will be deleted before running the delete operation.
+
+
+
+## Schema Validation
+
 
 
 ## Model vs DAO Pattern
