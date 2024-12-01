@@ -237,6 +237,179 @@ app.listen(3000, () => {
 
 - **404 Handler**: The router.use() at the end acts as a catch-all route to handle requests that don't match any defined routes. It would typically send a "Not Found" (404) response.
 
+### Pamaeters and Query Strings
+
+- **Route Parameters**: Extracted from the URL path using a colon followed by the parameter name (e.g., `/users/:id`).
+- **Query Strings**: Extracted from the URL query string using the `req.query` object (e.g., `/users?name=John`).
+
+```javascript
+// Route Parameters
+app.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+  res.send(`User ID: ${id}`);
+});
+
+// Query Strings
+app.get('/users', (req, res) => {
+  const { name } = req.query;
+  res.send(`User Name: ${name}`);
+});
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        routeParams["/users/:id"]
+        queryParams["/users?name=John"]
+        routeHandler1["fa:fa-wrench Route Handler"]
+        routeHandler2["fa:fa-wrench Route Handler"]
+    end
+
+    request --> routeParams
+    routeParams --> routeHandler1
+
+    request --> queryParams
+    queryParams --> routeHandler2
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style routeParams fill:#ccf,stroke:#f66,stroke-width:2px
+    style queryParams fill:#ff9,stroke:#333,stroke-width:2px
+```
+
+### Priority of Routes
+
+- **Exact Match**: Routes with exact matches take precedence over dynamic routes.
+- **Dynamic Routes**: Routes with dynamic parameters (e.g., `/users/:id`) are matched next.
+- **Wildcard Routes**: Routes with wildcards (e.g., `/users/*`) are matched last.
+
+```javascript
+app.get('/users', (req, res) => {
+    res.send('All users');
+});
+
+app.get('/users/new', (req, res) => {
+    res.send('New user form');
+});
+
+app.get('/users/:id', (req, res) => {
+    res.send(`User ID: ${req.params.id}`);
+});
+
+app.get('/users/*', (req, res) => {
+    res.send('Wildcard route');
+});
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        usersRoute["/users"]
+        newUserRoute["/users/new"]
+        userIdRoute["/users/:id"]
+        wildcardRoute["/users/*"]
+        response["🔵 Response"]
+    end
+
+    request --> usersRoute
+    usersRoute --> response
+
+    request --> newUserRoute
+    newUserRoute --> response
+
+    request --> userIdRoute
+    userIdRoute --> response
+
+    request --> wildcardRoute
+    wildcardRoute --> response
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style usersRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style newUserRoute fill:#ff9,stroke:#333,stroke-width:2px
+    style userIdRoute fill:#9cf,stroke:#333,stroke-width:2px
+    style wildcardRoute fill:#9cf,stroke:#333,stroke-width:2px
+    style response fill:#9cf,stroke:#333,stroke-width:2px
+```
+
+### Route Composition
+
+- **Route Composition**: Use `express.Router()` to create modular, mountable route handlers. This allows you to define routes in separate files and mount them at any path.
+
+```javascript
+
+// routes/auth.route.js
+const express = require('express');
+const router = express.Router();
+
+router.post('/login', (req, res) => {
+  // Login logic
+});
+
+router.post('/signup', (req, res) => {
+  // Signup logic
+});
+
+module.exports = router;
+
+// routes/user.route.js
+
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  // Get all users
+});
+
+router.get('/:id', (req, res) => {
+  // Get user by ID
+});
+
+module.exports = router;
+
+// app.js
+const express = require('express');
+const app = express();
+
+const authRoute = require('./routes/auth.route');
+const userRoute = require('./routes/user.route');
+
+app.use('/auth', authRoute);
+app.use('/users', userRoute);
+
+app.listen(3000);
+```
+
+```mermaid
+graph TD
+    subgraph expressApp["fa:fa-server Express.js Application"]
+        request["🔴 Request"]
+        authRoute["/auth"]
+        userRoute["/users"]
+        authHandler["fa:fa-wrench Auth Handler"]
+        userHandler["fa:fa-wrench User Handler"]
+    end
+
+    request --> authRoute
+    authRoute --> authHandler
+
+    request --> userRoute
+    userRoute --> userHandler
+
+    style request fill:#f9f,stroke:#333,stroke-width:2px
+    style authRoute fill:#ccf,stroke:#f66,stroke-width:2px
+    style userRoute fill:#ff9,stroke:#333,stroke-width:2px
+    style authHandler fill:#9cf,stroke:#333,stroke-width:2px
+    style userHandler fill:#9cf,stroke:#333,stroke-width:2px
+
+```
+
+
+
+
+
+
+
 ## Views
 
 ```mermaid
@@ -485,33 +658,49 @@ graph TD
 For small to medium applications, it's better to centralize logging in middleware for consistency and easier maintenance. Here's why:
 
 ```js
-// ❌ Don't scatter logs in services
-// userService.js
+// ❌ First Version - Don't mix logging and throwing
 const logger = require('../config/logger');
 
 class UserService {
   async getUser(id) {
     const user = await User.findById(id);
     
-    // Logging scattered throughout services
     if (!user.isActive) {
-      logger.error('Inactive user attempted access', {  // Don't do this
+      // Bad practice: Logging before throwing
+      logger.error('Inactive user attempted access', {  
         userId: user.id,
         status: user.status
       });
+      throw new Error('Inactive user access denied');
     }
     return user;
   }
 }
 
-// ✅ Better: Throw errors and let middleware handle logging
-// userService.js
+// ✅ Second Version - Better approach with centralized logging
+// errors/AppError.js
+class AppError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
+
+class InactiveUserError extends AppError {
+  constructor(userId, status) {
+    super('Inactive user access denied', 'INACTIVE_USER');
+    this.userId = userId;
+    this.status = status;
+  }
+}
+
+// services/userService.js
 class UserService {
   async getUser(id) {
     const user = await User.findById(id);
     
     if (!user.isActive) {
-      throw new Error('Inactive user access denied'); // Just throw error
+      throw new InactiveUserError(user.id, user.status);
     }
     return user;
   }
@@ -526,7 +715,12 @@ function logErrors(err, req, res, next) {
     error: {
       message: err.message,
       stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
-      code: err.code || 'UNKNOWN_ERROR'
+      code: err.code || 'UNKNOWN_ERROR',
+      // Include any custom properties from custom error classes
+      ...(err instanceof InactiveUserError ? {
+        userId: err.userId,
+        status: err.status
+      } : {})
     },
 
     // Request context
@@ -552,7 +746,8 @@ function logErrors(err, req, res, next) {
   next(err);
 }
 
-module.exports = logErrors;
+// Example of how to use in Express app:
+app.use(logErrors);
 ```
 
 Benefits of centralized logging:
@@ -1356,6 +1551,116 @@ graph TD
     style handler fill:#9cf,stroke:#333,stroke-width:2px
     style response fill:#9cf,stroke:#333,stroke-width:2px
 ```
+
+### How do you implement rate limiting in Express.js?
+
+- **`express-rate-limit`**: Middleware to limit the number of requests from an IP address.
+
+```javascript
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const app = express();
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again after 15 minutes'
+}); 
+app.use('/auth', authLimiter);
+app.post('/auth/login', (req, res) => {
+    // Handle login logic
+});
+
+app.listen(3000);
+```
+
+
+### What's the recommended way to handle async errors in Express route handlers?
+
+Using async/await with express-async-handler is a common pattern to handle async errors in Express route handlers. This library wraps route handlers with a try-catch block and forwards errors to the error-handling middleware.
+
+
+
+```javascript
+
+const express = require('express');
+const asyncHandler = require('express-async-handler');
+
+const app = express();
+
+app.get('/route', asyncHandler(async (req, res) => {
+    // Simulate an async operation
+    const result = await someAsyncFunction();
+    res.send(result);
+}));
+
+// Error-handling middleware
+app.use((err, req, res, next) => {
+    res.status(500).json({ message: err.message });
+});
+
+function someAsyncFunction() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => reject(new Error("Something went wrong!")), 1000);
+    });
+}
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
+
+```
+
+### How to implement session management in Express.js?
+
+- **`express-session`**: Middleware to manage sessions in Express.
+
+```javascript
+const express = require('express');
+
+const session = require('express-session');
+
+const app = express();
+
+app.use(session ({
+    secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+app.get('/', (req, res) => {
+    if (req.session.views) {
+        req.session.views++;
+    } else {
+        req.session.views = 1;
+    }
+    res.send(`Views: ${req.session.views}`);
+});
+
+app.listen(3000);
+```
+### How to Redirect in Express.js?
+
+- **`res.redirect()`**: Method to redirect to a different URL.
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.get('/old', (req, res) => {
+    res.redirect('/new');
+});
+
+app.get('/new', (req, res) => {
+    res.send('New route');
+});
+
+app.listen(3000);
+```
+
+
+
+
 
 
 ## Keywords To Remember
