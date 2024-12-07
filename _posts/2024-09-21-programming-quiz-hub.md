@@ -1,7 +1,7 @@
 ---
 title: "It's Quiz Time! 🎯"
 categories: [mern, mongodb]
-date: 2024-09-20 00:00:00
+date: 2024-09-21 00:00:00
 tags: [mern, mongodb]
 image: "/assets/images/programming-quiz-hub.png"
 ---
