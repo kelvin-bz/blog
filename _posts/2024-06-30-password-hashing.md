@@ -79,13 +79,12 @@ subgraph salting["fa:fa-snowflake Salting"]
 
     password --> hashFunction1["fa:fa-key Hash Function"]
     salt1 --> hashFunction1
-    salt2 --> hashFunction2["fa:fa-key Hash Function"]
+    password1["password123"] & salt2 --> hashFunction2["fa:fa-key Hash Function"]
 
-    hashFunction1 -->|"Different Hashes"| hashOutput1["Hash 1"]
-    hashFunction2 -->|"Different Hashes"| hashOutput2["Hash 2"]
+    hashFunction1 -->|"Different Hashes"| hashOutput1["Hash 1 + embed Salt 1"]
+    hashFunction2 -->|"Different Hashes"| hashOutput2["Hash 2 + embed Salt 2"]
 end
 
-style password fill:#ffebcc,stroke:#880
 style salt1 fill:#ffebcc,stroke:#880
 style salt2 fill:#ffebcc,stroke:#880
 style hashFunction1 fill:#cce5ff,stroke:#008
@@ -102,25 +101,23 @@ const saltRounds = 10;
 
 // Hashing a password
 function hashPassword(password) {
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(password, salt);
-    return { salt, hash };
+    const hash = bcrypt.hashSync(password, saltRounds);
+    return hash;
 }
 
 // Verifying a password
-function verifyPassword(storedHash, storedSalt, inputPassword) {
-    const hash = bcrypt.hashSync(inputPassword, storedSalt);
-    return hash === storedHash;
+function verifyPassword(storedHash, inputPassword) {
+    return bcrypt.compareSync(inputPassword, storedHash);
 }
 
 // Example usage
 const password = '123445';
-const { salt, hash } = hashPassword(password);
-console.log(`Salt: ${salt}`);
+const hash = hashPassword(password);
 console.log(`Hash: ${hash}`);
 
-const isValid = verifyPassword(hash, salt, '123445');
+const isValid = verifyPassword(hash, '123445');
 console.log(`Password is valid: ${isValid}`);
+
 ```
 
 
@@ -128,10 +125,10 @@ console.log(`Password is valid: ${isValid}`);
 
 Sample table structure for storing salted passwords:
 
-| id  | username | email            | salt                  | password_hash               |
-|-----|----------|------------------|-----------------------|-----------------------------|
-| 1   | joe      | joe@gmail.com    | random_salt_for_joe   | hashed_password_with_salt_for_joe |
-| 2   | doe      | doe@gmail.com    | random_salt_for_doe   | hashed_password_with_salt_for_doe |
+| id  | username | email            | password_hash               |
+|-----|----------|------------------|-----------------------|
+| 1   | joe      | joe@gmail.com    | hashed_password_with_salt_for_joe |
+| 2   | doe      | doe@gmail.com    | hashed_password_with_salt_for_doe |
 
 
 
@@ -165,61 +162,52 @@ style pepperedHash fill:#fff0cc,stroke:#880
 
 ```js
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const saltRounds = 10;
-const PEPPER = process.env.PASSWORD_PEPPER || 'default_pepper'; // For testing, set default value
-const HMAC_KEY = process.env.HMAC_KEY || 'default_hmac_key'; // For testing, set default value
 
-// Generate HMAC for a given input
-function generateHmac(input) {
-    return crypto.createHmac('sha256', HMAC_KEY).update(input).digest('hex');
-}
+class PasswordService {
+    constructor(config) {
+        this.saltRounds = config.saltRounds || 10;
+        this.pepper = config.pepper;
 
-// User registration
-function registerUser(password) {
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hmacPassword = generateHmac(password + PEPPER);
-    const hashedPassword = bcrypt.hashSync(hmacPassword, salt);
-    // Store salt and hashedPassword in the database
-    // Example: return { username: 'joe', salt: salt, password_hash: hashedPassword }
-    return { salt, hashedPassword };
-}
+        if (!this.pepper) {
+            throw new Error('Missing required pepper configuration');
+        }
+    }
 
-// User login
-function loginUser(storedSalt, storedHash, inputPassword) {
-    const hmacInputPassword = generateHmac(inputPassword + PEPPER);
-    const hashedInputPassword = bcrypt.hashSync(hmacInputPassword, storedSalt);
-    if (hashedInputPassword === storedHash) {
-        console.log('Login successful!');
-        return true;
-    } else {
-        console.log('Invalid password.');
-        return false;
+    async hashPassword(password) {
+        try {
+            const pepperedPassword = password + this.pepper;  // Simple concatenation
+            return await bcrypt.hash(pepperedPassword, this.saltRounds);
+        } catch (error) {
+            throw new Error('Password hashing failed');
+        }
+    }
+
+    async verifyPassword(storedHash, inputPassword) {
+        try {
+            const pepperedPassword = inputPassword + this.pepper;  // Simple concatenation
+            return await bcrypt.compare(pepperedPassword, storedHash);
+        } catch (error) {
+            throw new Error('Password verification failed');
+        }
     }
 }
 
-// Test code
-function runTests() {
-    console.log('Running tests...');
+// sample usage
+( async () => {
+    const passwordService = new PasswordService({
+        saltRounds: 10,
+        pepper: 'salty'
+    });
 
-    // Test 1: Register and login with correct password
-    console.log(`Test 1: Register and login with correct password`)
-    const password1 = 'mypassword';
-    const { salt, hashedPassword } = registerUser(password1);
-    console.log('Registered user with salt:', salt);
-    const loginSuccess1 = loginUser(salt, hashedPassword, password1);
-    console.assert(loginSuccess1, 'Test 1 failed: login should succeed with correct password');
+    const password = 'password123';
+    const hashedPassword = await passwordService.hashPassword(password);
+    console.log(hashedPassword);
 
-    // Test 2: Attempt to login with incorrect password
-     console.log(`\n Test 2: Attempt to login with incorrect password`)
-    const incorrectPassword = 'wrongpassword';
-    const loginSuccess2 = loginUser(salt, hashedPassword, incorrectPassword);
-    console.assert(!loginSuccess2, 'Test 2 failed: login should fail with incorrect password');
+    const isPasswordCorrect = await passwordService.verifyPassword(hashedPassword, password);
+    console.log(isPasswordCorrect);
+} )()
 
-}
 
-// Run tests
-runTests();
 
 ```
 
