@@ -59,3 +59,22 @@ This work is published under [MIT][mit] License.
 [use-template]: https://github.com/cotes2020/chirpy-starter/generate
 [CD]: https://en.wikipedia.org/wiki/Continuous_deployment
 [mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+
+
+## To Build the Site
+
+```shell
+bundle exec jekyll serve
+```
+
+## References to another note
+
+```
+[Check out my other post]({{ 'posts/expressjs-fundamental' | relative_url }})
+```
+
+## References to another section
+
+```
+For example if you have schema vadiation like this. [Go to Schema Validation](#schema-validation)  
+```
