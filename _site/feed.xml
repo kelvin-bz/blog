@@ -1,0 +1,194 @@
+
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://localhost:4000/</id>
+  <title>KelvinBz</title>
+  <subtitle>Life, Technology, and Everything in Between.</subtitle>
+  <updated>2025-02-09T11:24:21+07:00</updated>
+  <author>
+    <name>kelvinBz</name>
+    <uri>http://localhost:4000/</uri>
+  </author>
+  <link rel="self" type="application/atom+xml" href="http://localhost:4000/feed.xml"/>
+  <link rel="alternate" type="text/html" hreflang="en"
+    href="http://localhost:4000/"/>
+  <generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator>
+  <rights> © 2025 kelvinBz </rights>
+  <icon>/assets/img/favicons/favicon.ico</icon>
+  <logo>/assets/img/favicons/favicon-96x96.png</logo>
+
+
+  
+  <entry>
+    <title>It's Quiz Time! 🎯</title>
+    <link href="http://localhost:4000/posts/programming-quiz-hub/" rel="alternate" type="text/html" title="It&amp;apos;s Quiz Time! 🎯" />
+    <published>2024-09-21T07:00:00+07:00</published>
+  
+    <updated>2024-09-21T07:00:00+07:00</updated>
+  
+    <id>http://localhost:4000/posts/programming-quiz-hub/</id>
+    <content src="http://localhost:4000/posts/programming-quiz-hub/" />
+    <author>
+      <name>kelvinBz</name>
+    </author>
+
+  
+    
+    <category term="mern" />
+    
+    <category term="mongodb" />
+    
+  
+
+  <summary>Welcome to Programming Quiz Hub 🎯
+Boost your skills with interactive quizzes across programming and tech topics! Test your knowledge, explore new concepts, and track your progress with fun and engaging challenges. Start learning today! 🚀
+
+No result tracking, no sign-up required. Just pick a quiz and start learning! 📚
+
+(https://kelvin-bz.github.io/quiz/)</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>MERN - MongoDB Fundamental</title>
+    <link href="http://localhost:4000/posts/mongodb-fundamental/" rel="alternate" type="text/html" title="MERN - MongoDB Fundamental" />
+    <published>2024-09-20T07:00:00+07:00</published>
+  
+    <updated>2024-11-23T13:41:02+07:00</updated>
+  
+    <id>http://localhost:4000/posts/mongodb-fundamental/</id>
+    <content src="http://localhost:4000/posts/mongodb-fundamental/" />
+    <author>
+      <name>kelvinBz</name>
+    </author>
+
+  
+    
+    <category term="mern" />
+    
+    <category term="mongodb" />
+    
+  
+
+  <summary>MongoDB Architecture
+
+MongoDB is a popular NoSQL database designed for high performance, high availability, and easy scalability. It stores data in flexible, JSON-like documents, making it easy to work with structured, semi-structured, and unstructured data.
+
+
+  Database: A container for collections.
+  Collection: A group of MongoDB documents.
+  Document: A set of key-value pairs (similar to JS...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>MERN - Express.js Fundamentals</title>
+    <link href="http://localhost:4000/posts/expressjs-fundamental/" rel="alternate" type="text/html" title="MERN - Express.js Fundamentals" />
+    <published>2024-09-19T07:00:00+07:00</published>
+  
+    <updated>2024-12-01T22:31:44+07:00</updated>
+  
+    <id>http://localhost:4000/posts/expressjs-fundamental/</id>
+    <content src="http://localhost:4000/posts/expressjs-fundamental/" />
+    <author>
+      <name>kelvinBz</name>
+    </author>
+
+  
+    
+    <category term="mern" />
+    
+    <category term="expressjs" />
+    
+  
+
+  <summary>Fundamentals
+
+Express.js is a popular web application framework for Node.js that simplifies building web applications and APIs.
+
+
+  
+    Middleware: Functions that access the request and response objects to modify, add data, or trigger other functions.
+  
+  
+    Router: A mini-app that only deals with routing. It can have its middleware and routing logic.
+  
+  
+    Handler: A function that hand...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>MERN - Express.js Fundamentals</title>
+    <link href="http://localhost:4000/posts/expressjs-fundamental-processed/" rel="alternate" type="text/html" title="MERN - Express.js Fundamentals" />
+    <published>2024-09-19T07:00:00+07:00</published>
+  
+    <updated>2024-09-19T07:00:00+07:00</updated>
+  
+    <id>http://localhost:4000/posts/expressjs-fundamental-processed/</id>
+    <content src="http://localhost:4000/posts/expressjs-fundamental-processed/" />
+    <author>
+      <name>kelvinBz</name>
+    </author>
+
+  
+    
+    <category term="mern" />
+    
+    <category term="expressjs" />
+    
+  
+
+  <summary>Fundamentals
+
+Express.js is a popular web application framework for Node.js that simplifies building web applications and APIs.
+
+
+  
+    Middleware: Functions that access the request and response objects to modify, add data, or trigger other functions.
+  
+  
+    Router: A mini-app that only deals with routing. It can have its middleware and routing logic.
+  
+  
+    Handler: A function that hand...</summary>
+
+  </entry>
+
+  
+  <entry>
+    <title>MERN - Node.js Fundamentals</title>
+    <link href="http://localhost:4000/posts/nodejs-fundemental/" rel="alternate" type="text/html" title="MERN - Node.js Fundamentals" />
+    <published>2024-09-18T07:00:00+07:00</published>
+  
+    <updated>2024-09-18T07:00:00+07:00</updated>
+  
+    <id>http://localhost:4000/posts/nodejs-fundemental/</id>
+    <content src="http://localhost:4000/posts/nodejs-fundemental/" />
+    <author>
+      <name>kelvinBz</name>
+    </author>
+
+  
+    
+    <category term="mern" />
+    
+    <category term="nodejs" />
+    
+  
+
+  <summary>Basic
+What is NodeJs ?
+
+Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js is ideal for building scalable network applications, as it can handle a large number of connections simultaneously.
+
+In Node.js, I/O (Input/Output) refers to the operations that involve reading and writin...</summary>
+
+  </entry>
+
+</feed>
+
+
