@@ -1,9 +1,10 @@
 ---
-title: "Blockchain Basics P1 - Blockchain for dummies" 
+title: "Blockchain for dummies" 
 categories: [blockchain]
 date: 2024-07-06 00:00:00
 image: "/assets/images/blockchain-for-dummies.png"
 tags: [blockchain]
+
 ---
 
 In this article, we will cover the basics of blockchain technology in a simple and easy-to-understand way. Each section start with a simple diagram to explain the concept and then followed by a brief explanation. The good part of diagram is help you to understand the concept in a visual way and of course more questions will come to your mind, find the answers by yourself and making your own research is the best way to learn and memorize the concept.
